@@ -92,7 +92,7 @@ int qwqz_shader() {
   }
 
   // Compile the fragment shader
-  b = qwqz_load("assets/shaders/basic.fsh");
+  b = qwqz_load("assets/shaders/bouncy.fsh");
   if (b) {
     const char *fs = b;
     //LOGV("fragment source: %s\n", fs);
