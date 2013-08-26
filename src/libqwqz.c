@@ -136,8 +136,6 @@ int qwqz_link(qwqz_handle e) {
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
 
-  glUniform2f(e->g_ResolutionUniform, e->m_ScreenWidth, e->m_ScreenHeight);
-
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
@@ -150,15 +148,12 @@ int qwqz_link(qwqz_handle e) {
 }
 
 int qwqz_draw(qwqz_handle e) {
-
   {
     struct timeval tim;
     gettimeofday(&tim, NULL);
     e->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
     float step = e->t2 - e->t1;
-
     e->t1 = e->t2;
-
     e->m_SimulationTime += step;
   }
 
@@ -166,6 +161,7 @@ int qwqz_draw(qwqz_handle e) {
     if (!e->m_EnabledState) {
       qwqz_link(e);
     } else {
+      glUniform2f(e->g_ResolutionUniform, e->m_ScreenWidth, e->m_ScreenHeight);
       glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
       glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
     }
@@ -175,7 +171,6 @@ int qwqz_draw(qwqz_handle e) {
 }
 
 int qwqz_resize(qwqz_handle e, float width, float height) {
-  //LOGV("resized %f %f\n", width, height);
   e->m_ScreenWidth = width;
   e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
