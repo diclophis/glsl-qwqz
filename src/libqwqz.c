@@ -1,8 +1,9 @@
 //
 
-#include "MemoryLeak.h"
+#include "opengles_bridge.h"
+#include "libqwqz.h"
 
-void CheckGL(const char *s) {
+void qwqz_checkgl(const char *s) {
   // normally (when no error) just return
   const int lastGlError = glGetError();
   if (lastGlError == GL_NO_ERROR) return;
@@ -63,13 +64,13 @@ int qwqz_shader() {
   GLuint v = 0;
   GLuint f = 0;
   GLuint program = 0;
+
+  // Compile the vertex shader
   b = qwqz_load("assets/shaders/basic.vsh");
   if (b) {
     const char *vs = b;
-
     //LOGV("vertex source: %s\n", vs);
 
-    // Compile the vertex shader
     v = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(v, 1, &vs, NULL);
     glCompileShader(v);
@@ -83,7 +84,7 @@ int qwqz_shader() {
   }
 
   // Compile the fragment shader
-  b = qwqz_load("assets/shaders/basic.fsh");
+  b = qwqz_load("assets/shaders/starnest.fsh");
   if (b) {
     const char *fs = b;
     //LOGV("fragment source: %s\n", fs);
@@ -138,9 +139,9 @@ int qwqz_draw(qwqz_handle e) {
 	if (e->m_IsScreenResized) {
     if (!e->m_EnabledState) {
       qwqz_link(e);
-
-      e->m_Batches = (qwqz_batch *)malloc(sizeof(struct qwqz_batch_t) * 1);
-      e->m_Batches[0] = qwqz_batch_create(e);
+      e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
+      //e->m_Batches[0] = 
+      qwqz_batch_init(e, e->m_Batches[0]);
     } else {
       e->m_SimulationTime += 1.0;
       glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
@@ -164,13 +165,12 @@ int qwqz_resize(qwqz_handle e, float width, float height) {
   return 0;
 }
 
-qwqz_batch qwqz_batch_create(qwqz_handle e) {
+int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
 
   int max_frame_count = 1;
 
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
   GLushort *indices = (GLushort *) malloc(max_frame_count * 6 * sizeof(GLushort));
-	qwqz_batch ff = (qwqz_batch)malloc(sizeof(struct qwqz_batch_t) * 1);
 
   ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * 4);
 
@@ -221,5 +221,5 @@ qwqz_batch qwqz_batch_create(qwqz_handle e) {
 
   free(indices);
 
-  return ff;
+  return 0;
 }

@@ -1,240 +1,137 @@
-
-static inline float fastAbs(float x) { return (x < 0) ? -x : x; }
-static inline GLfloat fastSinf(GLfloat x)
-{
-	// fast sin function; maximum error is 0.001
-	const float P = 0.225;
-	
-	x = x * M_1_PI;
-	int k = (int) round(x);
-	x = x - k;
-    
-	float y = (4 - 4 * fastAbs(x)) * x;
-    
-	y = P * (y * fastAbs(y) - y) + y;
-    
-	return (k&1) ? -y : y;	
-}
-
-/*
- *  FileHandle.h
- *  MemoryLeak
- *
- *  Created by Jon Bardin on 04/20/12.
- *  GPL
- *
- */
-
-struct FileHandle {
-	FILE *fp;
-	unsigned int off;
-	unsigned int len;
-  const char *name;
-};
-
-enum {
-  MODELS,
-  SOUNDS,
-  TEXTURES,
-  LEVELS
-};
-// Jon Bardin GPL
+// stuff
 
 
-class StateFoo {
-
-public:
-
-  GLuint g_lastTexture;
-  GLuint g_lastElementBuffer;
-  GLuint g_lastInterleavedBuffer;
-  GLuint g_lastVertexArrayObject;
-  GLuint ModelViewProjectionMatrix_location;
-  int m_LastBufferIndex;
-  bool m_EnabledStates;
-
-  GLuint g_PositionAttribute;
-  GLuint g_TextureAttribute;
-  GLuint m_Program;
-  StateFoo(GLuint program);
-  ~StateFoo();
-  void Reset();
-  void Link();
-
-};
-/*
- *  foo.h
- *  MemoryLeak
- *
- *  Created by Jon Bardin on 9/6/10.
- *  GPL
- *
- */
-
-typedef struct
-{
-  GLshort vertex[2];
-  GLfloat texture[2];
-} SpriteFoo;
-
-typedef struct
-{
-  GLfloat vertex[3];
-  GLfloat normal[3];
-  GLfloat texture[3];
-  GLshort xyz[3];
-} ModelFoo;
-
-
-#ifdef __cplusplus
-
-extern "C" {
-
+#ifdef ANDROID_NDK
+#include <android/log.h>
+#define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, "libnav", __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG  , "libnav", __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO   , "libnav", __VA_ARGS__)
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN   , "libnav", __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR  , "libnav", __VA_ARGS__) 
+#else
+#define LOGV printf
 #endif
 
-struct foofoo {
+#include <stdio.h>
+#include <stdint.h>
+#include <sys/time.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/time.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/poll.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include <assert.h>
 
-/*
-#ifdef __cplusplus
-
-	foofoo()
-	{
-    m_AnimationDuration = 0;
-    m_numFaces = 0;
-    m_numFrames = 0;
-    m_numInterleavedBuffers = 0;
-    m_numTextureBuffers = 0;
-    m_numNormalBuffers = 0;
-    m_numIndexBuffers = 0;
-    m_AnimationStart = 0;
-    m_AnimationEnd = 0;
-    m_Stride = 0;
-    m_numVertexArrayObjects = 0;
-    m_numBuffers = 0;
-    m_NumBatched = 0;
-    m_NumBatchedElements = 0;
-    m_numSpriteFoos = 0;
-    m_numModelFoos = 0;
-    m_BufferCount = 0;
-    m_NeedsCopy = true;
-	}
-
-	~foofoo()
-	{
-    //LOGV("dealloc foofoo %d %d\n", m_numInterleavedBuffers, m_numIndexBuffers);
-    glDeleteBuffers(m_numBuffers, m_VerticeBuffers);
-    glDeleteBuffers(m_numBuffers, m_IndexBuffers);
-    glDeleteBuffers(m_numNormalBuffers, m_NormalBuffers);
-    glDeleteBuffers(m_numTextureBuffers, m_TextureBuffer);
-    glDeleteBuffers(m_numInterleavedBuffers, m_InterleavedBuffers);
-    glDeleteBuffers(m_numIndexBuffers, m_IndexBuffers);
-
-    if (m_numBuffers > 0) {
-      free(m_VerticeBuffers);
-    }
-
-    if (m_numIndexBuffers > 0) {
-      free(m_IndexBuffers);
-    }
-
-    if (m_numNormalBuffers > 0) {
-      free(m_NormalBuffers);
-    }
-
-    if (m_numTextureBuffers > 0) {
-      free(m_TextureBuffer);
-    }
-
-    if (m_numInterleavedBuffers > 0) {
-      free(m_InterleavedBuffers);
-    }
-
-    if (m_numSpriteFoos > 0) {
-      free(m_SpriteFoos);
-    }
-
-    if (m_numModelFoos > 0) {
-      free(m_ModelFoos);
-    }
-
-    if (m_numFaces > 0) {
-      free(m_IndexFoo);
-    }
-
-#ifdef HAS_VAO
-
-    glDeleteVertexArraysOES(m_numVertexArrayObjects, m_VertexArrayObjects);
-
-    if (m_numVertexArrayObjects > 0) {
-      free(m_VertexArrayObjects);
-    }
-
+#ifdef DESKTOP
+  #ifndef __APPLE__
+    #define GLU_PERSPECTIVE gluPerspective
+    #define glOrthof glOrtho
+    #define GLfixed GLfloat
+    #define glFrustumx glFrustum
+  #else
+    #define GLfixed GLfloat
+    #define glFrustumx glFrustum
+    #define GLU_PERSPECTIVE gluPerspective
+  #endif
+#else
+  #define GLU_PERSPECTIVE gluePerspective
 #endif
 
-	}
+#define GL_GLEXT_PROTOTYPES
 
+#ifdef __APPLE__
+  #ifdef DESKTOP
+	  #include <OpenGL/gl.h>    // Header File For The OpenGL32 Library
+	  #include <OpenGL/glu.h>   // Header File For The GLu32 Library
+	  #include <OpenGL/glext.h>   // Header File For The GLu32 Library
+    #include <GLUT/glut.h>    // Header File For The GLut Library
+    #define glOrthof glOrtho
+  #else
+    #ifdef USE_GLES2
+      #include <OpenGLES/ES2/gl.h>
+      #include <OpenGLES/ES2/glext.h>
+    #endif
+    #define glFrustum glFrustumf
+  #endif
+#else
+  #ifdef DESKTOP
+    #include <GL/gl.h>
+    #include <GL/glut.h>
+    #include <GL/glext.h>
+    #include <GL/glu.h>
+  #endif
 #endif
-*/
 
-	int m_numBuffers;
-	GLuint *m_VerticeBuffers;
-	GLuint *m_NormalBuffers;
-	GLuint *m_IndexBuffers;
-	GLuint *m_TextureBuffer;
-	GLuint *m_InterleavedBuffers;
-	GLuint *m_VertexArrayObjects;
-	GLuint m_Texture;
-  float m_AnimationDuration;
-	int m_numFaces;
-	int m_numFrames;
-  int m_numInterleavedBuffers;
-  int m_numTextureBuffers;
-  int m_numNormalBuffers;
-  int m_numIndexBuffers;
-  int m_numVertexArrayObjects;
-  int m_numSpriteFoos;
-  int m_numModelFoos;
-	int m_AnimationStart;
-	int m_AnimationEnd;
-  int m_NumBatched;
-  int m_NumBatchedElements;
-  size_t m_Stride;
-  bool m_NeedsCopy;
-  SpriteFoo *m_SpriteFoos;
-  ModelFoo *m_ModelFoos;
-  GLshort *m_IndexFoo;
-  int m_BufferCount;
-  float m_texCoordWidth;
-  float m_texCoordHeight;
-
-};
-
-#ifdef __cplusplus
-
-}
-
+#ifdef ANDROID_NDK
+  #include <GLES2/gl2.h>
+  #include <GLES2/gl2ext.h>
+  #define glFrustum glFrustumf
 #endif
-// Jon Bardin GPL
+
+#ifdef DESKTOP
+  #define GL_RGBA8_OES GL_RGBA8
+  #ifdef EMSCRIPTEN
+    #define glGenFramebuffersOES glGenFramebuffers
+    #define glBindFramebufferOES glBindFramebuffer
+    #define glGenRenderbuffersOES glGenRenderbuffers
+    #define glBindRenderbufferOES glBindRenderbuffer
+    #define glRenderbufferStorageOES glRenderbufferStorage
+    #define glFramebufferRenderbufferOES glFramebufferRenderbuffer
+    #define GL_FRAMEBUFFER_BINDING_OES GL_FRAMEBUFFER_BINDING
+    #define GL_RENDERBUFFER_BINDING_OES GL_RENDERBUFFER_BINDING
+    #define GL_FRAMEBUFFER_OES GL_FRAMEBUFFER
+    #define GL_RENDERBUFFER_OES GL_RENDERBUFFER
+    #define GL_COLOR_ATTACHMENT0_OES GL_COLOR_ATTACHMENT0
+    #define GL_DEPTH_ATTACHMENT_OES GL_DEPTH_ATTACHMENT
+    #define GL_DEPTH_COMPONENT16_OES GL_DEPTH_COMPONENT16
+    #define glCheckFramebufferStatusOES glCheckFramebufferStatus
+    #define glFramebufferTexture2DOES glFramebufferTexture2D
+    #define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE
+    #define glDeleteFramebuffersOES glDeleteFramebuffers
+  #else
+    #define glGenFramebuffersOES glGenFramebuffersEXT
+    #define glBindFramebufferOES glBindFramebufferEXT
+    #define glGenRenderbuffersOES glGenRenderbuffersEXT
+    #define glBindRenderbufferOES glBindRenderbufferEXT
+    #define glRenderbufferStorageOES glRenderbufferStorageEXT
+    #define glFramebufferRenderbufferOES glFramebufferRenderbufferEXT
+    #define GL_FRAMEBUFFER_BINDING_OES GL_FRAMEBUFFER_BINDING_EXT
+    #define GL_RENDERBUFFER_BINDING_OES GL_RENDERBUFFER_BINDING_EXT
+    #define GL_FRAMEBUFFER_OES GL_FRAMEBUFFER_EXT
+    #define GL_RENDERBUFFER_OES GL_RENDERBUFFER_EXT
+    #define GL_COLOR_ATTACHMENT0_OES GL_COLOR_ATTACHMENT0_EXT
+    #define GL_DEPTH_ATTACHMENT_OES GL_DEPTH_ATTACHMENT
+    #define GL_DEPTH_COMPONENT16_OES GL_DEPTH_COMPONENT16
+    #define glCheckFramebufferStatusOES glCheckFramebufferStatusEXT
+    #define glFramebufferTexture2DOES glFramebufferTexture2DEXT
+    #define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE_EXT
+    #define glDeleteFramebuffersOES glDeleteFramebuffersEXT
+  #endif
+#endif
 
 
-class nodexyz {
+#ifdef EMSCRIPTEN
+#ifndef MSG_NOSIGNAL
+#define MSG_NOSIGNAL 0
+#endif
+#endif
 
-public:
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <netdb.h>
 
-  int node_index;
-  int x;
-  int y;
-  int z;
-
-
-  bool operator==(const nodexyz &other) const {
-    return (this->x == other.x && this->y == other.y);
-  }
-
-
-  bool operator!=(const nodexyz &other) const {
-    return !(*this == other);
-  }
-
-
-};
+#if EMSCRIPTEN
+#include <emscripten.h>
+#endif
