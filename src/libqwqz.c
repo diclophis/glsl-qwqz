@@ -30,6 +30,11 @@ int qwqz_init(qwqz_handle e) {
   e->m_Program = 0;
   e->m_EnabledState = 0;
   e->m_Program = qwqz_shader();
+
+  struct timeval tim;
+  gettimeofday(&tim, NULL);
+  e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+
   return 0;
 }
 
@@ -136,7 +141,20 @@ int qwqz_link(qwqz_handle e) {
 }
 
 int qwqz_draw(qwqz_handle e) {
-	if (e->m_IsScreenResized) {
+
+  {
+    struct timeval tim;
+    gettimeofday(&tim, NULL);
+    e->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+    float step = e->t2 - e->t1;
+
+    gettimeofday(&tim, NULL);
+    e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+
+    e->m_SimulationTime += step;
+  }
+
+  if (e->m_IsScreenResized) {
     if (!e->m_EnabledState) {
       qwqz_link(e);
       e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);

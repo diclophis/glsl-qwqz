@@ -30,6 +30,8 @@ struct qwqz_handle_t {
   GLuint g_PositionAttribute;
   GLuint g_ResolutionUniform;
   GLuint g_TimeUniform;
+  double t1;
+  double t2;
 };
 typedef struct qwqz_handle_t * qwqz_handle;
 
