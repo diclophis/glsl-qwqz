@@ -61,6 +61,8 @@ struct qwqz_handle_t {
   float m_ScreenHalfHeight;
   qwqz_batch *m_Batches;
   GLuint g_PositionAttribute;
+  GLuint g_ResolutionUniform;
+  GLuint g_TimeUniform;
 };
 typedef struct qwqz_handle_t * qwqz_handle;
 

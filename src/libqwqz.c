@@ -2,7 +2,6 @@
 
 #include "MemoryLeak.h"
 
-
 void CheckGL(const char *s) {
   // normally (when no error) just return
   const int lastGlError = glGetError();
@@ -23,30 +22,13 @@ qwqz_handle qwqz_alloc() {
 }
 
 int qwqz_init(qwqz_handle e) {
-
   e->m_SpriteCount = 0;
 	e->m_IsSceneBuilt = 0;
 	e->m_IsScreenResized = 0;
 	e->m_SimulationTime = 0.0;		
   e->m_Program = 0;
   e->m_EnabledState = 0;
-
   e->m_Program = qwqz_shader();
-  CheckGL("init after qwqz_shader");
-
-  /*
-    gl.useProgram(screenProgram);
-    target.framebuffer = gl.createFramebuffer();
-    target.renderbuffer = gl.createRenderbuffer();
-    // Create vertex buffer (2 triangles)
-    buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ - 1.0, - 1.0, 1.0, - 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0, 1.0, - 1.0, 1.0 ]), gl.DYNAMIC_DRAW);
-    gl.vertexAttribPointer(screenVertexPosition, 2, gl.FLOAT, false, 0, 0);
-  */
-
-
-
   return 0;
 }
 
@@ -57,12 +39,13 @@ char *qwqz_load(const char *path) {
     unsigned int len = ftell(fd);
     rewind(fd);
     char *buffer = NULL;
-    buffer = (char *)malloc(sizeof(char) * len);
+    buffer = (char *)malloc(sizeof(char) * (len + 1));
     fseek(fd, 0, SEEK_SET); //NOTE: android offset != 0
     int read = fread(buffer, sizeof(char), len, fd);
     rewind(fd);
     fclose(fd);
     if (read > 0) {
+      buffer[len] = '\0';
       return buffer;
     } else {
       return NULL;
@@ -93,7 +76,7 @@ int qwqz_shader() {
     glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
     msg = (char *)malloc(sizeof(char) * l);
     glGetShaderInfoLog(v, l, NULL, msg);
-    LOGV("vertex shader info: %s\n", msg);
+    //LOGV("vertex shader info: %s\n", msg);
 
     free(b);
     free(msg);
@@ -111,7 +94,7 @@ int qwqz_shader() {
     glGetShaderiv(f, GL_INFO_LOG_LENGTH, &l);
     msg = (char *)malloc(sizeof(char) * l);
     glGetShaderInfoLog(f, l, NULL, msg);
-    LOGV("fragment shader info: %s\n", msg);
+    //LOGV("fragment shader info: %s\n", msg);
 
     free(b);
     free(msg);
@@ -122,12 +105,8 @@ int qwqz_shader() {
     program = glCreateProgram();
     glAttachShader(program, v);
     glAttachShader(program, f);
-    LOGV("created program: %d\n", program);
-
     return program;
   }
-
-  //m_StateFoo = new StateFoo(program);
 
   return 0;
 }
@@ -141,16 +120,14 @@ int qwqz_link(qwqz_handle e) {
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
   msg = (char *)malloc(sizeof(char) * l);
   glGetProgramInfoLog(e->m_Program, l, NULL, msg);
-  LOGV("program info: %d %s\n", e->m_Program, msg);
 
   glUseProgram(e->m_Program);
 
   e->g_PositionAttribute = glGetAttribLocation(e->m_Program, "Position");
+  e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
+  e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
 
-  LOGV("PositionAttribute: %d\n", e->g_PositionAttribute);
-
-  // Get the locations of the uniforms so we can access them
-  //ModelViewProjectionMatrix_location = glGetUniformLocation(m_Program, "ModelViewProjectionMatrix");
+  glUniform2f(e->g_ResolutionUniform, e->m_ScreenWidth, e->m_ScreenHeight);
 
   e->m_EnabledState = 1;
 
@@ -164,10 +141,10 @@ int qwqz_draw(qwqz_handle e) {
 
       e->m_Batches = (qwqz_batch *)malloc(sizeof(struct qwqz_batch_t) * 1);
       e->m_Batches[0] = qwqz_batch_create(e);
-      CheckGL("init after qwqz_batch_create");
     } else {
+      e->m_SimulationTime += 1.0;
+      glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
       glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-      CheckGL("draw");
     }
   }
 
@@ -175,13 +152,14 @@ int qwqz_draw(qwqz_handle e) {
 }
 
 int qwqz_resize(qwqz_handle e, float width, float height) {
-  LOGV("resized %f %f\n", width, height);
+  //LOGV("resized %f %f\n", width, height);
   e->m_ScreenWidth = width;
   e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
   glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
   e->m_IsScreenResized = 1;
   return 0;
 }
@@ -202,19 +180,6 @@ qwqz_batch qwqz_batch_create(qwqz_handle e) {
   ff->m_numIndexBuffers = 1;
   ff->m_IndexBuffers = (GLuint*)malloc(sizeof(GLuint) * (ff->m_numIndexBuffers));
 
-
-  //if (foo->m_IndexBuffers[0] != sf->g_lastElementBuffer) {
-  //  sf->g_lastElementBuffer = foo->m_IndexBuffers[0];
-  //  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sf->g_lastElementBuffer);
-  //}
-
-  //if (foo->m_InterleavedBuffers[0] != sf->g_lastInterleavedBuffer) {
-  //  sf->g_lastInterleavedBuffer = foo->m_InterleavedBuffers[0];
-  //  glBindBuffer(GL_ARRAY_BUFFER, sf->g_lastInterleavedBuffer);
-  //}
-
-  LOGV("wtf: %d\n", e->g_PositionAttribute);
-
   ff->m_Stride = size_of_sprite;
 
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
@@ -233,53 +198,26 @@ qwqz_batch qwqz_batch_create(qwqz_handle e) {
   glGenBuffers(ff->m_numIndexBuffers, ff->m_IndexBuffers);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ff->m_IndexBuffers[0]);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_frame_count * 6 * sizeof(GLshort), indices, GL_DYNAMIC_DRAW);
-  CheckGL("gen");
 
-
-  //glBindBuffer(GL_ARRAY_BUFFER, 0);
-  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-  //gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-  //  -1.0, -1.0,
-  //  1.0, -1.0,
-  //  -1.0, 1.0,
-  //  1.0, -1.0,
-  //  1.0, 1.0, 
-  //  -1.0, 1.0
-  //]), gl.DYNAMIC_DRAW);
-
-  //ff->m_Sprites[0] = malloc(size_of_sprite);
   ff->m_Sprites[0].vertex[0] = -1.0;
   ff->m_Sprites[0].vertex[1] = -1.0;
 
-  //ff->m_Sprites[1] = malloc(size_of_sprite);
   ff->m_Sprites[1].vertex[0] = -1.0;
   ff->m_Sprites[1].vertex[1] = 1.0;
 
-  //ff->m_Sprites[2] = malloc(size_of_sprite);
   ff->m_Sprites[2].vertex[0] = 1.0;
   ff->m_Sprites[2].vertex[1] = 1.0;
 
-  //ff->m_Sprites[3] = malloc(size_of_sprite);
   ff->m_Sprites[3].vertex[0] = 1.0;
   ff->m_Sprites[3].vertex[1] = -1.0;
 
   size_t interleaved_buffer_size = (1 * 4 * ff->m_Stride);
-  glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW); // GL_STATIC_DRAW might be faster...
+  glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, ff->m_Stride, (char *)NULL + (0));
-  CheckGL("point 1");
-  //glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, ff->m_Stride, (char *)NULL + (2 * sizeof(GLshort)));
 
   glEnableVertexAttribArray(e->g_PositionAttribute);
-  //glEnableVertexAttribArray(e->g_TextureAttribute);
-  CheckGL("point 2");
-
-  //{
-  //  glEnable(GL_BLEND);
-  //  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  //}
 
   free(indices);
 
