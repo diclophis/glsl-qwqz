@@ -94,6 +94,7 @@ extern "C" {
 
 struct foofoo {
 
+/*
 #ifdef __cplusplus
 
 	foofoo()
@@ -173,6 +174,7 @@ struct foofoo {
 	}
 
 #endif
+*/
 
 	int m_numBuffers;
 	GLuint *m_VerticeBuffers;
