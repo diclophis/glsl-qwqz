@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    <title>MemoryLeak</title>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      canvas { padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto; display: block; width: 100%; height 100%; top: 0; position: relative; }
+    </style>
+    <script>
+      // Checking for an update. Always the first event fired in the sequence.
+      window.applicationCache.addEventListener("checking", function(e) {
+        window.clearTimeout(installerTimeout);
+        //console.log("checking");
+      }, false);
+
+      // Fired after the first cache of the manifest.
+      window.applicationCache.addEventListener("cached", function(e) {
+        //console.log("cached");
+      }, false);
+
+      // An update was found. The browser is fetching resources.
+      window.applicationCache.addEventListener('downloading', function(e) {
+        //console.log("downloading");
+      }, false);
+
+      // The manifest returns 404 or 410, the download failed,
+      // or the manifest changed while the download was in progress.
+      window.applicationCache.addEventListener('error', function(e) {
+        window.clearTimeout(installerTimeout);
+        //console.log("error, not sure what to do here");
+      }, false);
+
+      // Fired after the first download of the manifest.
+      window.applicationCache.addEventListener('noupdate', function(e) {
+        window.clearTimeout(installerTimeout);
+        //console.log("no update required....");
+      }, false);
+
+      // Fired if the manifest file returns a 404 or 410.
+      // This results in the application cache being deleted.
+      window.applicationCache.addEventListener('obsolete', function(e) {
+        //console.log("cache is obsolete");
+      }, false);
+
+      // Fired for each resource listed in the manifest as it is being fetched.
+      window.applicationCache.addEventListener('progress', function(e) {
+        //console.log("progress");
+      }, false);
+
+      function onUpdateReady() {  
+        //console.log("found new version!, SWAP()");  
+        //window.applicationCache.swapCache();
+      }
+
+      window.applicationCache.addEventListener("updateready", onUpdateReady);  
+      if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {  
+        onUpdateReady();  
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        /*
+        var startGame = cwrap('start_game', 'number', ['number']);
+        var buttons = document.getElementsByTagName("button");
+        for (i in buttons) {
+          if (buttons[i].className == "game") {
+            buttons[i].onclick = function(e) {
+              startGame(this.value);
+            };
+          }
+        }
+        */
+        var manifestFile = new XMLHttpRequest();
+        var manifestUrl = "index.appcache";
+        manifestFile.open("GET", manifestUrl, true);
+        Module.addRunDependency("manifest");
+        manifestFile.onload = function(e) {
+          var assets = Module.FS_createFolder("/", "assets", true, true);
+          var shaders = Module.FS_createFolder(assets, "shaders", true, true);
+          var lines = this.response.split("\n");
+          for (i in lines) {
+            (function() {
+              var line = lines[i];
+              if (line.indexOf("assets") == 0) {
+                var lastSlashIndex = line.lastIndexOf("/");
+                var dirName = line.substr(0, lastSlashIndex);
+                var baseName = line.substr(lastSlashIndex + 1, line.length);
+                var dataFile = new XMLHttpRequest();
+                dataFile.open("GET", line, true);
+                dataFile.responseType = "arraybuffer";
+                Module.addRunDependency(line);
+                dataFile.onload = function(e) {
+                  console.log(line, this);
+                  var arrayBuffer = this.response;
+                  var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
+                  Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
+                  Module.removeRunDependency(line);
+                }
+                dataFile.send(null);
+              }
+            })();
+          }
+          Module.removeRunDependency("manifest");
+        }
+        manifestFile.send(null);
+      });
+    </script>
+  </head>
+  <body>
+    <script>
+      var Module = {
+        TOTAL_MEMORY: 20971520 * 4, 
+        noInitialRun: true,
+        print: (function() {
+          return function(text) {
+            console.log(text);
+          };
+        })(),
+        canvas: (function() {
+          var canvas = document.createElement("canvas");
+          //canvas.width = document.body.offsetWidth;
+          //canvas.height = document.body.offsetHeight;
+          //console.log(canvas);
+          document.body.appendChild(canvas);
+          return canvas; 
+        })(),
+        setStatus: function(text) {
+          console.log(text);
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Downloading: ' + (this.totalDependencies-left) + '/' + this.totalDependencies : 'All downloads complete.');
+        }
+      };
+    </script>
+    <script src="raptor_island.js"></script>
+  </body>
+</html>
