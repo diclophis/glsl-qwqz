@@ -35,6 +35,9 @@ int qwqz_init(qwqz_handle e) {
   gettimeofday(&tim, NULL);
   e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
 
+  e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
+  qwqz_batch_init(e, e->m_Batches[0]);
+
   return 0;
 }
 
@@ -84,8 +87,8 @@ int qwqz_shader() {
     glGetShaderInfoLog(v, l, NULL, msg);
     //LOGV("vertex shader info: %s\n", msg);
 
-    free(b);
-    free(msg);
+    //free(b);
+    //free(msg);
   }
 
   // Compile the fragment shader
@@ -102,8 +105,8 @@ int qwqz_shader() {
     glGetShaderInfoLog(f, l, NULL, msg);
     //LOGV("fragment shader info: %s\n", msg);
 
-    free(b);
-    free(msg);
+    //free(b);
+    //free(msg);
   }
 
   if (v && f) {
@@ -135,9 +138,13 @@ int qwqz_link(qwqz_handle e) {
 
   glUniform2f(e->g_ResolutionUniform, e->m_ScreenWidth, e->m_ScreenHeight);
 
-  e->m_EnabledState = 1;
+  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+  glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glEnableVertexAttribArray(e->g_PositionAttribute);
 
-  free(msg);
+  //free(msg);
+  
+  e->m_EnabledState = 1;
 
   return 0;
 }
@@ -158,8 +165,6 @@ int qwqz_draw(qwqz_handle e) {
   if (e->m_IsScreenResized) {
     if (!e->m_EnabledState) {
       qwqz_link(e);
-      e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-      qwqz_batch_init(e, e->m_Batches[0]);
     } else {
       glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
       glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
@@ -187,17 +192,18 @@ int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
   int max_frame_count = 1;
 
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+  ff->m_Stride = size_of_sprite;
+
   GLushort *indices = (GLushort *)malloc(max_frame_count * 6 * sizeof(GLushort));
 
-  ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * 4);
-
   ff->m_numInterleavedBuffers = 1;
-  ff->m_InterleavedBuffers = (GLuint*)malloc(sizeof(GLuint) * (ff->m_numInterleavedBuffers));
+  ff->m_InterleavedBuffers = (GLuint *)malloc(sizeof(GLuint) * (ff->m_numInterleavedBuffers));
 
   ff->m_numIndexBuffers = 1;
-  ff->m_IndexBuffers = (GLuint*)malloc(sizeof(GLuint) * (ff->m_numIndexBuffers));
+  ff->m_IndexBuffers = (GLuint *)malloc(sizeof(GLuint) * (ff->m_numIndexBuffers));
 
-  ff->m_Stride = size_of_sprite;
+  ff->m_numSprites = 4;
+  ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * ff->m_numSprites);
 
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
@@ -232,11 +238,8 @@ int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
-  glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, ff->m_Stride, (char *)NULL + (0));
 
-  glEnableVertexAttribArray(e->g_PositionAttribute);
-
-  free(indices);
+  //free(indices);
 
   return 0;
 }

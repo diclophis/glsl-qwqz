@@ -6,9 +6,10 @@ struct qwqz_sprite_t {
 typedef struct qwqz_sprite_t * qwqz_sprite;
 
 struct qwqz_batch_t {
-  struct qwqz_sprite_t *m_Sprites;
+  int m_numSprites;
   int m_numInterleavedBuffers;
   int m_numIndexBuffers;
+  struct qwqz_sprite_t *m_Sprites;
 	GLuint *m_InterleavedBuffers;
 	GLuint *m_IndexBuffers;
   size_t m_Stride;
