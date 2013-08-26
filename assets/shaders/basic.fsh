@@ -6,7 +6,7 @@ uniform vec2 iResolution;
 void main( void )
 {
   vec2 uPos = (gl_FragCoord.xy / iResolution.xy);
-  float speed = 0.1;
+  float speed = 1.0;
   float intensity = 0.0;
   float ratio = iResolution.x / iResolution.y;
   float count_x = (5.0);

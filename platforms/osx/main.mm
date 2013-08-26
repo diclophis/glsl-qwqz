@@ -112,6 +112,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 int main(int argc, char** argv) {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(kWindowWidth, kWindowHeight);
@@ -125,14 +126,14 @@ int main(int argc, char** argv) {
   glutMotionFunc(processMouseMotion);
   glutReshapeFunc(resize);
 
-  qwqz_engine = qwqz_alloc();
-  qwqz_init(qwqz_engine);
-
 #if defined(__APPLE__) && !defined (VMDMESA)
   int swap_interval = 1;
   CGLContextObj cgl_context = CGLGetCurrentContext();
   CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval);
 #endif
+
+  qwqz_engine = qwqz_alloc();
+  qwqz_init(qwqz_engine);
 
   glutMainLoop();
 

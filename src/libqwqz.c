@@ -137,6 +137,8 @@ int qwqz_link(qwqz_handle e) {
 
   e->m_EnabledState = 1;
 
+  free(msg);
+
   return 0;
 }
 
@@ -148,8 +150,7 @@ int qwqz_draw(qwqz_handle e) {
     e->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
     float step = e->t2 - e->t1;
 
-    gettimeofday(&tim, NULL);
-    e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+    e->t1 = e->t2;
 
     e->m_SimulationTime += step;
   }
@@ -158,10 +159,8 @@ int qwqz_draw(qwqz_handle e) {
     if (!e->m_EnabledState) {
       qwqz_link(e);
       e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-      //e->m_Batches[0] = 
       qwqz_batch_init(e, e->m_Batches[0]);
     } else {
-      e->m_SimulationTime += 1.0;
       glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
       glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
     }
@@ -188,7 +187,7 @@ int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
   int max_frame_count = 1;
 
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-  GLushort *indices = (GLushort *) malloc(max_frame_count * 6 * sizeof(GLushort));
+  GLushort *indices = (GLushort *)malloc(max_frame_count * 6 * sizeof(GLushort));
 
   ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * 4);
 

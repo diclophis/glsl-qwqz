@@ -13,7 +13,7 @@
 
   #define zoom   0.800
   #define tile   0.850
-  #define speed  0.001
+  #define speed  0.01
 
   #define brightness 0.0015
   #define darkmatter 0.300
