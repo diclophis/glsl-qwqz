@@ -1,0 +1,5 @@
+# OSX Makefile
+
+osx:
+	cd platforms/osx && make clean && make
+	platforms/osx/build/raptor_island
