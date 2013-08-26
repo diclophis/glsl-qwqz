@@ -87,12 +87,12 @@ int qwqz_shader() {
     glGetShaderInfoLog(v, l, NULL, msg);
     //LOGV("vertex shader info: %s\n", msg);
 
-    //free(b);
-    //free(msg);
+    free(b);
+    free(msg);
   }
 
   // Compile the fragment shader
-  b = qwqz_load("assets/shaders/starnest.fsh");
+  b = qwqz_load("assets/shaders/basic.fsh");
   if (b) {
     const char *fs = b;
     //LOGV("fragment source: %s\n", fs);
@@ -105,8 +105,8 @@ int qwqz_shader() {
     glGetShaderInfoLog(f, l, NULL, msg);
     //LOGV("fragment shader info: %s\n", msg);
 
-    //free(b);
-    //free(msg);
+    free(b);
+    free(msg);
   }
 
   if (v && f) {
@@ -142,7 +142,7 @@ int qwqz_link(qwqz_handle e) {
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
 
-  //free(msg);
+  free(msg);
   
   e->m_EnabledState = 1;
 
@@ -238,8 +238,10 @@ int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
-
-  //free(indices);
+  free(indices);
+  free(ff->m_Sprites);
+  free(ff->m_InterleavedBuffers);
+  free(ff->m_IndexBuffers);
 
   return 0;
 }
