@@ -112,7 +112,6 @@ void processNormalKeys(unsigned char key, int x, int y) {
 int main(int argc, char** argv) {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(kWindowWidth, kWindowHeight);
