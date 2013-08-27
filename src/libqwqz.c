@@ -92,7 +92,7 @@ int qwqz_shader() {
   }
 
   // Compile the fragment shader
-  b = qwqz_load("assets/shaders/bouncy.fsh");
+  b = qwqz_load("assets/shaders/nyan.fsh");
   if (b) {
     const char *fs = b;
     //LOGV("fragment source: %s\n", fs);
@@ -103,7 +103,7 @@ int qwqz_shader() {
     glGetShaderiv(f, GL_INFO_LOG_LENGTH, &l);
     msg = (char *)malloc(sizeof(char) * l);
     glGetShaderInfoLog(f, l, NULL, msg);
-    //LOGV("fragment shader info: %s\n", msg);
+    LOGV("fragment shader info: %s\n", msg);
 
     free(b);
     free(msg);
