@@ -8,11 +8,8 @@
 #import <CoreAudio/CoreAudio.h>
 #import <Accelerate/Accelerate.h>
 
-extern "C" {
-  #include "opengles_bridge.h"
-  #include "libqwqz.h"
-}
-
+#include "opengles_bridge.h"
+#include "libqwqz.h"
 
 static int kWindowWidth = 1024;
 static int kWindowHeight = 768;

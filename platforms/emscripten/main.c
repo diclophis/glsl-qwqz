@@ -6,10 +6,8 @@
 #include <GL/glext.h>
 #include <GL/glut.h>
 
-extern "C" {
-  #include "opengles_bridge.h"
-  #include "libqwqz.h"
-}
+#include "opengles_bridge.h"
+#include "libqwqz.h"
 
 static int game_index = 0;
 static bool left_down = false;

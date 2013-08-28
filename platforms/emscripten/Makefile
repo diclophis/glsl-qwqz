@@ -22,8 +22,8 @@ raptor_island: $(build) $(objects)
 	EMCC_DEBUG=1 $(CXX) -O3 $(objects) -o $(build)/raptor_island.bc
 	EMCC_DEBUG=1 $(CXX) -O3 -s ASM_JS=1 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js
 
-$(build)/%.bc: %.cpp
-	EMCC_DEBUG=1 $(CXX) $(CXXFLAGS) -c $< -o $@
+$(build)/%.bc: %.c
+	EMCC_DEBUG=1 $(CCC) $(CXXFLAGS) -c $< -o $@
 
 $(build)/%.bc: ../../src/%.cpp
 	EMCC_DEBUG=1 $(CXX) $(CXXFLAGS) -c $< -o $@
