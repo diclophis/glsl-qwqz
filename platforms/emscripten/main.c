@@ -10,10 +10,10 @@
 #include "libqwqz.h"
 
 static int game_index = 0;
-static bool left_down = false;
-static bool right_down = false;
-static bool reset_down = false;
-static bool debug_down = false;
+static int left_down = 0;
+static int right_down = 0;
+static int reset_down = 0;
+static int debug_down = 0;
 int kWindowWidth = 0;
 int kWindowHeight = 0;
 static qwqz_handle qwqz_engine = NULL;
