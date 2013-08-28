@@ -12,6 +12,7 @@ CXXFLAGS=\
 CFLAGS=$(CXXFLAGS)
 
 objects = $(patsubst %,build/%, $(patsubst %.cpp,%.bc, $(wildcard *.cpp)))
+objects += $(patsubst %,build/%, $(patsubst %.c,%.bc, $(wildcard *.c)))
 objects += $(patsubst ../../src/%,build/%, $(patsubst %.cpp,%.bc, $(wildcard ../../src/*.cpp)))
 objects += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/*.c)))
 
@@ -23,7 +24,7 @@ raptor_island: $(build) $(objects)
 	EMCC_DEBUG=1 $(CXX) -O3 -s ASM_JS=1 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js
 
 $(build)/%.bc: %.c
-	EMCC_DEBUG=1 $(CCC) $(CXXFLAGS) -c $< -o $@
+	EMCC_DEBUG=1 $(CC) $(CXXFLAGS) -c $< -o $@
 
 $(build)/%.bc: ../../src/%.cpp
 	EMCC_DEBUG=1 $(CXX) $(CXXFLAGS) -c $< -o $@
