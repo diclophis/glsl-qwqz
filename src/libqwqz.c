@@ -92,7 +92,7 @@ int qwqz_shader() {
   }
 
   // Compile the fragment shader
-  b = qwqz_load("assets/shaders/nyan.fsh");
+  b = qwqz_load("assets/shaders/gears.fsh");
   if (b) {
     const char *fs = b;
     //LOGV("fragment source: %s\n", fs);
