@@ -28,9 +28,6 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   e->m_Program = 0;
   e->m_EnabledState = 0;
   e->m_Batches = 0;
-  //e->m_Program = qwqz_shader(vsh, fsh);
-
-  //int qwqz_shader() {
 
   char *b = NULL;
   char *msg = NULL;
@@ -40,7 +37,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   GLuint program = 0;
 
   // Compile the vertex shader
-  b = qwqz_load(vsh); //"assets/shaders/basic.vsh");
+  b = qwqz_load(vsh);
   if (b) {
     const char *vs = b;
     LOGV("vertex source: %s\n", vs);
@@ -58,7 +55,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   }
 
   // Compile the fragment shader
-  b = qwqz_load(fsh); //"assets/shaders/gears.fsh");
+  b = qwqz_load(fsh);
   if (b) {
     const char *fs = b;
     LOGV("fragment source: %s\n", fs);
@@ -76,7 +73,6 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   }
 
   if (v && f) {
-
     // Create and link the shader program
     program = glCreateProgram();
     glAttachShader(program, v);
