@@ -128,9 +128,10 @@ int main(int argc, char** argv) {
   CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval);
 #endif
 
-  qwqz_engine = qwqz_create(argv[1], argv[2]);
-
-  glutMainLoop();
+  if (argc == 3) {
+    qwqz_engine = qwqz_create(argv[1], argv[2]);
+    glutMainLoop();
+  }
 
   [pool release];
 
