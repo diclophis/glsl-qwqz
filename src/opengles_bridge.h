@@ -115,11 +115,12 @@
 
 
 #ifdef EMSCRIPTEN
-#ifndef MSG_NOSIGNAL
-#define MSG_NOSIGNAL 0
-#endif
+  #ifndef MSG_NOSIGNAL
+    #define MSG_NOSIGNAL 0
+  #endif
 #endif
 
+/*
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -131,7 +132,8 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <netdb.h>
+*/
 
 #if EMSCRIPTEN
-#include <emscripten.h>
+  #include <emscripten.h>
 #endif
