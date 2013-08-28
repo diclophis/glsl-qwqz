@@ -18,27 +18,82 @@ void qwqz_checkgl(const char *s) {
   }
 }
 
-qwqz_handle qwqz_alloc() {
-  return malloc(sizeof(struct qwqz_handle_t));
-}
 
-int qwqz_init(qwqz_handle e) {
+qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
+  qwqz_handle e = malloc(sizeof(struct qwqz_handle_t));
   e->m_SpriteCount = 0;
 	e->m_IsSceneBuilt = 0;
 	e->m_IsScreenResized = 0;
 	e->m_SimulationTime = 0.0;		
   e->m_Program = 0;
   e->m_EnabledState = 0;
-  e->m_Program = qwqz_shader();
+  e->m_Batches = 0;
+  //e->m_Program = qwqz_shader(vsh, fsh);
 
-  struct timeval tim;
-  gettimeofday(&tim, NULL);
-  e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+  //int qwqz_shader() {
 
-  e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-  qwqz_batch_init(e, e->m_Batches[0]);
+  char *b = NULL;
+  char *msg = NULL;
+  int l;
+  GLuint v = 0;
+  GLuint f = 0;
+  GLuint program = 0;
 
-  return 0;
+  // Compile the vertex shader
+  b = qwqz_load(vsh); //"assets/shaders/basic.vsh");
+  if (b) {
+    const char *vs = b;
+    LOGV("vertex source: %s\n", vs);
+
+    v = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(v, 1, &vs, NULL);
+    glCompileShader(v);
+    glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
+    msg = (char *)malloc(sizeof(char) * l);
+    glGetShaderInfoLog(v, l, NULL, msg);
+    //LOGV("vertex shader info: %s\n", msg);
+
+    free(b);
+    free(msg);
+  }
+
+  // Compile the fragment shader
+  b = qwqz_load(fsh); //"assets/shaders/gears.fsh");
+  if (b) {
+    const char *fs = b;
+    LOGV("fragment source: %s\n", fs);
+
+    f = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(f, 1, &fs, NULL);
+    glCompileShader(f);
+    glGetShaderiv(f, GL_INFO_LOG_LENGTH, &l);
+    msg = (char *)malloc(sizeof(char) * l);
+    glGetShaderInfoLog(f, l, NULL, msg);
+    LOGV("fragment shader info: %s\n", msg);
+
+    free(b);
+    free(msg);
+  }
+
+  if (v && f) {
+
+    // Create and link the shader program
+    program = glCreateProgram();
+    glAttachShader(program, v);
+    glAttachShader(program, f);
+    e->m_Program = program;
+
+    struct timeval tim;
+    gettimeofday(&tim, NULL);
+    e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+
+    e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
+    qwqz_batch_init(e, e->m_Batches[0]);
+  }
+
+  qwqz_checkgl("create");
+
+  return e;
 }
 
 char *qwqz_load(const char *path) {
@@ -60,65 +115,11 @@ char *qwqz_load(const char *path) {
       return NULL;
     }
   } else {
-    LOGV("%s does not exist\n", path);
+    LOGV("file %s does not exist\n", path);
     return NULL;
   }
 }
 
-int qwqz_shader() {
-  char *b = NULL;
-  char *msg = NULL;
-  int l;
-  GLuint v = 0;
-  GLuint f = 0;
-  GLuint program = 0;
-
-  // Compile the vertex shader
-  b = qwqz_load("assets/shaders/basic.vsh");
-  if (b) {
-    const char *vs = b;
-    //LOGV("vertex source: %s\n", vs);
-
-    v = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(v, 1, &vs, NULL);
-    glCompileShader(v);
-    glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(v, l, NULL, msg);
-    //LOGV("vertex shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-
-  // Compile the fragment shader
-  b = qwqz_load("assets/shaders/gears.fsh");
-  if (b) {
-    const char *fs = b;
-    //LOGV("fragment source: %s\n", fs);
-
-    f = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(f, 1, &fs, NULL);
-    glCompileShader(f);
-    glGetShaderiv(f, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(f, l, NULL, msg);
-    LOGV("fragment shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-
-  if (v && f) {
-    // Create and link the shader program
-    program = glCreateProgram();
-    glAttachShader(program, v);
-    glAttachShader(program, f);
-    return program;
-  }
-
-  return 0;
-}
 
 int qwqz_link(qwqz_handle e) {
   
@@ -157,7 +158,7 @@ int qwqz_draw(qwqz_handle e) {
     e->m_SimulationTime += step;
   }
 
-  if (e->m_IsScreenResized) {
+  if (e->m_Batches && e->m_IsScreenResized) {
     if (!e->m_EnabledState) {
       qwqz_link(e);
     } else {

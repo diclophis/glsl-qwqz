@@ -131,8 +131,7 @@ int main(int argc, char** argv) {
   CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval);
 #endif
 
-  qwqz_engine = qwqz_alloc();
-  qwqz_init(qwqz_engine);
+  qwqz_engine = qwqz_create(argv[1], argv[2]);
 
   glutMainLoop();
 

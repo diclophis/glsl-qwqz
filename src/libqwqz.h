@@ -37,10 +37,8 @@ struct qwqz_handle_t {
 typedef struct qwqz_handle_t * qwqz_handle;
 
 void qwqz_checkgl(const char *s);
-qwqz_handle qwqz_alloc();
-int qwqz_init(qwqz_handle e);
+qwqz_handle qwqz_create(const char *vsh, const char *fsh);
 char *qwqz_load(const char *path);
-int qwqz_shader();
 int qwqz_link(qwqz_handle e);
 int qwqz_draw(qwqz_handle e);
 int qwqz_resize(qwqz_handle e, float width, float height);

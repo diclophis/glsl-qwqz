@@ -105,8 +105,7 @@ int main(int argc, char** argv) {
   glutDisplayFunc(draw);
   glutReshapeFunc(resize);
 
-  qwqz_engine = qwqz_alloc();
-  qwqz_init(qwqz_engine);
+  qwqz_engine = qwqz_create(argv[1], argv[2]);
 
   glutMainLoop();
 

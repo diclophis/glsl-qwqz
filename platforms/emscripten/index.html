@@ -133,7 +133,11 @@
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           Module.setStatus(left ? 'Downloading: ' + (this.totalDependencies-left) + '/' + this.totalDependencies : 'All downloads complete.');
-        }
+        },
+        arguments: [
+          "assets/shaders/basic.vsh",
+          "assets/shaders/flower.fsh"
+        ]
       };
     </script>
     <script src="raptor_island.js"></script>
