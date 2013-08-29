@@ -2,6 +2,8 @@
 precision highp float;
 #endif
 
+#define steps 64
+
 uniform float iGlobalTime;
 uniform vec2 iResolution;
 
@@ -26,7 +28,9 @@ float noise( in vec3 x )
 	//vec2 rg = vec2(0.25 + (cos(iGlobalTime * 0.1) * 0.01), 0.25 + (sin(iGlobalTime * 0.1) * 0.01));
 	//return mix(rg.x, rg.y, f.z);
 
-  return 0.5 + (sin(x.z + (iGlobalTime * 0.0)) * 0.1); //vec3(0.0, 0.0, 0.0);
+  float xx = 0.5 + (sin(x.z + (iGlobalTime * 0.0)) * 0.1); //vec3(0.0, 0.0, 0.0);
+  float yy = 0.5 + (cos(x.x + (iGlobalTime * 0.0)) * 0.1); //vec3(0.0, 0.0, 0.0);
+  return mix(xx, yy, 0.5);
 }
 
 float noise( in vec2 x )
@@ -102,7 +106,7 @@ float castRay( in vec3 ro, in vec3 rd, out vec3 oVos, out vec3 oDir )
 	
 	float res = -1.0;
 	vec3 mm = vec3(0.0);
-	for( int i=0; i<64; i++ ) 
+	for( int i=0; i<steps; i++ ) 
 	{
 		if( map(pos) ) { res=1.0; continue; }
 		mm = step(dis.xyz, dis.yxy) * step(dis.xyz, dis.zzx);
@@ -197,7 +201,7 @@ void main( void )
     //if( iMouse.w<=0.00001 ) mo=vec2(0.0);
 	
 	//float time = 2.0 * iGlobalTime + 50.0 * mo.x;
-	float time = 0.1 * iGlobalTime;
+	float time = 10.0 * iGlobalTime;
 
     // camera
   vec3 ro = 20.5 * normalize(vec3(cos(time), 0.5, sin(time)));
@@ -205,7 +209,7 @@ void main( void )
   float cr = 0.2 * cos(0.1 * iGlobalTime);
 	
 	ro = path( time );
-	ta = path( time+5.0 ) - vec3(0.0, 20.0, 0.0);
+	ta = path(time + 5.0) - vec3(0.0, 55.0, 0.0);
 	gro = ro;
 	
 	// build ray
