@@ -33,6 +33,17 @@ struct qwqz_handle_t {
   GLuint g_TimeUniform;
   double t1;
   double t2;
+
+
+  int m_Program2;
+  GLuint g_PositionAttribute2;
+  GLuint g_ResolutionUniform2;
+  GLuint g_TimeUniform2;
+
+  GLuint FramebufferName;
+  GLuint renderedTexture;
+  GLuint depthrenderbuffer;
+  int m_RenderTextureWidth;
 };
 typedef struct qwqz_handle_t * qwqz_handle;
 

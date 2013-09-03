@@ -26,6 +26,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
 	e->m_IsScreenResized = 0;
 	e->m_SimulationTime = 0.0;		
   e->m_Program = 0;
+  e->m_Program2 = 0;
   e->m_EnabledState = 0;
   e->m_Batches = 0;
 
@@ -34,6 +35,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   int l;
   GLuint v = 0;
   GLuint f = 0;
+  GLuint f2 = 0;
   GLuint program = 0;
 
   // Compile the vertex shader
@@ -72,12 +74,35 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
     free(msg);
   }
 
-  if (v && f) {
+  // Compile the texquad shader
+  b = qwqz_load("assets/shaders/texquad.fsh");
+  if (b) {
+    const char *fs = b;
+    LOGV("fragment source: %s\n", fs);
+
+    f2 = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(f2, 1, &fs, NULL);
+    glCompileShader(f2);
+    glGetShaderiv(f2, GL_INFO_LOG_LENGTH, &l);
+    msg = (char *)malloc(sizeof(char) * l);
+    glGetShaderInfoLog(f2, l, NULL, msg);
+    LOGV("fragment shader info: %s\n", msg);
+
+    free(b);
+    free(msg);
+  }
+
+  if (v && f && f2) {
     // Create and link the shader program
     program = glCreateProgram();
     glAttachShader(program, v);
     glAttachShader(program, f);
     e->m_Program = program;
+
+    program = glCreateProgram();
+    glAttachShader(program, v);
+    glAttachShader(program, f2);
+    e->m_Program2 = program;
 
     struct timeval tim;
     gettimeofday(&tim, NULL);
@@ -87,7 +112,41 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
     qwqz_batch_init(e, e->m_Batches[0]);
   }
 
+  // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
+  e->FramebufferName = 0;
+  glGenFramebuffers(1, &e->FramebufferName);
+  glBindFramebuffer(GL_FRAMEBUFFER, e->FramebufferName);
+
+  // The texture we're going to render to
+  e->renderedTexture = 0;
+  glGenTextures(1, &e->renderedTexture);
+
+  // "Bind" the newly created texture : all future texture functions will modify this texture
+  glBindTexture(GL_TEXTURE_2D, e->renderedTexture);
+
+  e->m_RenderTextureWidth = 512;
+  // Give an empty image to OpenGL ( the last "0" )
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, e->m_RenderTextureWidth, e->m_RenderTextureWidth, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+  // Poor filtering. Needed !
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+  // Set "renderedTexture" as our colour attachement #0
+  glFramebufferTextureOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, e->renderedTexture, 0);
+  qwqz_checkgl("glFramebufferTexturOES");
+
+  // Set the list of draw buffers.
+  GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+
   qwqz_checkgl("create");
+
+  // Always check that our framebuffer is ok
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    LOGV("doh\n");
+    return 0;
+  }
 
   return e;
 }
@@ -121,6 +180,7 @@ int qwqz_link(qwqz_handle e) {
   
   char *msg = NULL;
   int l = 0;
+  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
 
   glLinkProgram(e->m_Program);
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
@@ -133,12 +193,31 @@ int qwqz_link(qwqz_handle e) {
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
 
-  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
 
   free(msg);
-  
+
+  //TODO
+
+  glLinkProgram(e->m_Program2);
+  glGetProgramiv(e->m_Program2, GL_INFO_LOG_LENGTH, &l);
+  msg = (char *)malloc(sizeof(char) * l);
+  glGetProgramInfoLog(e->m_Program2, l, NULL, msg);
+
+  glUseProgram(e->m_Program2);
+
+  e->g_PositionAttribute2 = glGetAttribLocation(e->m_Program2, "Position");
+  e->g_ResolutionUniform2 = glGetUniformLocation(e->m_Program2, "iResolution");
+  e->g_TimeUniform2 = glGetUniformLocation(e->m_Program2, "iGlobalTime");
+
+  glVertexAttribPointer(e->g_PositionAttribute2, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glEnableVertexAttribArray(e->g_PositionAttribute2);
+
+  free(msg);
+ 
+  // TODO
+
   e->m_EnabledState = 1;
 
   return 0;
@@ -158,8 +237,28 @@ int qwqz_draw(qwqz_handle e) {
     if (!e->m_EnabledState) {
       qwqz_link(e);
     } else {
-      glUniform2f(e->g_ResolutionUniform, e->m_ScreenWidth, e->m_ScreenHeight);
+      // Render to our framebuffer
+      glBindFramebuffer(GL_FRAMEBUFFER, e->FramebufferName);
+      glViewport(0, 0, e->m_RenderTextureWidth, e->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+
+      glUseProgram(e->m_Program);
+      glUniform2f(e->g_ResolutionUniform, e->m_RenderTextureWidth, e->m_RenderTextureWidth);
       glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
+
+      glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+
+      // Render to the screen
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
+
+      glUseProgram(e->m_Program2);
+      glUniform2f(e->g_ResolutionUniform2, e->m_ScreenWidth, e->m_ScreenHeight);
+      glUniform1f(e->g_TimeUniform2, e->m_SimulationTime);
+
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, e->renderedTexture);
+      glUniform1i(glGetUniformLocation(e->m_Program2, "texture1"), 0);
+       
       glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
     }
   }

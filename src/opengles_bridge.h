@@ -90,6 +90,7 @@
     #define GL_DEPTH_COMPONENT16_OES GL_DEPTH_COMPONENT16
     #define glCheckFramebufferStatusOES glCheckFramebufferStatus
     #define glFramebufferTexture2DOES glFramebufferTexture2D
+    #define glFramebufferTextureOES glFramebufferTexture
     #define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE
     #define glDeleteFramebuffersOES glDeleteFramebuffers
   #else
@@ -108,6 +109,7 @@
     #define GL_DEPTH_COMPONENT16_OES GL_DEPTH_COMPONENT16
     #define glCheckFramebufferStatusOES glCheckFramebufferStatusEXT
     #define glFramebufferTexture2DOES glFramebufferTexture2DEXT
+    #define glFramebufferTextureOES glFramebufferTextureEXT
     #define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE_EXT
     #define glDeleteFramebuffersOES glDeleteFramebuffersEXT
   #endif
