@@ -132,8 +132,9 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
+  //extern void glFramebufferTexture2DEXT(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
   // Set "renderedTexture" as our colour attachement #0
-  glFramebufferTextureOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, e->renderedTexture, 0);
+  glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, e->renderedTexture, 0);
   qwqz_checkgl("glFramebufferTexturOES");
 
   // Set the list of draw buffers.
