@@ -138,8 +138,8 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   qwqz_checkgl("glFramebufferTexturOES");
 
   // Set the list of draw buffers.
-  GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
-  glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+  //GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
+  //glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 
   qwqz_checkgl("create");
 
