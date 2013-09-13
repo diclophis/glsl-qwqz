@@ -126,7 +126,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
 
   e->m_RenderTextureWidth = 512;
   // Give an empty image to OpenGL ( the last "0" )
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, e->m_RenderTextureWidth, e->m_RenderTextureWidth, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, e->m_RenderTextureWidth, e->m_RenderTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
   // Poor filtering. Needed !
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
