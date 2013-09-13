@@ -54,3 +54,4 @@ int qwqz_link(qwqz_handle e);
 int qwqz_draw(qwqz_handle e);
 int qwqz_resize(qwqz_handle e, float width, float height);
 int qwqz_batch_init();
+int qwqz_compile(GLuint type, const char *path);

@@ -38,6 +38,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   GLuint f2 = 0;
   GLuint program = 0;
 
+  /*
   // Compile the vertex shader
   b = qwqz_load(vsh);
   if (b) {
@@ -55,7 +56,10 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
     free(b);
     free(msg);
   }
+  */
+  v = qwqz_compile(GL_VERTEX_SHADER, vsh);
 
+  /*
   // Compile the fragment shader
   b = qwqz_load(fsh);
   if (b) {
@@ -73,7 +77,10 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
     free(b);
     free(msg);
   }
+  */
+  f = qwqz_compile(GL_FRAGMENT_SHADER, fsh);
 
+  /*
   // Compile the texquad shader
   b = qwqz_load("assets/shaders/texquad.fsh");
   if (b) {
@@ -91,6 +98,8 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
     free(b);
     free(msg);
   }
+  */
+  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");
 
   if (v && f && f2) {
     // Create and link the shader program
@@ -336,4 +345,27 @@ int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
   free(ff->m_IndexBuffers);
 
   return 0;
+}
+
+int qwqz_compile(GLuint type, const char *vsh) {
+  int l = 0;
+  GLuint v = 0;
+  char *b = qwqz_load(vsh);
+  char *msg = NULL;
+  if (b) {
+    const char *vs = b;
+    //LOGV("shader source: %s\n", vs);
+    v = glCreateShader(type);
+    glShaderSource(v, 1, &vs, NULL);
+    glCompileShader(v);
+    glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
+    msg = (char *)malloc(sizeof(char) * l);
+    glGetShaderInfoLog(v, l, NULL, msg);
+    LOGV("shader info: %s\n", msg);
+
+    free(b);
+    free(msg);
+  }
+
+  return v;
 }
