@@ -114,8 +114,9 @@ int main(int argc, char** argv) {
   CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval);
 #endif
 
-  impl_main(argc, argv);
-  glutMainLoop();
+  if (0 == impl_main(argc, argv)) {
+    glutMainLoop();
+  }
 
   [pool release];
 

@@ -48,10 +48,10 @@ struct qwqz_handle_t {
 typedef struct qwqz_handle_t * qwqz_handle;
 
 void qwqz_checkgl(const char *s);
-qwqz_handle qwqz_create(const char *vsh, const char *fsh);
+qwqz_handle qwqz_create();
 char *qwqz_load(const char *path);
 int qwqz_link(qwqz_handle e);
 int qwqz_draw(qwqz_handle e);
 int qwqz_resize(qwqz_handle e, float width, float height);
-int qwqz_batch_init();
+int qwqz_batch_init(qwqz_batch ff);
 int qwqz_compile(GLuint type, const char *path);

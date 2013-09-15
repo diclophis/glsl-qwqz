@@ -19,7 +19,7 @@ void qwqz_checkgl(const char *s) {
 }
 
 
-qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
+qwqz_handle qwqz_create() {
   qwqz_handle e = malloc(sizeof(struct qwqz_handle_t));
   e->m_SpriteCount = 0;
 	e->m_IsSceneBuilt = 0;
@@ -29,97 +29,6 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   e->m_Program2 = 0;
   e->m_EnabledState = 0;
   e->m_Batches = 0;
-
-  char *b = NULL;
-  char *msg = NULL;
-  int l;
-  GLuint v = 0;
-  GLuint f = 0;
-  GLuint f2 = 0;
-  GLuint program = 0;
-
-  /*
-  // Compile the vertex shader
-  b = qwqz_load(vsh);
-  if (b) {
-    const char *vs = b;
-    LOGV("vertex source: %s\n", vs);
-
-    v = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(v, 1, &vs, NULL);
-    glCompileShader(v);
-    glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(v, l, NULL, msg);
-    //LOGV("vertex shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-  */
-  v = qwqz_compile(GL_VERTEX_SHADER, vsh);
-
-  /*
-  // Compile the fragment shader
-  b = qwqz_load(fsh);
-  if (b) {
-    const char *fs = b;
-    LOGV("fragment source: %s\n", fs);
-
-    f = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(f, 1, &fs, NULL);
-    glCompileShader(f);
-    glGetShaderiv(f, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(f, l, NULL, msg);
-    LOGV("fragment shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-  */
-  f = qwqz_compile(GL_FRAGMENT_SHADER, fsh);
-
-  /*
-  // Compile the texquad shader
-  b = qwqz_load("assets/shaders/texquad.fsh");
-  if (b) {
-    const char *fs = b;
-    LOGV("fragment source: %s\n", fs);
-
-    f2 = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(f2, 1, &fs, NULL);
-    glCompileShader(f2);
-    glGetShaderiv(f2, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(f2, l, NULL, msg);
-    LOGV("fragment shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-  */
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");
-
-  if (v && f && f2) {
-    // Create and link the shader program
-    program = glCreateProgram();
-    glAttachShader(program, v);
-    glAttachShader(program, f);
-    e->m_Program = program;
-
-    program = glCreateProgram();
-    glAttachShader(program, v);
-    glAttachShader(program, f2);
-    e->m_Program2 = program;
-
-    struct timeval tim;
-    gettimeofday(&tim, NULL);
-    e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
-
-    e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-    qwqz_batch_init(e, e->m_Batches[0]);
-  }
 
   // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
   e->FramebufferName = 0;
@@ -234,45 +143,6 @@ int qwqz_link(qwqz_handle e) {
 }
 
 int qwqz_draw(qwqz_handle e) {
-  {
-    struct timeval tim;
-    gettimeofday(&tim, NULL);
-    e->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
-    float step = e->t2 - e->t1;
-    e->t1 = e->t2;
-    e->m_SimulationTime += step;
-  }
-
-  if (e->m_Batches && e->m_IsScreenResized) {
-    if (!e->m_EnabledState) {
-      qwqz_link(e);
-    } else {
-      // Render to our framebuffer
-      glBindFramebuffer(GL_FRAMEBUFFER, e->FramebufferName);
-      glViewport(0, 0, e->m_RenderTextureWidth, e->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-
-      glUseProgram(e->m_Program);
-      glUniform2f(e->g_ResolutionUniform, e->m_RenderTextureWidth, e->m_RenderTextureWidth);
-      glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
-
-      glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-
-      // Render to the screen
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
-
-      glUseProgram(e->m_Program2);
-      glUniform2f(e->g_ResolutionUniform2, e->m_ScreenWidth, e->m_ScreenHeight);
-      glUniform1f(e->g_TimeUniform2, e->m_SimulationTime);
-
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, e->renderedTexture);
-      glUniform1i(glGetUniformLocation(e->m_Program2, "texture1"), 0);
-       
-      glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-    }
-  }
-
   return 0;
 }
 
@@ -288,7 +158,7 @@ int qwqz_resize(qwqz_handle e, float width, float height) {
   return 0;
 }
 
-int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
+int qwqz_batch_init(qwqz_batch ff) {
 
   int max_frame_count = 1;
 
