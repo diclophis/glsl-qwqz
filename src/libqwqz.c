@@ -25,9 +25,6 @@ qwqz_handle qwqz_create() {
 	e->m_IsSceneBuilt = 0;
 	e->m_IsScreenResized = 0;
 	e->m_SimulationTime = 0.0;		
-  e->m_Program = 0;
-  e->m_Program2 = 0;
-  e->m_EnabledState = 0;
   e->m_Batches = 0;
 
   // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
@@ -95,8 +92,9 @@ char *qwqz_load(const char *path) {
 }
 
 
-int qwqz_link(qwqz_handle e) {
-  
+int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
+  e->m_Program = program;
+
   char *msg = NULL;
   int l = 0;
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
@@ -105,39 +103,22 @@ int qwqz_link(qwqz_handle e) {
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
   msg = (char *)malloc(sizeof(char) * l);
   glGetProgramInfoLog(e->m_Program, l, NULL, msg);
+  LOGV("program info: %s\n", msg);
 
   glUseProgram(e->m_Program);
 
   e->g_PositionAttribute = glGetAttribLocation(e->m_Program, "Position");
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
+  e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
 
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
 
-  free(msg);
-
-  //TODO
-
-  glLinkProgram(e->m_Program2);
-  glGetProgramiv(e->m_Program2, GL_INFO_LOG_LENGTH, &l);
-  msg = (char *)malloc(sizeof(char) * l);
-  glGetProgramInfoLog(e->m_Program2, l, NULL, msg);
-
-  glUseProgram(e->m_Program2);
-
-  e->g_PositionAttribute2 = glGetAttribLocation(e->m_Program2, "Position");
-  e->g_ResolutionUniform2 = glGetUniformLocation(e->m_Program2, "iResolution");
-  e->g_TimeUniform2 = glGetUniformLocation(e->m_Program2, "iGlobalTime");
-
-  glVertexAttribPointer(e->g_PositionAttribute2, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  glEnableVertexAttribArray(e->g_PositionAttribute2);
 
   free(msg);
- 
-  // TODO
 
-  e->m_EnabledState = 1;
+  qwqz_checkgl("linkage_init");
 
   return 0;
 }
@@ -155,6 +136,9 @@ int qwqz_resize(qwqz_handle e, float width, float height) {
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
+
+  qwqz_checkgl("resize");
+
   return 0;
 }
 
@@ -214,6 +198,8 @@ int qwqz_batch_init(qwqz_batch ff) {
   free(ff->m_InterleavedBuffers);
   free(ff->m_IndexBuffers);
 
+  qwqz_checkgl("batch_init");
+
   return 0;
 }
 
@@ -224,7 +210,6 @@ int qwqz_compile(GLuint type, const char *vsh) {
   char *msg = NULL;
   if (b) {
     const char *vs = b;
-    //LOGV("shader source: %s\n", vs);
     v = glCreateShader(type);
     glShaderSource(v, 1, &vs, NULL);
     glCompileShader(v);
@@ -236,6 +221,8 @@ int qwqz_compile(GLuint type, const char *vsh) {
     free(b);
     free(msg);
   }
+
+  qwqz_checkgl("compile");
 
   return v;
 }
