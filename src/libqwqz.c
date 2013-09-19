@@ -36,7 +36,9 @@ qwqz_handle qwqz_create() {
   e->renderedTexture = 0;
   glGenTextures(1, &e->renderedTexture);
 
-  // "Bind" the newly created texture : all future texture functions will modify this texture
+  glActiveTexture(GL_TEXTURE0);
+  //glBindTexture(GL_TEXTURE_2D, qwqz_engine->renderedTexture);
+// "Bind" the newly created texture : all future texture functions will modify this texture
   glBindTexture(GL_TEXTURE_2D, e->renderedTexture);
 
   e->m_RenderTextureWidth = 512;
@@ -51,7 +53,7 @@ qwqz_handle qwqz_create() {
   // Set "renderedTexture" as our colour attachement #0
   glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, e->renderedTexture, 0);
 
-  glBindTexture(GL_TEXTURE_2D, 0);
+  //glBindTexture(GL_TEXTURE_2D, 0);
 
   qwqz_checkgl("glFramebufferTexturOES");
 

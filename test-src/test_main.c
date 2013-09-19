@@ -40,14 +40,12 @@ void impl_draw() {
     glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
     glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_SimulationTime);
-    glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
+    //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
 
-    //glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, qwqz_engine->renderedTexture);
      
     glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+    //glBindTexture(GL_TEXTURE_2D, 0);
   //}
 
   qwqz_draw(qwqz_engine);
