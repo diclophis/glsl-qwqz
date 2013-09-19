@@ -61,6 +61,8 @@ int impl_main(int argc, char** argv) {
   if (argc == 3) {
     qwqz_engine = qwqz_create();
 
+    qwqz_engine->m_RenderTextureWidth = 512;
+
     GLuint v = 0;
     GLuint f = 0;
     GLuint f2 = 0;
@@ -70,6 +72,10 @@ int impl_main(int argc, char** argv) {
     struct timeval tim;
     gettimeofday(&tim, NULL);
     qwqz_engine->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+
+    // render target
+    int renderBufferTexture = qwqz_buffer_texture_init();
+    qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
     //TODO: why does this have to happen before linking?
     qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
@@ -99,3 +105,4 @@ int impl_main(int argc, char** argv) {
 
   return 1;
 }
+
