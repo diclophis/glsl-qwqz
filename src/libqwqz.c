@@ -50,6 +50,9 @@ qwqz_handle qwqz_create() {
   //extern void glFramebufferTexture2DEXT(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
   // Set "renderedTexture" as our colour attachement #0
   glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, e->renderedTexture, 0);
+
+  glBindTexture(GL_TEXTURE_2D, 0);
+
   qwqz_checkgl("glFramebufferTexturOES");
 
   // Set the list of draw buffers.

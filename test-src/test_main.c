@@ -21,8 +21,8 @@ void impl_draw() {
     qwqz_engine->m_SimulationTime += step;
   }
 
-  //TODO: dumbness
-  if (qwqz_engine->m_Linkages && qwqz_engine->m_Batches && qwqz_engine->m_IsScreenResized) {
+  ////TODO: dumbness
+  //if (qwqz_engine->m_Linkages && qwqz_engine->m_Batches && qwqz_engine->m_IsScreenResized) {
     // Render to our framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
     glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
@@ -40,13 +40,15 @@ void impl_draw() {
     glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
     glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_SimulationTime);
-    glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0);
+    glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
 
-    glActiveTexture(GL_TEXTURE0);
+    //glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, qwqz_engine->renderedTexture);
      
     glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-  }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+  //}
 
   qwqz_draw(qwqz_engine);
 }
