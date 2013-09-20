@@ -10,7 +10,7 @@ uniform sampler2D texture1;
 
 void main() {
   vec2 uPos = (gl_FragCoord.xy / iResolution.xy) * 1.0;
-  uPos.x += iGlobalTime;
+  uPos.x += iGlobalTime * 0.1;
   uPos.y *= -1.0;
   gl_FragColor = texture2D(texture1, uPos);
 }
