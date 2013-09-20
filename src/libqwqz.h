@@ -20,25 +20,27 @@ struct qwqz_handle_t {
   int m_SpriteCount;
   int m_IsSceneBuilt;
   int m_IsScreenResized;
-  float m_SimulationTime;
-  int m_Program;
-  int m_EnabledState;
   float m_ScreenWidth;
   float m_ScreenHeight;
   float m_ScreenAspect;
   float m_ScreenHalfHeight;
   struct qwqz_batch_t *m_Batches;
+  struct qwqz_linkage_t *m_Linkages;
+  struct qwqz_timer_t *m_Timers;
+
+
+
+  /*
+  int m_Program;
   GLuint g_PositionAttribute;
   GLuint g_ResolutionUniform;
   GLuint g_TimeUniform;
-  double t1;
-  double t2;
-
 
   int m_Program2;
   GLuint g_PositionAttribute2;
   GLuint g_ResolutionUniform2;
   GLuint g_TimeUniform2;
+  */
 
   GLuint FramebufferName;
   GLuint renderedTexture;
@@ -47,10 +49,33 @@ struct qwqz_handle_t {
 };
 typedef struct qwqz_handle_t * qwqz_handle;
 
+struct qwqz_timer_t {
+  double t1;
+  double t2;
+  float m_SimulationTime;
+};
+typedef struct qwqz_timer_t * qwqz_timer;
+
+struct qwqz_linkage_t {
+  int m_Program;
+  GLuint g_PositionAttribute;
+  GLuint g_ResolutionUniform;
+  GLuint g_TimeUniform;
+  GLuint g_TextureUniform;
+  GLuint g_TextureUniform2;
+};
+typedef struct qwqz_linkage_t * qwqz_linkage;
+
 void qwqz_checkgl(const char *s);
-qwqz_handle qwqz_create(const char *vsh, const char *fsh);
+qwqz_handle qwqz_create();
 char *qwqz_load(const char *path);
-int qwqz_link(qwqz_handle e);
 int qwqz_draw(qwqz_handle e);
 int qwqz_resize(qwqz_handle e, float width, float height);
-int qwqz_batch_init();
+int qwqz_batch_init(qwqz_batch ff);
+int qwqz_linkage_init(GLuint program, qwqz_linkage e);
+int qwqz_compile(GLuint type, const char *path);
+int qwqz_texture_init(GLuint u, const char *path);
+int qwqz_buffer_texture_init();
+int qwqz_buffer_target_init(int texture);
+int qwqz_timer_init(qwqz_timer t);
+void qwqz_tick_timer(qwqz_timer t);

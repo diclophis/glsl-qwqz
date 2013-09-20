@@ -10,6 +10,7 @@
 
 #include "opengles_bridge.h"
 #include "libqwqz.h"
+#include "impl_main.h"
 
 static int kWindowWidth = 1024;
 static int kWindowHeight = 768;
@@ -17,12 +18,10 @@ static bool left_down = false;
 static bool right_down = false;
 static bool reset_down = false;
 static bool debug_down = false;
-static int game_index = 0;
-static qwqz_handle qwqz_engine = NULL;
 
 
 void draw(void) {
-  qwqz_draw(qwqz_engine);
+  impl_draw();
   glutSwapBuffers();
   glutPostRedisplay();
 }
@@ -31,7 +30,7 @@ void draw(void) {
 void resize(int width, int height) {
   kWindowWidth = width;
   kWindowHeight = height;
-  qwqz_resize(qwqz_engine, (float)width, (float)height);
+  impl_resize((float)width, (float)height);
 }
 
 
@@ -86,24 +85,11 @@ void processNormalKeys(unsigned char key, int x, int y) {
         //Engine::CurrentGameCreateFoos();
         //Engine::CurrentGameStart();
       } else if (key == 115) { // s
-        //if (game_index == 2) {
-        //  game_index = 3;
-        //} else {
-        //  game_index = 2;
-        //}
-
-        //game_index++;
-        if (game_index == 5) {
-          game_index = 0;
-        }
-
-        //Engine::Start(game_index, kWindowWidth, kWindowHeight); //, textures, models, levels, sounds, NULL);
       }
     }
     reset_down = !reset_down;
   }
 }
-
 
 
 int main(int argc, char** argv) {
@@ -128,8 +114,7 @@ int main(int argc, char** argv) {
   CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval);
 #endif
 
-  if (argc == 3) {
-    qwqz_engine = qwqz_create(argv[1], argv[2]);
+  if (0 == impl_main(argc, argv)) {
     glutMainLoop();
   }
 

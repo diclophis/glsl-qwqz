@@ -1,2 +1,9 @@
 platforms/osx/build
 platforms/emscripten/build
+.DS_Store
+
+*.pbxuser
+*.perspectivev3
+project.xcworkspace
+xcuserdata
+*.pbxuser

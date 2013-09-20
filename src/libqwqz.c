@@ -2,6 +2,7 @@
 
 #include "opengles_bridge.h"
 #include "libqwqz.h"
+#include "pnglite.h"
 
 void qwqz_checkgl(const char *s) {
   // normally (when no error) just return
@@ -20,137 +21,14 @@ void qwqz_checkgl(const char *s) {
 }
 
 
-qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
+qwqz_handle qwqz_create() {
   qwqz_handle e = malloc(sizeof(struct qwqz_handle_t));
   e->m_SpriteCount = 0;
 	e->m_IsSceneBuilt = 0;
 	e->m_IsScreenResized = 0;
-	e->m_SimulationTime = 0.0;		
-  e->m_Program = 0;
-  e->m_Program2 = 0;
-  e->m_EnabledState = 0;
+	//e->m_SimulationTime = 0.0;		
   e->m_Batches = 0;
 
-  char *b = NULL;
-  char *msg = NULL;
-  int l;
-  GLuint v = 0;
-  GLuint f = 0;
-  GLuint f2 = 0;
-  GLuint program = 0;
-
-  glClearColor(1, 1, 1, 1);
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  // Compile the vertex shader
-  b = qwqz_load(vsh);
-  if (b) {
-    const char *vs = b;
-    LOGV("vertex source: %s\n", vs);
-
-    v = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(v, 1, &vs, NULL);
-    glCompileShader(v);
-    glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(v, l, NULL, msg);
-    LOGV("vertex shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-
-  // Compile the fragment shader
-  b = qwqz_load(fsh);
-  if (b) {
-    const char *fs = b;
-    LOGV("fragment source: %s\n", fs);
-
-    f = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(f, 1, &fs, NULL);
-    glCompileShader(f);
-    glGetShaderiv(f, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(f, l, NULL, msg);
-    LOGV("fragment shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-
-  // Compile the texquad shader
-  b = qwqz_load("assets/shaders/texquad.fsh");
-  if (b) {
-    const char *fs = b;
-    LOGV("fragment source: %s\n", fs);
-
-    f2 = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(f2, 1, &fs, NULL);
-    glCompileShader(f2);
-    glGetShaderiv(f2, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(f2, l, NULL, msg);
-    LOGV("fragment shader info: %s\n", msg);
-
-    free(b);
-    free(msg);
-  }
-
-  if (v && f && f2) {
-    // Create and link the shader program
-    program = glCreateProgram();
-    glAttachShader(program, v);
-    glAttachShader(program, f);
-    e->m_Program = program;
-
-    program = glCreateProgram();
-    glAttachShader(program, v);
-    glAttachShader(program, f2);
-    e->m_Program2 = program;
-
-    struct timeval tim;
-    gettimeofday(&tim, NULL);
-    e->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
-
-    e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-    qwqz_batch_init(e, e->m_Batches[0]);
-  }
-
-  // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
-  e->FramebufferName = 0;
-  glGenFramebuffers(1, &e->FramebufferName);
-  glBindFramebuffer(GL_FRAMEBUFFER, e->FramebufferName);
-
-  // The texture we're going to render to
-  e->renderedTexture = 0;
-  glGenTextures(1, &e->renderedTexture);
-
-  // "Bind" the newly created texture : all future texture functions will modify this texture
-  glBindTexture(GL_TEXTURE_2D, e->renderedTexture);
-
-  e->m_RenderTextureWidth = 512;
-  // Give an empty image to OpenGL ( the last "0" )
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, e->m_RenderTextureWidth, e->m_RenderTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-  // Poor filtering. Needed !
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-  //extern void glFramebufferTexture2DEXT(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
-  // Set "renderedTexture" as our colour attachement #0
-  glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, e->renderedTexture, 0);
-
-  // Set the list of draw buffers.
-  //GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};
-  //glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-
-  qwqz_checkgl("create");
-
-  // Always check that our framebuffer is ok
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    LOGV("doh\n");
-    return 0;
-  }
 
   return e;
 }
@@ -180,8 +58,9 @@ char *qwqz_load(const char *path) {
 }
 
 
-int qwqz_link(qwqz_handle e) {
-  
+int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
+  e->m_Program = program;
+
   char *msg = NULL;
   int l = 0;
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
@@ -190,83 +69,27 @@ int qwqz_link(qwqz_handle e) {
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
   msg = (char *)malloc(sizeof(char) * l);
   glGetProgramInfoLog(e->m_Program, l, NULL, msg);
+  LOGV("program info: %s\n", msg);
 
   glUseProgram(e->m_Program);
 
   e->g_PositionAttribute = glGetAttribLocation(e->m_Program, "Position");
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
+  e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
+  e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
 
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
 
   free(msg);
 
-  //TODO
-
-  glLinkProgram(e->m_Program2);
-  glGetProgramiv(e->m_Program2, GL_INFO_LOG_LENGTH, &l);
-  msg = (char *)malloc(sizeof(char) * l);
-  glGetProgramInfoLog(e->m_Program2, l, NULL, msg);
-
-  glUseProgram(e->m_Program2);
-
-  e->g_PositionAttribute2 = glGetAttribLocation(e->m_Program2, "Position");
-  e->g_ResolutionUniform2 = glGetUniformLocation(e->m_Program2, "iResolution");
-  e->g_TimeUniform2 = glGetUniformLocation(e->m_Program2, "iGlobalTime");
-
-  glVertexAttribPointer(e->g_PositionAttribute2, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  glEnableVertexAttribArray(e->g_PositionAttribute2);
-
-  free(msg);
- 
-  // TODO
-
-  e->m_EnabledState = 1;
+  qwqz_checkgl("linkage_init");
 
   return 0;
 }
 
 int qwqz_draw(qwqz_handle e) {
-  {
-    struct timeval tim;
-    gettimeofday(&tim, NULL);
-    e->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
-    float step = e->t2 - e->t1;
-    e->t1 = e->t2;
-    e->m_SimulationTime += step;
-  }
-
-  if (e->m_Batches && e->m_IsScreenResized) {
-    if (!e->m_EnabledState) {
-      qwqz_link(e);
-    } else {
-      // Render to our framebuffer
-      glBindFramebuffer(GL_FRAMEBUFFER, e->FramebufferName);
-      glViewport(0, 0, e->m_RenderTextureWidth, e->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-
-      glUseProgram(e->m_Program);
-      glUniform2f(e->g_ResolutionUniform, e->m_RenderTextureWidth, e->m_RenderTextureWidth);
-      glUniform1f(e->g_TimeUniform, e->m_SimulationTime);
-
-      glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-
-      // Render to the screen
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
-
-      glUseProgram(e->m_Program2);
-      glUniform2f(e->g_ResolutionUniform2, e->m_ScreenWidth, e->m_ScreenHeight);
-      glUniform1f(e->g_TimeUniform2, e->m_SimulationTime);
-
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, e->renderedTexture);
-      glUniform1i(glGetUniformLocation(e->m_Program2, "texture1"), 0);
-       
-      glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-    }
-  }
-
   return 0;
 }
 
@@ -279,10 +102,13 @@ int qwqz_resize(qwqz_handle e, float width, float height) {
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
+
+  qwqz_checkgl("resize");
+
   return 0;
 }
 
-int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
+int qwqz_batch_init(qwqz_batch ff) {
 
   int max_frame_count = 1;
 
@@ -338,5 +164,161 @@ int qwqz_batch_init(qwqz_handle e, qwqz_batch ff) {
   free(ff->m_InterleavedBuffers);
   free(ff->m_IndexBuffers);
 
+  qwqz_checkgl("batch_init");
+
   return 0;
+}
+
+int qwqz_compile(GLuint type, const char *vsh) {
+  int l = 0;
+  GLuint v = 0;
+  char *b = qwqz_load(vsh);
+  char *msg = NULL;
+  if (b) {
+    const char *vs = b;
+    v = glCreateShader(type);
+    glShaderSource(v, 1, &vs, NULL);
+    glCompileShader(v);
+    glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
+    msg = (char *)malloc(sizeof(char) * l);
+    glGetShaderInfoLog(v, l, NULL, msg);
+    LOGV("shader info: %s\n", msg);
+
+    free(b);
+    free(msg);
+  }
+
+  qwqz_checkgl("compile");
+
+  return v;
+}
+
+
+int qwqz_texture_init(GLuint unit, const char *path) {
+  png_t tex;
+  //char* data = qwqz_load("assets/textures/0.png");
+  FILE *fp = fopen(path, "rb");
+  unsigned char* data;
+  GLuint textureHandle;
+
+  png_init(0, 0);
+  //fseek(m_TextureFileHandles->at(i)->fp, m_TextureFileHandles->at(i)->off, 0);
+  png_open_read(&tex, 0, fp);
+  data = (unsigned char*)malloc(tex.width * tex.height * tex.bpp);
+  for(int i=0; i < tex.width*tex.height*tex.bpp; ++i) {
+    data[i] = 0;
+  }
+  png_get_data(&tex, data);
+
+  //unsigned int* inPixel32;
+  unsigned short* outPixel16;
+
+  void *textureData = data;
+  void *tempData = malloc(tex.height * tex.width * sizeof(unsigned short));
+
+  //inPixel32 = (unsigned int *)textureData;
+  outPixel16 = (unsigned short *)tempData;
+
+  //Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRGGGGBBBBAAAA"
+  for (int i=0; i<(tex.height * tex.width); i++) {
+    unsigned int inP = ((unsigned int *)textureData)[i];
+    outPixel16[i] = ((((inP >> 0) & 0xFF) >> 4) << 12) | ((((inP >> 8) & 0xFF) >> 4) << 8) | ((((inP >> 16) & 0xFF) >> 4) << 4) | ((((inP >> 24) & 0xFF) >> 4) << 0);
+  }
+
+  glGenTextures(1, &textureHandle);
+
+  glActiveTexture(unit);
+  glBindTexture(GL_TEXTURE_2D, textureHandle);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  int useSwizzledBits = 1;
+  if (useSwizzledBits) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.width, tex.height, 0, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, tempData);
+  } else {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.width, tex.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+  }
+  
+  int generateMipMap = 1;
+  if (generateMipMap) {
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }
+
+  free(data);
+  free(tempData);
+
+  qwqz_checkgl("texture_init");
+
+  return textureHandle;
+}
+
+
+int qwqz_buffer_texture_init() {
+  // The texture we're going to render to
+  GLuint renderedTexture = 0;
+  glGenTextures(1, &renderedTexture);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, renderedTexture);
+
+  int m_RenderTextureWidth = 512;
+  // Give an empty image to OpenGL ( the last "0" )
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_RenderTextureWidth, m_RenderTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+  // Poor filtering. Needed !
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+  //glBindTexture(GL_TEXTURE_2D, 0);
+
+  return renderedTexture;
+}
+
+
+int qwqz_buffer_target_init(renderedTexture) {
+
+  // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
+  GLuint FramebufferName = 0;
+  glGenFramebuffers(1, &FramebufferName);
+  glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+
+  // Set "renderedTexture" as our colour attachement #0
+  glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
+
+  qwqz_checkgl("glFramebufferTexturOES");
+
+  qwqz_checkgl("create");
+
+  // Always check that our framebuffer is ok
+  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    LOGV("doh\n");
+    return 0;
+  } else {
+    return FramebufferName;
+  }
+}
+
+
+int qwqz_timer_init(qwqz_timer timer) {
+  timer->m_SimulationTime = 0.0;
+  timer->t1 = 0.0;
+  timer->t2 = 0.0;
+  struct timeval tim;
+  gettimeofday(&tim, NULL);
+  timer->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+  return 0;
+}
+
+
+void qwqz_tick_timer(qwqz_timer timer) {
+  struct timeval tim;
+  gettimeofday(&tim, NULL);
+  timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+  float step = timer->t2 - timer->t1;
+  timer->t1 = timer->t2;
+  timer->m_SimulationTime += step;
 }
