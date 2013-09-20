@@ -8,13 +8,14 @@ void qwqz_checkgl(const char *s) {
   const int lastGlError = glGetError();
   if (lastGlError == GL_NO_ERROR) return;
   
-  LOGV("\n%s caused\n", s);
+  LOGV("\n%s caused %04x %04x\n", s, lastGlError,  GL_INVALID_FRAMEBUFFER_OPERATION_EXT);
   switch (lastGlError)
   {
     case GL_INVALID_ENUM:      LOGV("GL_INVALID_ENUM\n\n");      break;
     case GL_INVALID_VALUE:     LOGV("GL_INVALID_VALUE\n\n");     break;
     case GL_INVALID_OPERATION: LOGV("GL_INVALID_OPERATION\n\n"); break;
     case GL_OUT_OF_MEMORY:     LOGV("GL_OUT_OF_MEMORY\n\n");     break;
+    default: LOGV("unknown %d\n", lastGlError);
   }
 }
 
@@ -38,6 +39,9 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   GLuint f2 = 0;
   GLuint program = 0;
 
+  glClearColor(1, 1, 1, 1);
+  glClear(GL_COLOR_BUFFER_BIT);
+
   // Compile the vertex shader
   b = qwqz_load(vsh);
   if (b) {
@@ -50,7 +54,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
     glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
     msg = (char *)malloc(sizeof(char) * l);
     glGetShaderInfoLog(v, l, NULL, msg);
-    //LOGV("vertex shader info: %s\n", msg);
+    LOGV("vertex shader info: %s\n", msg);
 
     free(b);
     free(msg);
@@ -126,7 +130,7 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
 
   e->m_RenderTextureWidth = 512;
   // Give an empty image to OpenGL ( the last "0" )
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, e->m_RenderTextureWidth, e->m_RenderTextureWidth, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, e->m_RenderTextureWidth, e->m_RenderTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
   // Poor filtering. Needed !
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -135,7 +139,6 @@ qwqz_handle qwqz_create(const char *vsh, const char *fsh) {
   //extern void glFramebufferTexture2DEXT(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
   // Set "renderedTexture" as our colour attachement #0
   glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, e->renderedTexture, 0);
-  qwqz_checkgl("glFramebufferTexturOES");
 
   // Set the list of draw buffers.
   //GLenum DrawBuffers[2] = {GL_COLOR_ATTACHMENT0};

@@ -96,12 +96,21 @@ int main(int argc, char** argv) {
   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(kWindowWidth, kWindowHeight);
   glutCreateWindow("does emscripten GLUT wrapper set window.title?, do I need a title? //TODO");
+  //qwqz_checkgl("b");
+  //qwqz_checkgl("c");
+  //qwqz_checkgl("d");
   glutKeyboardFunc(processNormalKeys);
+  //qwqz_checkgl("e");
   glutKeyboardUpFunc(processNormalKeys);
+  //qwqz_checkgl("f");
   glutMouseFunc(processMouse);
+  //qwqz_checkgl("g");
   glutMotionFunc(processMouseMotion);
+  //qwqz_checkgl("h");
   glutDisplayFunc(draw);
+  //qwqz_checkgl("i");
   glutReshapeFunc(resize);
+  //qwqz_checkgl("j");
 
   if (argc == 3) {
     qwqz_engine = qwqz_create(argv[1], argv[2]);
