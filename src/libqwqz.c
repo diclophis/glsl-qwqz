@@ -25,7 +25,7 @@ qwqz_handle qwqz_create() {
   e->m_SpriteCount = 0;
 	e->m_IsSceneBuilt = 0;
 	e->m_IsScreenResized = 0;
-	e->m_SimulationTime = 0.0;		
+	//e->m_SimulationTime = 0.0;		
   e->m_Batches = 0;
 
 
@@ -299,4 +299,25 @@ int qwqz_buffer_target_init(renderedTexture) {
   } else {
     return FramebufferName;
   }
+}
+
+
+int qwqz_timer_init(qwqz_timer timer) {
+  timer->m_SimulationTime = 0.0;
+  timer->t1 = 0.0;
+  timer->t2 = 0.0;
+  struct timeval tim;
+  gettimeofday(&tim, NULL);
+  timer->t1 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+  return 0;
+}
+
+
+void qwqz_tick_timer(qwqz_timer timer) {
+  struct timeval tim;
+  gettimeofday(&tim, NULL);
+  timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+  float step = timer->t2 - timer->t1;
+  timer->t1 = timer->t2;
+  timer->m_SimulationTime += step;
 }

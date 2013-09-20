@@ -20,17 +20,15 @@ struct qwqz_handle_t {
   int m_SpriteCount;
   int m_IsSceneBuilt;
   int m_IsScreenResized;
-  float m_SimulationTime;
   float m_ScreenWidth;
   float m_ScreenHeight;
   float m_ScreenAspect;
   float m_ScreenHalfHeight;
   struct qwqz_batch_t *m_Batches;
   struct qwqz_linkage_t *m_Linkages;
+  struct qwqz_timer_t *m_Timers;
 
 
-  double t1;
-  double t2;
 
   /*
   int m_Program;
@@ -50,6 +48,13 @@ struct qwqz_handle_t {
   int m_RenderTextureWidth;
 };
 typedef struct qwqz_handle_t * qwqz_handle;
+
+struct qwqz_timer_t {
+  double t1;
+  double t2;
+  float m_SimulationTime;
+};
+typedef struct qwqz_timer_t * qwqz_timer;
 
 struct qwqz_linkage_t {
   int m_Program;
@@ -71,3 +76,5 @@ int qwqz_compile(GLuint type, const char *path);
 int qwqz_texture_init();
 int qwqz_buffer_texture_init();
 int qwqz_buffer_target_init(int texture);
+int qwqz_timer_init(qwqz_timer t);
+void qwqz_tick_timer(qwqz_timer t);
