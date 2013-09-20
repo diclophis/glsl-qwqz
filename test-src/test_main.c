@@ -10,7 +10,7 @@
 static qwqz_handle qwqz_engine = NULL;
 
 
-void impl_draw() {
+int impl_draw() {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
   glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
@@ -37,8 +37,8 @@ void impl_draw() {
 }
 
 
-void impl_resize(int width, int height) {
-  qwqz_resize(qwqz_engine, (float)width, (float)height);
+int impl_resize(int width, int height) {
+  qwqz_resize(qwqz_engine, width, height);
 }
 
 

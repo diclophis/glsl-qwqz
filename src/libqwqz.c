@@ -93,7 +93,7 @@ int qwqz_draw(qwqz_handle e) {
   return 0;
 }
 
-int qwqz_resize(qwqz_handle e, float width, float height) {
+int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenWidth = width;
   e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;

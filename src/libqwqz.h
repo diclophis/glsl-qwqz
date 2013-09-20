@@ -70,7 +70,7 @@ void qwqz_checkgl(const char *s);
 qwqz_handle qwqz_create();
 char *qwqz_load(const char *path);
 int qwqz_draw(qwqz_handle e);
-int qwqz_resize(qwqz_handle e, float width, float height);
+int qwqz_resize(qwqz_handle e, int width, int height);
 int qwqz_batch_init(qwqz_batch ff);
 int qwqz_linkage_init(GLuint program, qwqz_linkage e);
 int qwqz_compile(GLuint type, const char *path);
