@@ -27,9 +27,6 @@ raptor_island: $(build) $(objects)
 $(build)/%.o: %.m
 	$(CC) $(CXXFLAGS) -c $< -o $@
 
-#$(build)/%.o: ../../src/%.cpp
-#	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 $(build)/%.o: ../../$(impl)-src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 

@@ -88,6 +88,7 @@
         manifestFile.onload = function(e) {
           var assets = Module.FS_createFolder("/", "assets", true, true);
           var shaders = Module.FS_createFolder(assets, "shaders", true, true);
+          var textures = Module.FS_createFolder(assets, "textures", true, true);
           var lines = this.response.split("\n");
           for (i in lines) {
             (function() {

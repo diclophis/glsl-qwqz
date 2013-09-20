@@ -3,37 +3,40 @@
 TOTAL_ALLOWED_RAM=65536
 
 build=build
+impl=$(IMPL)
 
 CXXFLAGS=\
 -O2 \
 -I../../src \
+-I../../$(impl)-src \
 -DDESKTOP \
 
 CFLAGS=$(CXXFLAGS)
 
-objects = $(patsubst %,build/%, $(patsubst %.cpp,%.bc, $(wildcard *.cpp)))
-objects += $(patsubst %,build/%, $(patsubst %.c,%.bc, $(wildcard *.c)))
-objects += $(patsubst ../../src/%,build/%, $(patsubst %.cpp,%.bc, $(wildcard ../../src/*.cpp)))
-objects += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/*.c)))
+objects   = $(patsubst %,build/%, $(patsubst %.c,%.bc, $(wildcard *.c)))
+objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/zlib/*.c)))
+objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/*.c)))
+objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../$(impl)-src/*.c)))
 
 HASH=qwqz-$(shell md5sum build/raptor_island.js | cut -d" " -f 1)
 hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
 raptor_island: $(build) $(objects)
 	EMCC_DEBUG=1 $(CXX) -O2 $(objects) -o $(build)/raptor_island.bc
-	EMCC_DEBUG=1 $(CXX) -O2 -s ASM_JS=1 -s GL_DEBUG=0 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js
+	EMCC_DEBUG=1 $(CXX) -O2 -s ASM_JS=1 -s VERBOSE=1 -s GL_DEBUG=0 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js
 
 $(build)/%.bc: %.c
 	EMCC_DEBUG=1 $(CC) $(CXXFLAGS) -c $< -o $@
 
-$(build)/%.bc: ../../src/%.cpp
-	EMCC_DEBUG=1 $(CXX) $(CXXFLAGS) -c $< -o $@
+$(build)/%.bc: ../../$(impl)-src/%.c
+	EMCC_DEBUG=1 $(CC) $(CFLAGS) -c $< -o $@
 
 $(build)/%.bc: ../../src/%.c
 	EMCC_DEBUG=1 $(CC) $(CFLAGS) -c $< -o $@
 
 $(build):
 	mkdir -p $(build)
+	mkdir -p $(build)/contrib/zlib
 
 clean:
 	touch /tmp/emscripten_temp && rm -R /tmp/emscripten_temp
