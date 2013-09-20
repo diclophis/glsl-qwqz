@@ -8,6 +8,7 @@
 
 #include "opengles_bridge.h"
 #include "libqwqz.h"
+#include "impl_main.h"
 
 static int game_index = 0;
 static int left_down = 0;
@@ -27,7 +28,7 @@ void draw(void) {
 void resize(int width, int height) {
   kWindowWidth = width;
   kWindowHeight = height;
-  impl_resize((float)width, (float)height);
+  impl_resize(width, height);
 }
 
 
