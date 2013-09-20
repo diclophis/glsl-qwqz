@@ -77,6 +77,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
+  e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
 
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
@@ -193,10 +194,10 @@ int qwqz_compile(GLuint type, const char *vsh) {
 }
 
 
-int qwqz_texture_init() {
+int qwqz_texture_init(GLuint unit, const char *path) {
   png_t tex;
   //char* data = qwqz_load("assets/textures/0.png");
-  FILE *fp = fopen("assets/textures/0.png", "rb");
+  FILE *fp = fopen(path, "rb");
   unsigned char* data;
   GLuint textureHandle;
 
@@ -226,7 +227,7 @@ int qwqz_texture_init() {
 
   glGenTextures(1, &textureHandle);
 
-  glActiveTexture(GL_TEXTURE0);
+  glActiveTexture(unit);
   glBindTexture(GL_TEXTURE_2D, textureHandle);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
