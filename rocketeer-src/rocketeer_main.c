@@ -23,6 +23,7 @@ int impl_draw() {
 
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform2, 1);
+  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform3, 2);
    
   glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 
@@ -47,6 +48,7 @@ int impl_main(int argc, char** argv) {
 
   int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/textures/0.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
+  int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
 
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);

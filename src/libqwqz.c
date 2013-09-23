@@ -78,6 +78,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
+  e->g_TextureUniform3 = glGetUniformLocation(e->m_Program, "texture3");
 
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);

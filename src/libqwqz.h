@@ -63,6 +63,7 @@ struct qwqz_linkage_t {
   GLuint g_TimeUniform;
   GLuint g_TextureUniform;
   GLuint g_TextureUniform2;
+  GLuint g_TextureUniform3;
 };
 typedef struct qwqz_linkage_t * qwqz_linkage;
 
