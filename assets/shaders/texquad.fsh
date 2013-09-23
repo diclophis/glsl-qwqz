@@ -42,14 +42,16 @@ void main() {
   //if (alpha > 0.0 && alpha < 1.0)
   //{
 
-      float s = step(0.1, 1.0 - t3.a);
+      float s = step(0.01, 1.0 - t3.a);
       total.rgb = mix(t3.rgb, u_borderColor.rgb, s);
-      //total.a = smoothstep(0.1, 0.9, clamp(t3.a * (2.0 + sin(iGlobalTime)), 0.1, 0.9));
+      //total.rgb = t3.rgb;
+      //total.a = 1.0; //t3.a;
+
       if (t3.a == 1.0) {
         total.a = t3.a;
       } else {
         //total.a = smoothstep(0.01, 0.5, clamp(smoothstep(0.1, 0.9, t3.a) * (1.0 + (sin(iGlobalTime))), 0.0, 1.0));
-        total.a = (clamp(t3.a * (1.0 + (sin(iGlobalTime * 10.0))), 0.0, 1.0));
+        total.a = smoothstep(0.4, 0.8, ((t3.a * (1.0 + (sin(iGlobalTime * 2.0)))))); //, 0.0, 1.0));
       }
 
       /*
