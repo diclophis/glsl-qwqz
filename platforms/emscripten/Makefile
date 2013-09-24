@@ -11,6 +11,7 @@ CXXFLAGS=\
 -I../../src/contrib \
 -I../../$(impl)-src \
 -DDESKTOP \
+-DNDEBUG
 
 CFLAGS=$(CXXFLAGS)
 
