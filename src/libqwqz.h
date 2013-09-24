@@ -53,6 +53,7 @@ struct qwqz_timer_t {
   double t1;
   double t2;
   float m_SimulationTime;
+  float step;
 };
 typedef struct qwqz_timer_t * qwqz_timer;
 

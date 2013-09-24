@@ -322,4 +322,5 @@ void qwqz_tick_timer(qwqz_timer timer) {
   float step = timer->t2 - timer->t1;
   timer->t1 = timer->t2;
   timer->m_SimulationTime += step;
+  timer->step = step;
 }
