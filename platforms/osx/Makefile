@@ -10,6 +10,7 @@ CXXFLAGS=\
 -pg \
 -I/usr/include \
 -I../../src \
+-I../../src/contrib \
 -I../../$(impl)-src \
 -DDESKTOP
 
@@ -18,6 +19,7 @@ LDFLAGS=-m64 -arch x86_64 -framework OpenGL -framework GLUT -framework Foundatio
 
 objects   = $(patsubst %,build/%, $(patsubst %.m,%.o, $(wildcard *.m)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/zlib/*.c)))
+objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/chipmunk/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/*.c)))
 objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../$(impl)-src/*.c)))
 
@@ -36,6 +38,7 @@ $(build)/%.o: ../../src/%.c
 $(build):
 	mkdir -p $(build)
 	mkdir -p $(build)/contrib/zlib
+	mkdir -p $(build)/contrib/chipmunk
 
 clean:
 	touch $(build) && rm -R $(build)
