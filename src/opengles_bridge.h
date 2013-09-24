@@ -112,6 +112,8 @@
     #define glFramebufferTexture2DOES glFramebufferTexture2DEXT
     #define GL_FRAMEBUFFER_COMPLETE_OES GL_FRAMEBUFFER_COMPLETE_EXT
     #define glDeleteFramebuffersOES glDeleteFramebuffersEXT
+    #define glGenVertexArraysOES glGenVertexArraysAPPLE
+    #define glBindVertexArrayOES glBindVertexArrayAPPLE
   #endif
 #endif
 

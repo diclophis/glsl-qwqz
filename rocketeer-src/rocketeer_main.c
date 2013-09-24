@@ -121,10 +121,10 @@ int impl_draw() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
-  //glMatrixMode(GL_MODELVIEW);
-  //glLoadIdentity();
-  //glTranslatef((GLfloat)translate.x, (GLfloat)translate.y, 0.0f);
-  //glScalef((GLfloat)scale, (GLfloat)scale, 1.0f);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  glTranslatef((GLfloat)translate.x, (GLfloat)translate.y, 0.0f);
+  glScalef((GLfloat)scale, (GLfloat)scale, 1.0f);
 
   cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
 
@@ -163,9 +163,9 @@ int impl_resize(int width, int height) {
   ChipmunkDebugDrawPointLineScale = scale;
   glLineWidth((GLfloat)scale);
 
-  //glMatrixMode(GL_PROJECTION);
-  //glLoadIdentity();
-  //gluOrtho2D(-hw, hw, -hh, hh);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluOrtho2D(-hw, hw, -hh, hh);
 
   return 0;
 }

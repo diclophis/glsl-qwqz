@@ -4,6 +4,8 @@
 #include "libqwqz.h"
 #include "pnglite.h"
 
+static GLfloat ProjectionMatrix[16];
+
 void qwqz_checkgl(const char *s) {
   // normally (when no error) just return
   const int lastGlError = glGetError();
@@ -94,6 +96,41 @@ int qwqz_draw(qwqz_handle e) {
   return 0;
 }
 
+void identity(GLfloat *m) {
+  GLfloat t[16] = {
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0,
+  };
+  
+  memcpy(m, t, sizeof(t));
+}
+
+void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
+  
+  GLfloat deltaX = right - left;
+  GLfloat deltaY = top - bottom;
+  GLfloat deltaZ = farZ - nearZ;
+  
+  GLfloat tmp[16];
+  identity(tmp);
+  
+  if ((deltaX == 0) || (deltaY == 0) || (deltaZ == 0)) {
+    LOGV("Invalid ortho\n");
+    return;
+  }
+  
+  tmp[0] = (2.0 / deltaX);
+  tmp[12] = (-(right + left) / deltaX);
+  tmp[5] = (2.0 / deltaY);
+  tmp[13] = (-(top + bottom) / deltaY);
+  tmp[10] = (-2.0 / deltaZ);
+  tmp[14] = (-(nearZ + farZ) / deltaZ);
+  
+  memcpy(m, tmp, sizeof(tmp));
+}
+
 int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenWidth = width;
   e->m_ScreenHeight = height;
@@ -103,6 +140,19 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
+
+
+  float m_Zoom2 = 1.0;
+
+  float a = (-e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
+  float b = (e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
+  float c = (-e->m_ScreenHalfHeight) * m_Zoom2;
+  float d = e->m_ScreenHalfHeight * m_Zoom2;
+  float ee = 10.0;
+  float ff = -10.0;
+
+  identity(ProjectionMatrix);
+  ortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
 
   qwqz_checkgl("resize");
 
