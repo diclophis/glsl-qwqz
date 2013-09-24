@@ -22,6 +22,7 @@ int kWindowHeight = 0;
 void draw(void) {
   impl_draw();
   glutPostRedisplay();
+	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
