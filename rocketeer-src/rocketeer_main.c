@@ -5,10 +5,114 @@
 #include "libqwqz.h"
 #include "impl_main.h"
 #include "rocketeer_main.h"
+#include "chipmunk/chipmunk.h"
+#include "chipmunk/ChipmunkDebugDraw.h"
+#include "chipmunk/ChipmunkDemoShaderSupport.h"
+
+
+#define GRABBABLE_MASK_BIT (1<<31)
+cpShapeFilter GRAB_FILTER = {CP_NO_GROUP, GRABBABLE_MASK_BIT, GRABBABLE_MASK_BIT};
+cpShapeFilter NOT_GRABBABLE_FILTER = {CP_NO_GROUP, ~GRABBABLE_MASK_BIT, ~GRABBABLE_MASK_BIT};
+
+void ChipmunkDemoDefaultDrawImpl(cpSpace *space);
+
+static void
+DrawCircle(cpVect p, cpFloat a, cpFloat r, cpSpaceDebugColor outline, cpSpaceDebugColor fill, cpDataPointer *data)
+{ChipmunkDebugDrawCircle(p, a, r, outline, fill);}
+
+static void
+DrawSegment(cpVect a, cpVect b, cpSpaceDebugColor color, cpDataPointer *data)
+{ChipmunkDebugDrawSegment(a, b, color);}
+
+static void
+DrawFatSegment(cpVect a, cpVect b, cpFloat r, cpSpaceDebugColor outline, cpSpaceDebugColor fill, cpDataPointer *data)
+{ChipmunkDebugDrawFatSegment(a, b, r, outline, fill);}
+
+static void
+DrawPolygon(int count, const cpVect *verts, cpFloat r, cpSpaceDebugColor outline, cpSpaceDebugColor fill, cpDataPointer *data)
+{ChipmunkDebugDrawPolygon(count, verts, r, outline, fill);}
+
+static void
+DrawDot(cpFloat size, cpVect pos, cpSpaceDebugColor color, cpDataPointer *data)
+{ChipmunkDebugDrawDot(size, pos, color);}
+
+static cpSpaceDebugColor
+ColorForShape(cpShape *shape, cpDataPointer *data)
+{
+  if(cpShapeGetSensor(shape)){
+    return LAColor(1.0f, 0.1f);
+  } else {
+    cpBody *body = shape->body;
+    
+    if(cpBodyIsSleeping(body)){
+      return LAColor(0.2f, 1.0f);
+    } else if(body->node.idleTime > shape->space->sleepTimeThreshold) {
+      return LAColor(0.66f, 1.0f);
+    } else {
+      uint32_t val = (uint32_t)shape->hashid;
+      
+      // scramble the bits up using Robert Jenkins' 32 bit integer hash function
+      val = (val+0x7ed55d16) + (val<<12);
+      val = (val^0xc761c23c) ^ (val>>19);
+      val = (val+0x165667b1) + (val<<5);
+      val = (val+0xd3a2646c) ^ (val<<9);
+      val = (val+0xfd7046c5) + (val<<3);
+      val = (val^0xb55a4f09) ^ (val>>16);
+      
+      GLfloat r = (GLfloat)((val>>0) & 0xFF);
+      GLfloat g = (GLfloat)((val>>8) & 0xFF);
+      GLfloat b = (GLfloat)((val>>16) & 0xFF);
+      
+      GLfloat max = (GLfloat)cpfmax(cpfmax(r, g), b);
+      GLfloat min = (GLfloat)cpfmin(cpfmin(r, g), b);
+      GLfloat intensity = (cpBodyIsStatic(body) ? 0.15f : 0.75f);
+      
+      // Saturate and scale the color
+      if(min == max){
+        return RGBAColor(intensity, 0.0f, 0.0f, 1.0f);
+      } else {
+        GLfloat coef = (GLfloat)intensity/(max - min);
+        return RGBAColor(
+          (r - min)*coef,
+          (g - min)*coef,
+          (b - min)*coef,
+          1.0f
+        );
+      }
+    }
+  }
+}
+
+
+void
+ChipmunkDemoDefaultDrawImpl(cpSpace *space)
+{
+  cpSpaceDebugDrawOptions drawOptions = {
+    DrawCircle,
+    DrawSegment,
+    DrawFatSegment,
+    DrawPolygon,
+    DrawDot,
+
+    CP_SPACE_DEBUG_DRAW_SHAPES | CP_SPACE_DEBUG_DRAW_CONSTRAINTS | CP_SPACE_DEBUG_DRAW_COLLISION_POINTS,
+
+    {200.0f/255.0f, 210.0f/255.0f, 230.0f/255.0f, 1.0f},
+    ColorForShape,
+    {0.0f, 0.75f, 0.0f, 1.0f},
+    {1.0f, 0.0f, 0.0f, 1.0f},
+  };
+
+  cpSpaceDebugDraw(space, &drawOptions);
+}
+
+
 
 
 static qwqz_handle qwqz_engine = NULL;
+static cpSpace *space;
 
+cpVect translate = {0, 0};
+cpFloat scale = 1.0;
 
 int impl_draw() {
 
@@ -17,6 +121,23 @@ int impl_draw() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  glTranslatef((GLfloat)translate.x, (GLfloat)translate.y, 0.0f);
+  glScalef((GLfloat)scale, (GLfloat)scale, 1.0f);
+
+  cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
+
+  // Draw the renderer contents and reset it back to the last tick's state.
+  ChipmunkDebugDrawClearRenderer();
+  ChipmunkDebugDrawPushRenderer();
+
+  ChipmunkDemoDefaultDrawImpl(space);
+
+  ChipmunkDebugDrawFlushRenderer();
+  ChipmunkDebugDrawPopRenderer();
+
+  /*
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
@@ -26,6 +147,7 @@ int impl_draw() {
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform3, 2);
    
   glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+  */
 
   return 0;
 }
@@ -33,6 +155,17 @@ int impl_draw() {
 
 int impl_resize(int width, int height) {
   qwqz_resize(qwqz_engine, width, height);
+
+  float scale = (float)cpfmin(width/640.0, height/480.0);
+  float hw = width*(0.5f/scale);
+  float hh = height*(0.5f/scale);
+
+  ChipmunkDebugDrawPointLineScale = scale;
+  glLineWidth((GLfloat)scale);
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluOrtho2D(-hw, hw, -hh, hh);
 
   return 0;
 }
@@ -68,7 +201,76 @@ int impl_main(int argc, char** argv) {
     glAttachShader(program, f2);
     qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
 
-    LOGV("impled %d\n", t0);
+    ChipmunkDebugDrawInit();
+
+    //space = 
+
+space = cpSpaceNew();
+cpSpaceSetIterations(space, 30);
+cpSpaceSetGravity(space, cpv(0, -100));
+cpSpaceSetSleepTimeThreshold(space, 0.5f);
+cpSpaceSetCollisionSlop(space, 0.5f);
+
+cpBody *body, *staticBody = cpSpaceGetStaticBody(space);
+cpShape *shape;
+
+// Create segments around the edge of the screen.
+shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(-320,240), 0.0f));
+cpShapeSetElasticity(shape, 1.0f);
+cpShapeSetFriction(shape, 1.0f);
+cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(320,-240), cpv(320,240), 0.0f));
+cpShapeSetElasticity(shape, 1.0f);
+cpShapeSetFriction(shape, 1.0f);
+cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(320,-240), 0.0f));
+cpShapeSetElasticity(shape, 1.0f);
+cpShapeSetFriction(shape, 1.0f);
+cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+// Add lots of boxes.
+for(int i=0; i<14; i++){
+  for(int j=0; j<=i; j++){
+    body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(1.0f, 30.0f, 30.0f)));
+    cpBodySetPosition(body, cpv(j*32 - i*16, 300 - i*32));
+    
+    shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.5f));
+    cpShapeSetElasticity(shape, 0.0f);
+    cpShapeSetFriction(shape, 0.8f);
+  }
+}
+
+// Add a ball to make things more interesting
+cpFloat radius = 15.0f;
+body = cpSpaceAddBody(space, cpBodyNew(10.0f, cpMomentForCircle(10.0f, 0.0f, radius, cpvzero)));
+cpBodySetPosition(body, cpv(0, -240 + radius+5));
+
+shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
+cpShapeSetElasticity(shape, 0.0f);
+cpShapeSetFriction(shape, 0.9f);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    LOGV("impled %d %d %d\n", t0, t1, t2);
   
     return 0;
   }
