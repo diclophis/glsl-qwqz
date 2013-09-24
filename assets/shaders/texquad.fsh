@@ -39,7 +39,7 @@ void main() {
   if (t3.a == 1.0) {
     total.a = t3.a;
   } else {
-    total.a = smoothstep(0.4, 0.8, ((t3.a * (1.0 + (sin(iGlobalTime * 2.0))))));
+    total.a = smoothstep(0.4, 0.8, ((t3.a * (1.0 + (sin(iGlobalTime * 10.0))))));
   }
 
   gl_FragColor = vec4(0.0, 1.0, 0.0, 0.5);
