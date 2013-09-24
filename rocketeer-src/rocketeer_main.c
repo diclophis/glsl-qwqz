@@ -196,10 +196,10 @@ int impl_main(int argc, char** argv) {
   f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");
 
   if (v && f2) {
-    program = glCreateProgram();
-    glAttachShader(program, v);
-    glAttachShader(program, f2);
-    qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
+    //program = glCreateProgram();
+    //glAttachShader(program, v);
+    //glAttachShader(program, f2);
+    //qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
 
     ChipmunkDebugDrawInit();
 
