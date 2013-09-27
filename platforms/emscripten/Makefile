@@ -18,6 +18,7 @@ CFLAGS=$(CXXFLAGS)
 objects   = $(patsubst %,build/%, $(patsubst %.c,%.bc, $(wildcard *.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/zlib/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/chipmunk/*.c)))
+objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/spine/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/*.c)))
 objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../$(impl)-src/*.c)))
 
@@ -41,6 +42,7 @@ $(build):
 	mkdir -p $(build)
 	mkdir -p $(build)/contrib/zlib
 	mkdir -p $(build)/contrib/chipmunk
+	mkdir -p $(build)/contrib/spine
 
 clean:
 	touch /tmp/emscripten_temp && rm -R /tmp/emscripten_temp
