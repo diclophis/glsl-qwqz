@@ -109,8 +109,8 @@ static cpSpace *space;
 static cpVect translate = {0, 0};
 static cpFloat scale = 1.0;
 static int doPhysics = 0;
-static int doSpine = 1;
-static int doMenu = 1;
+static int doSpine = 0;
+static int doMenu = 0;
 
 
 int impl_draw() {
@@ -150,6 +150,9 @@ int impl_draw() {
     glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
   }
 
+  if (doSpine) {
+  }
+
   return 0;
 }
 
@@ -186,6 +189,56 @@ int impl_main(int argc, char** argv) {
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
   int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
 
+  if (doPhysics) {
+    ChipmunkDebugDrawInit();
+
+    space = cpSpaceNew();
+    cpSpaceSetIterations(space, 30);
+    cpSpaceSetGravity(space, cpv(0, -100));
+    cpSpaceSetSleepTimeThreshold(space, 0.5f);
+    cpSpaceSetCollisionSlop(space, 0.5f);
+
+    cpBody *body, *staticBody = cpSpaceGetStaticBody(space);
+    cpShape *shape;
+
+    // Create segments around the edge of the screen.
+    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(-320,240), 0.0f));
+    cpShapeSetElasticity(shape, 1.0f);
+    cpShapeSetFriction(shape, 1.0f);
+    cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(320,-240), cpv(320,240), 0.0f));
+    cpShapeSetElasticity(shape, 1.0f);
+    cpShapeSetFriction(shape, 1.0f);
+    cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(320,-240), 0.0f));
+    cpShapeSetElasticity(shape, 1.0f);
+    cpShapeSetFriction(shape, 1.0f);
+    cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+    // Add lots of boxes.
+    for(int i=0; i<14; i++){
+      for(int j=0; j<=i; j++){
+        body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(1.0f, 30.0f, 30.0f)));
+        cpBodySetPosition(body, cpv(j*32 - i*16, 300 - i*32));
+        
+        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.5f));
+        cpShapeSetElasticity(shape, 0.0f);
+        cpShapeSetFriction(shape, 0.8f);
+      }
+    }
+
+    // Add a ball to make things more interesting
+    cpFloat radius = 15.0f;
+    body = cpSpaceAddBody(space, cpBodyNew(10.0f, cpMomentForCircle(10.0f, 0.0f, radius, cpvzero)));
+    cpBodySetPosition(body, cpv(0, -240 + radius+5));
+
+    shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
+    cpShapeSetElasticity(shape, 0.0f);
+    cpShapeSetFriction(shape, 0.9f);
+  }
+
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
@@ -195,71 +248,23 @@ int impl_main(int argc, char** argv) {
 
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
 
-  v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");
+  if (doMenu) {
+    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
+    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");
 
-  if (v && f2) {
-    if (doMenu) {
-      program = glCreateProgram();
-      glAttachShader(program, v);
-      glAttachShader(program, f2);
-      qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
-    }
-
-    if (doPhysics) {
-      ChipmunkDebugDrawInit();
-
-      space = cpSpaceNew();
-      cpSpaceSetIterations(space, 30);
-      cpSpaceSetGravity(space, cpv(0, -100));
-      cpSpaceSetSleepTimeThreshold(space, 0.5f);
-      cpSpaceSetCollisionSlop(space, 0.5f);
-
-      cpBody *body, *staticBody = cpSpaceGetStaticBody(space);
-      cpShape *shape;
-
-      // Create segments around the edge of the screen.
-      shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(-320,240), 0.0f));
-      cpShapeSetElasticity(shape, 1.0f);
-      cpShapeSetFriction(shape, 1.0f);
-      cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
-
-      shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(320,-240), cpv(320,240), 0.0f));
-      cpShapeSetElasticity(shape, 1.0f);
-      cpShapeSetFriction(shape, 1.0f);
-      cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
-
-      shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(320,-240), 0.0f));
-      cpShapeSetElasticity(shape, 1.0f);
-      cpShapeSetFriction(shape, 1.0f);
-      cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
-
-      // Add lots of boxes.
-      for(int i=0; i<14; i++){
-        for(int j=0; j<=i; j++){
-          body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(1.0f, 30.0f, 30.0f)));
-          cpBodySetPosition(body, cpv(j*32 - i*16, 300 - i*32));
-          
-          shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.5f));
-          cpShapeSetElasticity(shape, 0.0f);
-          cpShapeSetFriction(shape, 0.8f);
-        }
+    if (v && f2) {
+      if (doMenu) {
+        program = glCreateProgram();
+        glAttachShader(program, v);
+        glAttachShader(program, f2);
+        qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
       }
 
-      // Add a ball to make things more interesting
-      cpFloat radius = 15.0f;
-      body = cpSpaceAddBody(space, cpBodyNew(10.0f, cpMomentForCircle(10.0f, 0.0f, radius, cpvzero)));
-      cpBodySetPosition(body, cpv(0, -240 + radius+5));
 
-      shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
-      cpShapeSetElasticity(shape, 0.0f);
-      cpShapeSetFriction(shape, 0.9f);
+      LOGV("impled %d %d %d\n", t0, t1, t2);
+    
     }
-
-    LOGV("impled %d %d %d\n", t0, t1, t2);
-  
-    return 0;
   }
 
-  return 1;
+  return 0;
 }
