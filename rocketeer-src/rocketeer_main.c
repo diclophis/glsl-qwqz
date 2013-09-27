@@ -5,9 +5,28 @@
 #include "libqwqz.h"
 #include "impl_main.h"
 #include "rocketeer_main.h"
+
 #include "chipmunk/chipmunk.h"
 #include "chipmunk/ChipmunkDebugDraw.h"
 #include "chipmunk/ChipmunkDemoShaderSupport.h"
+
+#include <spine/spine.h>
+#include <spine/extension.h>
+
+
+void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
+	self->rendererObject = 0;
+	self->width = 123;
+	self->height = 456;
+  LOGV("_AtlasPage_createTexture: %s\n", path);
+}
+
+void _AtlasPage_disposeTexture (AtlasPage* self) {
+}
+
+char* _Util_readFile (const char* path, int* length) {
+	return _readFile(path, length);
+}
 
 
 #define GRABBABLE_MASK_BIT (1<<31)
@@ -109,8 +128,12 @@ static cpSpace *space;
 static cpVect translate = {0, 0};
 static cpFloat scale = 1.0;
 static int doPhysics = 0;
-static int doSpine = 0;
+static int doSpine = 1;
 static int doMenu = 0;
+static Skeleton* skeleton;
+static AnimationStateData* stateData;
+static AnimationState* state;
+static float verticeBuffer[8];
 
 
 int impl_draw() {
@@ -151,6 +174,19 @@ int impl_draw() {
   }
 
   if (doSpine) {
+    AnimationState_update(state, qwqz_engine->m_Timers[0].step);
+    AnimationState_apply(state, skeleton);
+    Skeleton_updateWorldTransform(skeleton);
+
+    for (int i=0; i<skeleton->slotCount; i++) {
+      Slot *s = skeleton->drawOrder[i];
+      Attachment *ra = s->attachment;
+      if (ra->type == ATTACHMENT_REGION) {
+        //void RegionAttachment_computeVertices (RegionAttachment* self, float x, float y, Bone* bone, float* vertices);
+        RegionAttachment_computeVertices((RegionAttachment *)ra, 0.0, 0.0, s->bone, verticeBuffer);
+        LOGV("%f %f %f\n", qwqz_engine->m_Timers[0].step, verticeBuffer[0], verticeBuffer[0]);
+      }
+    }
   }
 
   return 0;
@@ -264,6 +300,38 @@ int impl_main(int argc, char** argv) {
       LOGV("impled %d %d %d\n", t0, t1, t2);
     
     }
+  }
+
+  if (doSpine) {
+    Atlas* atlas = Atlas_readAtlasFile("assets/spine/spineboy.atlas");
+    printf("First region name: %s, x: %d, y: %d\n", atlas->regions->name, atlas->regions->x, atlas->regions->y);
+    printf("First page name: %s, size: %d, %d\n", atlas->pages->name, atlas->pages->width, atlas->pages->height);
+
+    SkeletonJson* json = SkeletonJson_create(atlas);
+    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/spineboy.json");
+
+    //if (!skeletonData) printf("Error: %s\n", json->error);
+    //printf("Default skin name: %s\n", skeletonData->defaultSkin->name);
+
+    skeleton = Skeleton_create(skeletonData);
+
+    //Animation* animation = SkeletonData_findAnimation(skeletonData, "walk");
+    //if (!animation) printf("Error: %s\n", json->error);
+    //printf("Animation timelineCount: %d\n", animation->timelineCount);
+
+    stateData = AnimationStateData_create(skeletonData);
+    state = AnimationState_create(stateData);
+
+    AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
+    AnimationStateData_setMixByName(stateData, "jump", "walk", 0.4);
+
+    AnimationState_setAnimationByName(state, "walk", 1);
+
+
+    //Skeleton_dispose(skeleton);
+    //SkeletonData_dispose(skeletonData);
+    //SkeletonJson_dispose(json);
+    //Atlas_dispose(atlas);
   }
 
   return 0;
