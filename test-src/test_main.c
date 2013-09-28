@@ -53,9 +53,12 @@ int impl_draw() {
   glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
   glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
+
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+
+  translate(NULL, 0, 0, 0);
 
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
@@ -69,6 +72,8 @@ int impl_draw() {
   glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
   glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
+
+  translate(NULL, 0, 0, 0);
 
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
    
