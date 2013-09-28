@@ -73,6 +73,7 @@ struct qwqz_linkage_t {
   GLuint g_TextureUniform;
   GLuint g_TextureUniform2;
   GLuint g_TextureUniform3;
+  GLuint ModelViewProjectionMatrix_location;
 };
 typedef struct qwqz_linkage_t * qwqz_linkage;
 
@@ -94,4 +95,4 @@ int qwqz_buffer_texture_init();
 int qwqz_buffer_target_init(int texture);
 int qwqz_timer_init(qwqz_timer t);
 void qwqz_tick_timer(qwqz_timer t);
-void translate(float *m, float x, float y, float z);
+void translate(qwqz_linkage e, float *m, float x, float y, float z);

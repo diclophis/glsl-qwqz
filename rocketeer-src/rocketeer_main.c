@@ -145,7 +145,7 @@ int impl_draw() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
-  translate(NULL, 0, 0, 0);
+  translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
   if (doPhysics) {
     glMatrixMode(GL_MODELVIEW);

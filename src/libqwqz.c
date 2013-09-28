@@ -5,7 +5,6 @@
 #include "pnglite.h"
 
 static GLfloat ProjectionMatrix[16];
-static GLuint ModelViewProjectionMatrix_location;
 
 void qwqz_checkgl(const char *s) {
   // normally (when no error) just return
@@ -86,14 +85,13 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_TextureAttribute = glGetAttribLocation(e->m_Program, "Texture");
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
 
-
-  GLuint ModelViewProjectionMatrix_location = glGetUniformLocation(e->m_Program, "ModelViewProjectionMatrix");
-  glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+  e->ModelViewProjectionMatrix_location = glGetUniformLocation(e->m_Program, "ModelViewProjectionMatrix");
+  glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
 
   qwqz_checkgl("linkage_init");
-  LOGV("GET %d %d %d\n", e->m_Program, e->g_TimeUniform, ModelViewProjectionMatrix_location);
+  LOGV("GET %d %d %d\n", e->m_Program, e->g_TimeUniform, e->ModelViewProjectionMatrix_location);
 
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
@@ -127,12 +125,12 @@ void identity(GLfloat *m) {
   memcpy(m, t, sizeof(t));
 }
 
-void translate(GLfloat *m, float tx, float ty, float tz) {
+void translate(qwqz_linkage e, GLfloat *m, float tx, float ty, float tz) {
     ProjectionMatrix[12] += (ProjectionMatrix[0] * tx + ProjectionMatrix[4] * ty + ProjectionMatrix[8] * tz);
     ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
     ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
     ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
-    glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+    glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 }
 
 void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
