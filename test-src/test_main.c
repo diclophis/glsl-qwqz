@@ -32,22 +32,28 @@ int impl_draw() {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+
   verticeBuffer[0] = -1.0;
   verticeBuffer[1] = -1.0;
+
   verticeBuffer[2] = -1.0;
   verticeBuffer[3] = 1.0;
+
   verticeBuffer[4] = 1.0;
   verticeBuffer[5] = 1.0;
+
   verticeBuffer[6] = 1.0;
   verticeBuffer[7] = -1.0;
-  uvBuffer[0] = -1.0;
-  uvBuffer[1] = -1.0;
-  uvBuffer[2] = -1.0;
-  uvBuffer[3] = 1.0;
-  uvBuffer[4] = 1.0;
-  uvBuffer[5] = 1.0;
-  uvBuffer[6] = 1.0;
-  uvBuffer[7] = -1.0;
+
+  uvBuffer[0] = 0.0;
+  uvBuffer[1] = 0.0;
+  uvBuffer[2] = 0.0;
+  uvBuffer[3] = 0.0;
+  uvBuffer[4] = 0.0;
+  uvBuffer[5] = 0.0;
+  uvBuffer[6] = 0.0;
+  uvBuffer[7] = 0.0;
+
   qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
 
   glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
@@ -108,7 +114,7 @@ int impl_main(int argc, char** argv) {
 
     //TODO: why does this have to happen before linking?
     qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-    qwqz_batch_init(&qwqz_engine->m_Batches[0]);
+    qwqz_batch_init(&qwqz_engine->m_Batches[0], 1);
 
     qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 

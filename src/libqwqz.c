@@ -22,6 +22,8 @@ void qwqz_checkgl(const char *s) {
     default: LOGV("unknown %d\n", lastGlError); return;
   }
 
+  LOGV("exit!\n");
+
   exit(1);
 }
 
@@ -36,9 +38,6 @@ qwqz_handle qwqz_create() {
 
   e->g_lastElementBuffer = -1;
   e->g_lastInterleavedBuffer = -1;
-
-
-
 
   return e;
 }
@@ -184,7 +183,7 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   return 0;
 }
 
-int qwqz_batch_init(qwqz_batch ff) {
+int qwqz_batch_init(qwqz_batch ff, int count) {
 
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
   ff->m_Stride = size_of_sprite;
@@ -195,7 +194,7 @@ int qwqz_batch_init(qwqz_batch ff) {
   ff->m_numIndexBuffers = 1;
   ff->m_IndexBuffers = (GLuint *)malloc(sizeof(GLuint) * (ff->m_numIndexBuffers));
 
-  ff->m_numSprites = 18; // TODO: bone count!!!!
+  ff->m_numSprites = count; // TODO: bone count!!!!
   int max_frame_count = ff->m_numSprites;
   ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * ff->m_numSprites * 4);
   GLushort *indices = (GLushort *)malloc(max_frame_count * 6 * sizeof(GLushort));
@@ -252,11 +251,19 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   qwqz_checkgl("wtf");
 
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
+  LOGV("buffering %d\n", interleaved_buffer_size);
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
   
   qwqz_checkgl("wtf2");
+ 
   
+  // 1st [mode] parameter is what kind of primitive to render.
+  // 2nd [count] parameter should be the number of elements to render. ie. the number of vertices
+  // 3rd [type] parameter should be the type of the value in the 4th parameter.. can ONLY be either
+  //  GL_UNSIGNED_BYTE or GL_UNSIGNED_SHORT or GL_UNSIGNED_INT
+  // 4th [indices] parameter is a pointer to where the indices are stored.
+
   glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 }
 

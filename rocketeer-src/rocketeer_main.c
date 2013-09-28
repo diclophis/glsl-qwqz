@@ -293,7 +293,7 @@ int impl_main(int argc, char** argv) {
 
   //TODO: why does this have to happen before linking?
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[0]);
+  qwqz_batch_init(&qwqz_engine->m_Batches[0], 18);
 
   int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/elle.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
