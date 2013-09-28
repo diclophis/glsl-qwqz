@@ -91,6 +91,10 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
+
+  qwqz_checkgl("linkage_init");
+  LOGV("GET %d %d\n", e->m_Program, e->g_TimeUniform);
+
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
   e->g_TextureUniform3 = glGetUniformLocation(e->m_Program, "texture3");

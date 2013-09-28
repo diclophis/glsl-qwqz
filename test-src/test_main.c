@@ -79,6 +79,8 @@ int impl_draw() {
   glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
 
+  LOGV("%d %d\n", qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Linkages[1].g_TimeUniform);
+
   translate(NULL, 0, 0, 0);
 
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
