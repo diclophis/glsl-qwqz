@@ -5,8 +5,9 @@ precision highp float;
 uniform float iGlobalTime;
 uniform vec2 iResolution;
 
-void main() {
-  vec2 uPos = (gl_FragCoord.xy / iResolution.xy) * 1.0;
+uniform sampler2D texture1;
+varying vec2 OutTexture;
 
-  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+void main() {
+  gl_FragColor = texture2D(texture1, OutTexture);
 }

@@ -83,6 +83,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   glUseProgram(e->m_Program);
 
   e->g_PositionAttribute = glGetAttribLocation(e->m_Program, "Position");
+  e->g_TextureAttribute = glGetAttribLocation(e->m_Program, "Texture");
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
@@ -92,12 +93,8 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
 
-  //TODO
-  //glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, ff->m_Stride, (char *)NULL + (0));
-  //glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, ff->m_Stride, (char *)NULL + (2 * sizeof(GLshort)));
-
-  //glEnableVertexAttribArray(sf->g_PositionAttribute);
-  //glEnableVertexAttribArray(sf->g_TextureAttribute);
+  glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+  glEnableVertexAttribArray(e->g_TextureAttribute);
 
   free(msg);
 
@@ -209,29 +206,6 @@ int qwqz_batch_init(qwqz_batch ff) {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_frame_count * 6 * sizeof(GLshort), indices, GL_DYNAMIC_DRAW);
   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-  /*
-  ff->m_Sprites[0].vertex[0] = -1.0;
-  ff->m_Sprites[0].vertex[1] = -1.0;
-
-  ff->m_Sprites[1].vertex[0] = -1.0;
-  ff->m_Sprites[1].vertex[1] = 1.0;
-
-  ff->m_Sprites[2].vertex[0] = 1.0;
-  ff->m_Sprites[2].vertex[1] = 1.0;
-
-  ff->m_Sprites[3].vertex[0] = 1.0;
-  ff->m_Sprites[3].vertex[1] = -1.0;
-
-  verticeBuffer[0] = -1.0;
-  verticeBuffer[1] = -1.0;
-  verticeBuffer[2] = -1.0;
-  verticeBuffer[3] = 1.0;
-  verticeBuffer[4] = 1.0;
-  verticeBuffer[5] = 1.0;
-  verticeBuffer[6] = 1.0;
-  verticeBuffer[7] = -1.0;
-  */
-
   qwqz_checkgl("batch_init");
 
   return 0;
@@ -248,110 +222,35 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
-    //LOGV("abc %d\n", e->g_lastElementBuffer);
   }
 
   if (1 || ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
     e->g_lastInterleavedBuffer = ff->m_InterleavedBuffers[0];
     //glBindBuffer(GL_ARRAY_BUFFER, e->g_lastInterleavedBuffer);
-    //LOGV("efg %d\n", e->g_lastInterleavedBuffer);
   }
 
   qwqz_checkgl("wtf");
 
-  //size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
-  //glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW); // GL_STATIC_DRAW might be faster...
-  //glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
-
-  //LOGV("render: %d\n", ff->m_numSpritesBatched);
-
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
-  //glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
   
-  //if (!sf->m_EnabledStates) {
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    //glActiveTexture(GL_TEXTURE0);
-    //glEnableVertexAttribArray(sf->g_PositionAttribute);
-    //glEnableVertexAttribArray(sf->g_TextureAttribute);
-  //  sf->m_EnabledStates = true;
-  //}
-
-  //LOGV("render: %d\n", ff->m_numSpritesBatched);
   qwqz_checkgl("wtf2");
   
   glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-
-  //LOGV("render: %d\n", ff->m_numSpritesBatched);
 }
-
 
 
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv) {
   for (int i=0; i<4; i++) {
     int batched_times_four = (ff->m_numSpritesBatched * 4) + i;
     
-    //ff->m_Sprites[(batched_times_four)].vertex[0] = 0;
+    ff->m_Sprites[(batched_times_four)].vertex[0] = vertices[0 + (i * 2)];
+    ff->m_Sprites[(batched_times_four)].vertex[1] = vertices[1 + (i * 2)];
     
-    ff->m_Sprites[(batched_times_four)].vertex[0] = vertices[0 + (i * 2)]; //(x + m_Position[0]);
-    ff->m_Sprites[(batched_times_four)].vertex[1] = vertices[1 + (i * 2)]; //(y + m_Position[1]);
-    //LOGV("%f %f\n", uv[0 + (i * 2)], uv[1 + (i * 2)]);
-    
-    ff->m_Sprites[(batched_times_four)].texture[0] = 0.0; //uv[0 + (i * 2)];
-    ff->m_Sprites[(batched_times_four)].texture[1] = 0.0; //uv[1 + (i * 2)];
+    ff->m_Sprites[(batched_times_four)].texture[0] = uv[0 + (i * 2)];
+    ff->m_Sprites[(batched_times_four)].texture[1] = uv[1 + (i * 2)];
   }
-
-  /*
-  ff->m_Sprites[0].vertex[0] = -1.0;
-  ff->m_Sprites[0].vertex[1] = -1.0;
-  ff->m_Sprites[1].vertex[0] = -1.0;
-  ff->m_Sprites[1].vertex[1] = 1.0;
-  ff->m_Sprites[2].vertex[0] = 1.0;
-  ff->m_Sprites[2].vertex[1] = 1.0;
-  ff->m_Sprites[3].vertex[0] = 1.0;
-  ff->m_Sprites[3].vertex[1] = -1.0;
-  */
-
-  for (int i=0; i<4; i++) {
-    ff->m_Sprites[(i)].texture[0] = 0.0; //uv[0 + (i * 2)];
-    ff->m_Sprites[(i)].texture[1] = 0.0; //uv[1 + (i * 2)];
-  }
-
-  /*
-  verticeBuffer[0] = -1.0;
-  verticeBuffer[1] = -1.0;
-  verticeBuffer[2] = -1.0;
-  verticeBuffer[3] = 1.0;
-  verticeBuffer[4] = 1.0;
-  verticeBuffer[5] = 1.0;
-  verticeBuffer[6] = 1.0;
-  verticeBuffer[7] = -1.0;
-  */
-
-  //LOGV("added\n");
-
-
-      //attachment.rendererObject.page.rendererObject,
-      //ff->m_Sprites[cbi].vertex[0] = vertices[0];
-
-      /*
-      vertices[1],
-      vertices[6],
-      vertices[7],
-      vertices[2],
-      vertices[3],
-      vertices[4],
-      vertices[5],
-      //skeleton.r * slot.r,
-      //skeleton.g * slot.g,
-      //skeleton.b * slot.b,
-      //skeleton.a * slot.a,
-      uvs[0], uvs[1],
-      uvs[4], uvs[5]
-      */
 
   ff->m_numSpritesBatched++;
   
@@ -462,8 +361,6 @@ int qwqz_buffer_texture_init() {
   // Poor filtering. Needed !
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-  //glBindTexture(GL_TEXTURE_2D, 0);
 
   return renderedTexture;
 }

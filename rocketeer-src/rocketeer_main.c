@@ -16,8 +16,9 @@
 
 void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
 	self->rendererObject = 0;
-	self->width = 123;
-	self->height = 456;
+  // size is important!!
+	self->width = 256;
+	self->height = 256;
   LOGV("_AtlasPage_createTexture: %s\n", path);
 }
 
@@ -308,12 +309,13 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
   qwqz_batch_init(&qwqz_engine->m_Batches[0]);
 
+  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/spineboy.png");
+  int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
+  int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
+
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
 
   if (doMenu) {
-    int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/textures/0.png");
-    int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
-    int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");

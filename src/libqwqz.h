@@ -67,6 +67,7 @@ typedef struct qwqz_timer_t * qwqz_timer;
 struct qwqz_linkage_t {
   int m_Program;
   GLuint g_PositionAttribute;
+  GLuint g_TextureAttribute;
   GLuint g_ResolutionUniform;
   GLuint g_TimeUniform;
   GLuint g_TextureUniform;
