@@ -185,7 +185,7 @@ int qwqz_batch_init(qwqz_batch ff) {
   ff->m_numIndexBuffers = 1;
   ff->m_IndexBuffers = (GLuint *)malloc(sizeof(GLuint) * (ff->m_numIndexBuffers));
 
-  ff->m_numSprites = 1; // TODO: bone count!!!!
+  ff->m_numSprites = 18; // TODO: bone count!!!!
   int max_frame_count = ff->m_numSprites;
   ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * ff->m_numSprites * 4);
   GLushort *indices = (GLushort *)malloc(max_frame_count * 6 * sizeof(GLushort));
@@ -291,7 +291,6 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
 
 
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv) {
-  /*
   for (int i=0; i<4; i++) {
     int batched_times_four = (ff->m_numSpritesBatched * 4) + i;
     
@@ -304,19 +303,17 @@ void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *col
     ff->m_Sprites[(batched_times_four)].texture[0] = 0.0; //uv[0 + (i * 2)];
     ff->m_Sprites[(batched_times_four)].texture[1] = 0.0; //uv[1 + (i * 2)];
   }
-  */
 
+  /*
   ff->m_Sprites[0].vertex[0] = -1.0;
   ff->m_Sprites[0].vertex[1] = -1.0;
-
   ff->m_Sprites[1].vertex[0] = -1.0;
   ff->m_Sprites[1].vertex[1] = 1.0;
-
   ff->m_Sprites[2].vertex[0] = 1.0;
   ff->m_Sprites[2].vertex[1] = 1.0;
-
   ff->m_Sprites[3].vertex[0] = 1.0;
   ff->m_Sprites[3].vertex[1] = -1.0;
+  */
 
   for (int i=0; i<4; i++) {
     ff->m_Sprites[(i)].texture[0] = 0.0; //uv[0 + (i * 2)];
