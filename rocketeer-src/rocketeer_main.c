@@ -142,6 +142,8 @@ int impl_draw() {
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
@@ -178,8 +180,8 @@ int impl_draw() {
   }
 
   if (doSpine) {
-    skeleton->root->scaleX = 2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime);
-    skeleton->root->scaleY = 2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime);
+    skeleton->root->scaleX = 1.0 + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+    skeleton->root->scaleY = 1.0 + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
 
     AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
     AnimationState_apply(state, skeleton);
@@ -340,7 +342,7 @@ int impl_main(int argc, char** argv) {
     AnimationState_setAnimationByName(state, "run", 1);
 
 
-    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
+    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
 
     if (v && f2) {

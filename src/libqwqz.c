@@ -253,7 +253,6 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   qwqz_checkgl("wtf");
 
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
-  LOGV("buffering %d\n", interleaved_buffer_size);
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
   
