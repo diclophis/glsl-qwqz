@@ -297,7 +297,7 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
   qwqz_batch_init(&qwqz_engine->m_Batches[0], 18);
 
-  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/elle.png");
+  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/spineboy.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
   int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
 
@@ -317,12 +317,12 @@ int impl_main(int argc, char** argv) {
   }
 
   if (doSpine) {
-    Atlas* atlas = Atlas_readAtlasFile("assets/spine/elle.atlas");
+    Atlas* atlas = Atlas_readAtlasFile("assets/spine/spineboy.atlas");
     //printf("First region name: %s, x: %d, y: %d\n", atlas->regions->name, atlas->regions->x, atlas->regions->y);
     //printf("First page name: %s, size: %d, %d\n", atlas->pages->name, atlas->pages->width, atlas->pages->height);
 
     SkeletonJson* json = SkeletonJson_create(atlas);
-    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/elle.json");
+    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/spineboy.json");
 
     //if (!skeletonData) printf("Error: %s\n", json->error);
     //printf("Default skin name: %s\n", skeletonData->defaultSkin->name);
@@ -339,7 +339,7 @@ int impl_main(int argc, char** argv) {
     //AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
     //AnimationStateData_setMixByName(stateData, "jump", "walk", 0.4);
 
-    AnimationState_setAnimationByName(state, "run", 1);
+    AnimationState_setAnimationByName(state, "walk", 1);
 
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
