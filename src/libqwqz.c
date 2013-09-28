@@ -93,7 +93,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
 
   qwqz_checkgl("linkage_init");
-  LOGV("GET %d %d\n", e->m_Program, e->g_TimeUniform);
+  LOGV("GET %d %d %d\n", e->m_Program, e->g_TimeUniform, ModelViewProjectionMatrix_location);
 
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
@@ -261,7 +261,6 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   
   qwqz_checkgl("wtf2");
  
-  
   // 1st [mode] parameter is what kind of primitive to render.
   // 2nd [count] parameter should be the number of elements to render. ie. the number of vertices
   // 3rd [type] parameter should be the type of the value in the 4th parameter.. can ONLY be either
