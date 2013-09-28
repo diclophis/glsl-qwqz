@@ -179,28 +179,12 @@ int impl_draw() {
     AnimationState_apply(state, skeleton);
     Skeleton_updateWorldTransform(skeleton);
 
-    /* 
-    // full screen quad
-    qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-    verticeBuffer[0] = -1.0;
-    verticeBuffer[1] = -1.0;
-    verticeBuffer[2] = -1.0;
-    verticeBuffer[3] = 1.0;
-    verticeBuffer[4] = 1.0;
-    verticeBuffer[5] = 1.0;
-    verticeBuffer[6] = 1.0;
-    verticeBuffer[7] = -1.0;
-    qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, NULL);
-    */
-
     qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
     for (int i=0; i<skeleton->slotCount; i++) {
       Slot *s = skeleton->drawOrder[i];
       RegionAttachment *ra = (RegionAttachment *)s->attachment;
       if (s->attachment->type == ATTACHMENT_REGION) {
-        //void RegionAttachment_computeVertices (RegionAttachment* self, float x, float y, Bone* bone, float* vertices);
         RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
-        //LOGV("%d %f %f %f\n", i, qwqz_engine->m_Timers[0].step, verticeBuffer[0], verticeBuffer[0]);
         qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
       }
     }

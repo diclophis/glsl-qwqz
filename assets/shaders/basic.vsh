@@ -9,8 +9,8 @@ varying vec2 OutTexture;
 
 void main() {
   vec2 p = Position;
-  p.x = 0.001 * Position.x;
-  p.y = (0.001 * Position.y) - 0.5;
+  p.x = 0.01 * Position.x;
+  p.y = (0.01 * Position.y) - 0.5;
   gl_Position = vec4(p, 1.0, 1.0);
 
   OutTexture = Texture;
