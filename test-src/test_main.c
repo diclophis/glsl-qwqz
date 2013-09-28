@@ -5,9 +5,26 @@
 #include "libqwqz.h"
 #include "impl_main.h"
 #include "test_main.h"
+#include <spine/spine.h>
+#include <spine/extension.h>
 
 
 static qwqz_handle qwqz_engine = NULL;
+static float verticeBuffer[8];
+
+void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
+	self->rendererObject = 0;
+	self->width = 123;
+	self->height = 456;
+  LOGV("_AtlasPage_createTexture: %s\n", path);
+}
+
+void _AtlasPage_disposeTexture (AtlasPage* self) {
+}
+
+char* _Util_readFile (const char* path, int* length) {
+	return _readFile(path, length);
+}
 
 
 int impl_draw() {
@@ -30,10 +47,28 @@ int impl_draw() {
   glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
   glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
-   
-  glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 
+  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+    
+  verticeBuffer[0] = -1.0;
+  verticeBuffer[1] = -1.0;
+
+  verticeBuffer[2] = -1.0;
+  verticeBuffer[3] = 1.0;
+
+  verticeBuffer[4] = 1.0;
+  verticeBuffer[5] = 1.0;
+
+  verticeBuffer[6] = 1.0;
+  verticeBuffer[7] = -1.0;
+
+  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, NULL);
+  qwqz_batch_end(&qwqz_engine->m_Batches[0]);
+  qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+   
   qwqz_draw(qwqz_engine);
+
+  return 0;
 }
 
 

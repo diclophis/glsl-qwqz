@@ -178,15 +178,47 @@ int impl_draw() {
     AnimationState_apply(state, skeleton);
     Skeleton_updateWorldTransform(skeleton);
 
+    qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+    
+verticeBuffer[0] = -1.0;
+verticeBuffer[1] = -1.0;
+
+verticeBuffer[2] = -1.0;
+verticeBuffer[3] = 1.0;
+
+verticeBuffer[4] = 1.0;
+verticeBuffer[5] = 1.0;
+
+verticeBuffer[6] = 1.0;
+verticeBuffer[7] = -1.0;
+
+    qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, NULL);
+    qwqz_batch_end(&qwqz_engine->m_Batches[0]);
+
+    /*
     for (int i=0; i<skeleton->slotCount; i++) {
       Slot *s = skeleton->drawOrder[i];
-      Attachment *ra = s->attachment;
-      if (ra->type == ATTACHMENT_REGION) {
+      RegionAttachment *ra = (RegionAttachment *)s->attachment;
+      if (s->attachment->type == ATTACHMENT_REGION) {
         //void RegionAttachment_computeVertices (RegionAttachment* self, float x, float y, Bone* bone, float* vertices);
-        RegionAttachment_computeVertices((RegionAttachment *)ra, 0.0, 0.0, s->bone, verticeBuffer);
-        LOGV("%f %f %f\n", qwqz_engine->m_Timers[0].step, verticeBuffer[0], verticeBuffer[0]);
+        RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+        //LOGV("%d %f %f %f\n", i, qwqz_engine->m_Timers[0].step, verticeBuffer[0], verticeBuffer[0]);
+        qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
       }
     }
+    */
+
+    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+    glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+
+    //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
+    //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform2, 1);
+    //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform3, 2);
+    //glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+
+    qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+
   }
 
   return 0;
@@ -221,9 +253,6 @@ int impl_main(int argc, char** argv) {
   GLuint f2 = 0;
   GLuint program = 0;
 
-  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/textures/0.png");
-  int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
-  int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
 
   if (doPhysics) {
     ChipmunkDebugDrawInit();
@@ -285,6 +314,10 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
 
   if (doMenu) {
+    int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/textures/0.png");
+    int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
+    int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
+
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");
 
@@ -298,7 +331,6 @@ int impl_main(int argc, char** argv) {
 
 
       LOGV("impled %d %d %d\n", t0, t1, t2);
-    
     }
   }
 
@@ -332,6 +364,16 @@ int impl_main(int argc, char** argv) {
     //SkeletonData_dispose(skeletonData);
     //SkeletonJson_dispose(json);
     //Atlas_dispose(atlas);
+
+    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
+    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
+
+    if (v && f2) {
+      program = glCreateProgram();
+      glAttachShader(program, v);
+      glAttachShader(program, f2);
+      qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
+    }
   }
 
   return 0;
