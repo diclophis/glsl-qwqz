@@ -193,7 +193,7 @@ int impl_draw() {
     glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-    //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
+    glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
     //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform2, 1);
     //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform3, 2);
     //glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
