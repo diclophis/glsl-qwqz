@@ -30,6 +30,17 @@ char* _Util_readFile (const char* path, int* length) {
 int impl_draw() {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
+  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  verticeBuffer[0] = -1.0;
+  verticeBuffer[1] = -1.0;
+  verticeBuffer[2] = -1.0;
+  verticeBuffer[3] = 1.0;
+  verticeBuffer[4] = 1.0;
+  verticeBuffer[5] = 1.0;
+  verticeBuffer[6] = 1.0;
+  verticeBuffer[7] = -1.0;
+  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, NULL);
+
   glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
   glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
@@ -37,7 +48,9 @@ int impl_draw() {
   glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-  glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+  qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+
+  //glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 
   // Render to the screen
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -48,22 +61,6 @@ int impl_draw() {
   glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
 
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-    
-  verticeBuffer[0] = -1.0;
-  verticeBuffer[1] = -1.0;
-
-  verticeBuffer[2] = -1.0;
-  verticeBuffer[3] = 1.0;
-
-  verticeBuffer[4] = 1.0;
-  verticeBuffer[5] = 1.0;
-
-  verticeBuffer[6] = 1.0;
-  verticeBuffer[7] = -1.0;
-
-  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, NULL);
-  qwqz_batch_end(&qwqz_engine->m_Batches[0]);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
    
   qwqz_draw(qwqz_engine);

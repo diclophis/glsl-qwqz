@@ -178,24 +178,21 @@ int impl_draw() {
     AnimationState_apply(state, skeleton);
     Skeleton_updateWorldTransform(skeleton);
 
+    /* 
+    // full screen quad
     qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-    
-verticeBuffer[0] = -1.0;
-verticeBuffer[1] = -1.0;
-
-verticeBuffer[2] = -1.0;
-verticeBuffer[3] = 1.0;
-
-verticeBuffer[4] = 1.0;
-verticeBuffer[5] = 1.0;
-
-verticeBuffer[6] = 1.0;
-verticeBuffer[7] = -1.0;
-
+    verticeBuffer[0] = -1.0;
+    verticeBuffer[1] = -1.0;
+    verticeBuffer[2] = -1.0;
+    verticeBuffer[3] = 1.0;
+    verticeBuffer[4] = 1.0;
+    verticeBuffer[5] = 1.0;
+    verticeBuffer[6] = 1.0;
+    verticeBuffer[7] = -1.0;
     qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, NULL);
-    qwqz_batch_end(&qwqz_engine->m_Batches[0]);
+    */
 
-    /*
+    qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
     for (int i=0; i<skeleton->slotCount; i++) {
       Slot *s = skeleton->drawOrder[i];
       RegionAttachment *ra = (RegionAttachment *)s->attachment;
@@ -206,7 +203,6 @@ verticeBuffer[7] = -1.0;
         qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
       }
     }
-    */
 
     glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -228,11 +224,12 @@ verticeBuffer[7] = -1.0;
 int impl_resize(int width, int height) {
   qwqz_resize(qwqz_engine, width, height);
 
-  float scale = (float)cpfmin(width/640.0, height/480.0);
-  float hw = width*(0.5f/scale);
-  float hh = height*(0.5f/scale);
 
   if (doPhysics) {
+    float scale = (float)cpfmin(width/640.0, height/480.0);
+    float hw = width*(0.5f/scale);
+    float hh = height*(0.5f/scale);
+
     ChipmunkDebugDrawPointLineScale = scale;
     glLineWidth((GLfloat)scale);
 

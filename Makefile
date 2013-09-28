@@ -1,7 +1,7 @@
 # OSX Makefile
 
 rocketeer:
-	cd platforms/osx && IMPL=rocketeer make clean
+	#cd platforms/osx && IMPL=rocketeer make clean
 	cd platforms/osx && IMPL=rocketeer make
 	platforms/osx/build/raptor_island
 

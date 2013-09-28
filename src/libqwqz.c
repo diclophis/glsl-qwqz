@@ -18,8 +18,10 @@ void qwqz_checkgl(const char *s) {
     case GL_INVALID_VALUE:     LOGV("GL_INVALID_VALUE\n\n");     break;
     case GL_INVALID_OPERATION: LOGV("GL_INVALID_OPERATION\n\n"); break;
     case GL_OUT_OF_MEMORY:     LOGV("GL_OUT_OF_MEMORY\n\n");     break;
-    default: LOGV("unknown %d\n", lastGlError);
+    default: LOGV("unknown %d\n", lastGlError); return;
   }
+
+  exit(1);
 }
 
 
@@ -33,6 +35,9 @@ qwqz_handle qwqz_create() {
 
   e->g_lastElementBuffer = -1;
   e->g_lastInterleavedBuffer = -1;
+
+
+
 
   return e;
 }
@@ -162,9 +167,9 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
 
   identity(ProjectionMatrix);
   ortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
-  */
 
   qwqz_checkgl("resize");
+  */
 
   return 0;
 }
@@ -180,7 +185,7 @@ int qwqz_batch_init(qwqz_batch ff) {
   ff->m_numIndexBuffers = 1;
   ff->m_IndexBuffers = (GLuint *)malloc(sizeof(GLuint) * (ff->m_numIndexBuffers));
 
-  ff->m_numSprites = 18; // TODO: bone count!!!!
+  ff->m_numSprites = 1; // TODO: bone count!!!!
   int max_frame_count = ff->m_numSprites;
   ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * ff->m_numSprites * 4);
   GLushort *indices = (GLushort *)malloc(max_frame_count * 6 * sizeof(GLushort));
@@ -188,7 +193,7 @@ int qwqz_batch_init(qwqz_batch ff) {
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
   glBufferData(GL_ARRAY_BUFFER, max_frame_count * 4 * ff->m_Stride, NULL, GL_DYNAMIC_DRAW);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  //glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   for (unsigned int i=0; i<max_frame_count; i++) {
     indices[(i * 6) + 0] = (i * 4) + 1;
@@ -202,7 +207,7 @@ int qwqz_batch_init(qwqz_batch ff) {
   glGenBuffers(ff->m_numIndexBuffers, ff->m_IndexBuffers);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ff->m_IndexBuffers[0]);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_frame_count * 6 * sizeof(GLshort), indices, GL_DYNAMIC_DRAW);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   /*
   ff->m_Sprites[0].vertex[0] = -1.0;
@@ -216,6 +221,15 @@ int qwqz_batch_init(qwqz_batch ff) {
 
   ff->m_Sprites[3].vertex[0] = 1.0;
   ff->m_Sprites[3].vertex[1] = -1.0;
+
+  verticeBuffer[0] = -1.0;
+  verticeBuffer[1] = -1.0;
+  verticeBuffer[2] = -1.0;
+  verticeBuffer[3] = 1.0;
+  verticeBuffer[4] = 1.0;
+  verticeBuffer[5] = 1.0;
+  verticeBuffer[6] = 1.0;
+  verticeBuffer[7] = -1.0;
   */
 
   qwqz_checkgl("batch_init");
@@ -229,22 +243,18 @@ void qwqz_batch_clear(qwqz_batch ff) {
 }
 
 
-void qwqz_batch_end(qwqz_batch ff) {
-}
-
-
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
 
-  if (ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
+  if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
-    LOGV("abc %d\n", e->g_lastElementBuffer);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
+    //LOGV("abc %d\n", e->g_lastElementBuffer);
   }
 
-  if (ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
+  if (1 || ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
     e->g_lastInterleavedBuffer = ff->m_InterleavedBuffers[0];
-    glBindBuffer(GL_ARRAY_BUFFER, e->g_lastInterleavedBuffer);
-    LOGV("efg %d\n", e->g_lastInterleavedBuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, e->g_lastInterleavedBuffer);
+    //LOGV("efg %d\n", e->g_lastInterleavedBuffer);
   }
 
   qwqz_checkgl("wtf");
@@ -253,30 +263,35 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   //glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW); // GL_STATIC_DRAW might be faster...
   //glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
+  //LOGV("render: %d\n", ff->m_numSpritesBatched);
+
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
+  //glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
   
   //if (!sf->m_EnabledStates) {
-    
-    glEnable(GL_BLEND);
+    //glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //glActiveTexture(GL_TEXTURE0);
     //glEnableVertexAttribArray(sf->g_PositionAttribute);
     //glEnableVertexAttribArray(sf->g_TextureAttribute);
-    
   //  sf->m_EnabledStates = true;
   //}
+
+  //LOGV("render: %d\n", ff->m_numSpritesBatched);
   qwqz_checkgl("wtf2");
   
   glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+
+  //LOGV("render: %d\n", ff->m_numSpritesBatched);
 }
 
 
 
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv) {
+  /*
   for (int i=0; i<4; i++) {
     int batched_times_four = (ff->m_numSpritesBatched * 4) + i;
     
@@ -289,8 +304,37 @@ void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *col
     ff->m_Sprites[(batched_times_four)].texture[0] = 0.0; //uv[0 + (i * 2)];
     ff->m_Sprites[(batched_times_four)].texture[1] = 0.0; //uv[1 + (i * 2)];
   }
+  */
 
-  LOGV("added\n");
+  ff->m_Sprites[0].vertex[0] = -1.0;
+  ff->m_Sprites[0].vertex[1] = -1.0;
+
+  ff->m_Sprites[1].vertex[0] = -1.0;
+  ff->m_Sprites[1].vertex[1] = 1.0;
+
+  ff->m_Sprites[2].vertex[0] = 1.0;
+  ff->m_Sprites[2].vertex[1] = 1.0;
+
+  ff->m_Sprites[3].vertex[0] = 1.0;
+  ff->m_Sprites[3].vertex[1] = -1.0;
+
+  for (int i=0; i<4; i++) {
+    ff->m_Sprites[(i)].texture[0] = 0.0; //uv[0 + (i * 2)];
+    ff->m_Sprites[(i)].texture[1] = 0.0; //uv[1 + (i * 2)];
+  }
+
+  /*
+  verticeBuffer[0] = -1.0;
+  verticeBuffer[1] = -1.0;
+  verticeBuffer[2] = -1.0;
+  verticeBuffer[3] = 1.0;
+  verticeBuffer[4] = 1.0;
+  verticeBuffer[5] = 1.0;
+  verticeBuffer[6] = 1.0;
+  verticeBuffer[7] = -1.0;
+  */
+
+  //LOGV("added\n");
 
 
       //attachment.rendererObject.page.rendererObject,
@@ -313,6 +357,8 @@ void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *col
       */
 
   ff->m_numSpritesBatched++;
+  
+  qwqz_checkgl("add");
 }
 
 
