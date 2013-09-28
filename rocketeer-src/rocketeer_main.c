@@ -175,7 +175,7 @@ int impl_draw() {
   }
 
   if (doSpine) {
-    AnimationState_update(state, qwqz_engine->m_Timers[0].step);
+    AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
     AnimationState_apply(state, skeleton);
     Skeleton_updateWorldTransform(skeleton);
 
@@ -184,7 +184,7 @@ int impl_draw() {
       Slot *s = skeleton->drawOrder[i];
       RegionAttachment *ra = (RegionAttachment *)s->attachment;
       if (s->attachment->type == ATTACHMENT_REGION) {
-        RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+        RegionAttachment_computeVertices(ra, 0.0, -40.0, s->bone, verticeBuffer);
         qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
       }
     }
@@ -293,7 +293,7 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
   qwqz_batch_init(&qwqz_engine->m_Batches[0]);
 
-  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/spineboy.png");
+  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/elle.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
   int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
 
@@ -318,12 +318,12 @@ int impl_main(int argc, char** argv) {
   }
 
   if (doSpine) {
-    Atlas* atlas = Atlas_readAtlasFile("assets/spine/spineboy.atlas");
-    printf("First region name: %s, x: %d, y: %d\n", atlas->regions->name, atlas->regions->x, atlas->regions->y);
-    printf("First page name: %s, size: %d, %d\n", atlas->pages->name, atlas->pages->width, atlas->pages->height);
+    Atlas* atlas = Atlas_readAtlasFile("assets/spine/elle.atlas");
+    //printf("First region name: %s, x: %d, y: %d\n", atlas->regions->name, atlas->regions->x, atlas->regions->y);
+    //printf("First page name: %s, size: %d, %d\n", atlas->pages->name, atlas->pages->width, atlas->pages->height);
 
     SkeletonJson* json = SkeletonJson_create(atlas);
-    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/spineboy.json");
+    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/elle.json");
 
     //if (!skeletonData) printf("Error: %s\n", json->error);
     //printf("Default skin name: %s\n", skeletonData->defaultSkin->name);
@@ -337,10 +337,10 @@ int impl_main(int argc, char** argv) {
     stateData = AnimationStateData_create(skeletonData);
     state = AnimationState_create(stateData);
 
-    AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
-    AnimationStateData_setMixByName(stateData, "jump", "walk", 0.4);
+    //AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
+    //AnimationStateData_setMixByName(stateData, "jump", "walk", 0.4);
 
-    AnimationState_setAnimationByName(state, "walk", 1);
+    AnimationState_setAnimationByName(state, "run", 1);
 
 
     //Skeleton_dispose(skeleton);

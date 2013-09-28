@@ -1,0 +1,74 @@
+elle.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+elleUpperArmBack
+  rotate: false
+  xy: 80, 184
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+elleUpperArmFront
+  rotate: false
+  xy: 80, 150
+  size: 16, 32
+  orig: 16, 32
+  offset: 0, 0
+  index: -1
+elleUpperLegFront
+  rotate: false
+  xy: 54, 222
+  size: 18, 32
+  orig: 18, 32
+  offset: 0, 0
+  index: -1
+elleLowerArmBack
+  rotate: false
+  xy: 60, 106
+  size: 24, 42
+  orig: 24, 42
+  offset: 0, 0
+  index: -1
+elleBody
+  rotate: false
+  xy: 2, 106
+  size: 56, 70
+  orig: 56, 70
+  offset: 0, 0
+  index: -1
+elleHead
+  rotate: false
+  xy: 2, 2
+  size: 96, 102
+  orig: 96, 102
+  offset: 0, 0
+  index: -1
+elleLowerArmFront
+  rotate: false
+  xy: 54, 178
+  size: 24, 42
+  orig: 24, 42
+  offset: 0, 0
+  index: -1
+elleLowerLegFront
+  rotate: false
+  xy: 2, 178
+  size: 24, 48
+  orig: 24, 48
+  offset: 0, 0
+  index: -1
+elleUpperLegBack
+  rotate: false
+  xy: 74, 222
+  size: 18, 32
+  orig: 18, 32
+  offset: 0, 0
+  index: -1
+elleLowerLegBack
+  rotate: false
+  xy: 28, 178
+  size: 24, 48
+  orig: 24, 48
+  offset: 0, 0
+  index: -1
