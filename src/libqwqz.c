@@ -5,6 +5,7 @@
 #include "pnglite.h"
 
 static GLfloat ProjectionMatrix[16];
+static GLuint ModelViewProjectionMatrix_location;
 
 void qwqz_checkgl(const char *s) {
   // normally (when no error) just return
@@ -85,6 +86,11 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_PositionAttribute = glGetAttribLocation(e->m_Program, "Position");
   e->g_TextureAttribute = glGetAttribLocation(e->m_Program, "Texture");
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
+
+
+  GLuint ModelViewProjectionMatrix_location = glGetUniformLocation(e->m_Program, "ModelViewProjectionMatrix");
+  glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
@@ -116,6 +122,14 @@ void identity(GLfloat *m) {
   };
   
   memcpy(m, t, sizeof(t));
+}
+
+void translate(GLfloat *m, float tx, float ty, float tz) {
+    ProjectionMatrix[12] += (ProjectionMatrix[0] * tx + ProjectionMatrix[4] * ty + ProjectionMatrix[8] * tz);
+    ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
+    ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
+    ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
+    glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 }
 
 void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
@@ -153,8 +167,10 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_IsScreenResized = 1;
 
   /*
-  float m_Zoom2 = 1.0;
 
+  qwqz_checkgl("resize");
+  */
+  float m_Zoom2 = 1.0;
   float a = (-e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
   float b = (e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
   float c = (-e->m_ScreenHalfHeight) * m_Zoom2;
@@ -164,9 +180,6 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
 
   identity(ProjectionMatrix);
   ortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
-
-  qwqz_checkgl("resize");
-  */
 
   return 0;
 }

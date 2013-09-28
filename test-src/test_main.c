@@ -11,6 +11,7 @@
 
 static qwqz_handle qwqz_engine = NULL;
 static float verticeBuffer[8];
+static float uvBuffer[8];
 
 void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
 	self->rendererObject = 0;
@@ -39,7 +40,15 @@ int impl_draw() {
   verticeBuffer[5] = 1.0;
   verticeBuffer[6] = 1.0;
   verticeBuffer[7] = -1.0;
-  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, NULL);
+  uvBuffer[0] = -1.0;
+  uvBuffer[1] = -1.0;
+  uvBuffer[2] = -1.0;
+  uvBuffer[3] = 1.0;
+  uvBuffer[4] = 1.0;
+  uvBuffer[5] = 1.0;
+  uvBuffer[6] = 1.0;
+  uvBuffer[7] = -1.0;
+  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
 
   glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
   glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right

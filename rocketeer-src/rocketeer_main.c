@@ -126,7 +126,7 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 static qwqz_handle qwqz_engine = NULL;
 static cpSpace *space;
-static cpVect translate = {0, 0};
+static cpVect translate2 = {0, 0};
 static cpFloat scale = 1.0;
 static int doPhysics = 0;
 static int doSpine = 1;
@@ -144,10 +144,12 @@ int impl_draw() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
+  translate(0, 0, 0);
+
   if (doPhysics) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef((GLfloat)translate.x, (GLfloat)translate.y, 0.0f);
+    glTranslatef((GLfloat)translate2.x, (GLfloat)translate2.y, 0.0f);
     glScalef((GLfloat)scale, (GLfloat)scale, 1.0f);
 
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
@@ -184,7 +186,7 @@ int impl_draw() {
       Slot *s = skeleton->drawOrder[i];
       RegionAttachment *ra = (RegionAttachment *)s->attachment;
       if (s->attachment->type == ATTACHMENT_REGION) {
-        RegionAttachment_computeVertices(ra, 0.0, -40.0, s->bone, verticeBuffer);
+        RegionAttachment_computeVertices(ra, 0.0, -4.0, s->bone, verticeBuffer);
         qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
       }
     }

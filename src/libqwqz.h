@@ -94,3 +94,4 @@ int qwqz_buffer_texture_init();
 int qwqz_buffer_target_init(int texture);
 int qwqz_timer_init(qwqz_timer t);
 void qwqz_tick_timer(qwqz_timer t);
+void translate(float x, float y, float z);
