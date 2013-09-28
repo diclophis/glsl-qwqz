@@ -5,16 +5,15 @@
 #include "libqwqz.h"
 #include "impl_main.h"
 #include "rocketeer_main.h"
-
-#include "chipmunk/chipmunk.h"
-#include "chipmunk/ChipmunkDebugDraw.h"
-#include "chipmunk/ChipmunkDemoShaderSupport.h"
-
+#include <chipmunk/chipmunk.h>
+#include <chipmunk/ChipmunkDebugDraw.h>
+#include <chipmunk/ChipmunkDemoShaderSupport.h>
 #include <spine/spine.h>
 #include <spine/extension.h>
 
 
 void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
+  //TODO: figure out how to map renderObject
 	self->rendererObject = 0;
   // size is important!!
 	self->width = 256;
@@ -22,8 +21,10 @@ void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
   LOGV("_AtlasPage_createTexture: %s\n", path);
 }
 
+
 void _AtlasPage_disposeTexture (AtlasPage* self) {
 }
+
 
 char* _Util_readFile (const char* path, int* length) {
 	return _readFile(path, length);
@@ -177,6 +178,9 @@ int impl_draw() {
   }
 
   if (doSpine) {
+    skeleton->root->scaleX = 2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime);
+    skeleton->root->scaleY = 2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime);
+
     AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
     AnimationState_apply(state, skeleton);
     Skeleton_updateWorldTransform(skeleton);
@@ -196,12 +200,8 @@ int impl_draw() {
     glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
     glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
-    //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform2, 1);
-    //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform3, 2);
-    //glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
 
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-
   }
 
   return 0;
@@ -302,10 +302,8 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
 
   if (doMenu) {
-
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/texquad.fsh");
-
     if (v && f2) {
       if (doMenu) {
         program = glCreateProgram();
@@ -313,9 +311,6 @@ int impl_main(int argc, char** argv) {
         glAttachShader(program, f2);
         qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
       }
-
-
-      LOGV("impled %d %d %d\n", t0, t1, t2);
     }
   }
 
@@ -344,11 +339,6 @@ int impl_main(int argc, char** argv) {
 
     AnimationState_setAnimationByName(state, "run", 1);
 
-
-    //Skeleton_dispose(skeleton);
-    //SkeletonData_dispose(skeletonData);
-    //SkeletonJson_dispose(json);
-    //Atlas_dispose(atlas);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
