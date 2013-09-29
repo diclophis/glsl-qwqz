@@ -147,7 +147,6 @@ int impl_draw() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
-  translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
   if (doPhysics) {
     glMatrixMode(GL_MODELVIEW);
@@ -180,8 +179,8 @@ int impl_draw() {
   }
 
   if (doSpine) {
-    skeleton->root->scaleX = 1.0 + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
-    skeleton->root->scaleY = 1.0 + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+    skeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+    skeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
 
     AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
     AnimationState_apply(state, skeleton);
@@ -203,7 +202,12 @@ int impl_draw() {
 
     glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
 
+    translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+
+    //translate(&qwqz_engine->m_Linkages[0], NULL, 50.0, 0, 0);
+    //qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+    //translate(&qwqz_engine->m_Linkages[0], NULL, -50.0, 0, 0);
   }
 
   return 0;
@@ -297,7 +301,7 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
   qwqz_batch_init(&qwqz_engine->m_Batches[0], 18);
 
-  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/spineboy.png");
+  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/elle.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
   int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
 
@@ -317,12 +321,12 @@ int impl_main(int argc, char** argv) {
   }
 
   if (doSpine) {
-    Atlas* atlas = Atlas_readAtlasFile("assets/spine/spineboy.atlas");
+    Atlas* atlas = Atlas_readAtlasFile("assets/spine/elle.atlas");
     //printf("First region name: %s, x: %d, y: %d\n", atlas->regions->name, atlas->regions->x, atlas->regions->y);
     //printf("First page name: %s, size: %d, %d\n", atlas->pages->name, atlas->pages->width, atlas->pages->height);
 
     SkeletonJson* json = SkeletonJson_create(atlas);
-    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/spineboy.json");
+    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/elle.json");
 
     //if (!skeletonData) printf("Error: %s\n", json->error);
     //printf("Default skin name: %s\n", skeletonData->defaultSkin->name);
@@ -339,8 +343,7 @@ int impl_main(int argc, char** argv) {
     //AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
     //AnimationStateData_setMixByName(stateData, "jump", "walk", 0.4);
 
-    AnimationState_setAnimationByName(state, "walk", 1);
-
+    AnimationState_setAnimationByName(state, "run", 1);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
