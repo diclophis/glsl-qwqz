@@ -164,7 +164,6 @@ int impl_draw() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
-
   if (doPhysics) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -196,7 +195,6 @@ int impl_draw() {
   }
 
   if (doSpine) {
-
     if (1) {
       qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
@@ -359,7 +357,6 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
-
   int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/elle.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/spine/bgs.png");
 
@@ -402,11 +399,6 @@ int impl_main(int argc, char** argv) {
       AnimationState_setAnimationByName(bgsState, "default", 1);
     }
 
-    //TODO: why does this have to happen before linking?
-    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-    LOGV("wtf: %d\n", (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
-    qwqz_batch_init(&qwqz_engine->m_Batches[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
-
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
 
@@ -416,6 +408,11 @@ int impl_main(int argc, char** argv) {
       glAttachShader(program, f2);
       qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
     }
+
+    //TODO: why does this have to happen before linking?
+    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
+    //LOGV("wtf: %d\n", (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
+    qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
   }
 
   return 0;

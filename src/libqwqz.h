@@ -53,6 +53,7 @@ struct qwqz_handle_t {
   GLuint g_lastElementBuffer;
   GLuint g_lastInterleavedBuffer;
   GLuint g_lastVertexArrayObject;
+  GLuint m_NeedsBlendEnabled;
 };
 typedef struct qwqz_handle_t * qwqz_handle;
 
@@ -82,11 +83,10 @@ qwqz_handle qwqz_create();
 char *qwqz_load(const char *path);
 int qwqz_draw(qwqz_handle e);
 int qwqz_resize(qwqz_handle e, int width, int height);
-int qwqz_batch_init(qwqz_batch ff, int count);
+int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count);
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv);
 void qwqz_batch_clear(qwqz_batch ff);
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff);
-
 
 int qwqz_linkage_init(GLuint program, qwqz_linkage e);
 int qwqz_compile(GLuint type, const char *path);
