@@ -32,6 +32,7 @@ int impl_draw() {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
 
   verticeBuffer[0] = -1.0;
   verticeBuffer[1] = -1.0;
@@ -55,10 +56,10 @@ int impl_draw() {
   uvBuffer[7] = 0.0;
 
   qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
+  qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
 
   glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
   glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
@@ -68,8 +69,6 @@ int impl_draw() {
 
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
-  //glDrawElements(GL_TRIANGLES, 1 * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-
   // Render to the screen
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -77,11 +76,10 @@ int impl_draw() {
   glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
   glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
   glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-  //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 0); //qwqz_engine->renderedTexture);
 
   translate(&qwqz_engine->m_Linkages[1], NULL, 0, 0, 0);
 
-  qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+  qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
    
   qwqz_draw(qwqz_engine);
 
@@ -112,10 +110,6 @@ int impl_main(int argc, char** argv) {
     int renderBufferTexture = qwqz_buffer_texture_init();
     qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
-    //TODO: why does this have to happen before linking?
-    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-    qwqz_batch_init(&qwqz_engine->m_Batches[0], 1);
-
     qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 
     v = qwqz_compile(GL_VERTEX_SHADER, argv[1]);
@@ -133,11 +127,14 @@ int impl_main(int argc, char** argv) {
       glAttachShader(program, v);
       glAttachShader(program, f2);
       qwqz_linkage_init(program, &qwqz_engine->m_Linkages[1]);
-    
-      return 0;
     }
+
+    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 2);
+
+    qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], 1);
+    qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
   }
 
-  return 1;
+  return 0;
 }
 
