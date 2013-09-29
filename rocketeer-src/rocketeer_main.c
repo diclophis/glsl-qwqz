@@ -152,6 +152,7 @@ static Skeleton* skeleton;
 static AnimationStateData* stateData;
 static AnimationState* state;
 static float verticeBuffer[8];
+static float bgsScroll[3] = { 0.0, 0.0, 0.0 };
 
 
 int impl_draw() {
@@ -196,35 +197,38 @@ int impl_draw() {
 
   if (doSpine) {
 
-    // !!!!!!!!!
-
-
-    // !!!!!!
-
     if (1) {
       qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
-      bgsSkeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
-      bgsSkeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+      bgsSkeleton->root->scaleX = 1.0;
+      bgsSkeleton->root->scaleY = 1.0;
 
       AnimationState_update(bgsState, qwqz_engine->m_Timers[0].step * 0.1);
       AnimationState_apply(bgsState, bgsSkeleton);
       Skeleton_updateWorldTransform(bgsSkeleton);
 
+      for (int a=0; a<3; a++) {
+        float bgw = 280.0 * 3.0;
+        float spd = 1.0 + (float)a;
 
-      for (int i=0; i<bgsSkeleton->slotCount; i++) {
-        Slot *s = bgsSkeleton->drawOrder[i];
-        RegionAttachment *ra = (RegionAttachment *)s->attachment;
-        if (s->attachment->type == ATTACHMENT_REGION) {
-          int spd = (i / 3) + 1;
-          LOGV("spd: %d\n", spd);
-          int scx = -(int)(qwqz_engine->m_Timers[0].m_SimulationTime * 200 * spd) % 852;
-          RegionAttachment_computeVertices(ra, scx, 0.0, s->bone, verticeBuffer);
-          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+        bgsScroll[a] += -100.0 * qwqz_engine->m_Timers[0].step * spd;
+
+        if (bgsScroll[a] < -bgw) {
+          bgsScroll[a] = 0.0;
         }
 
-        if (i > 4) {
-          break;
+        float scx = -(bgw / 2) + bgsScroll[a];
+        for (int i=0; i<3; i++) {
+          for (int j=0; j<3; j++) {
+            int c = (a * 3) + j;
+            Slot *s = bgsSkeleton->drawOrder[c];
+            RegionAttachment *ra = (RegionAttachment *)s->attachment;
+            if (s->attachment->type == ATTACHMENT_REGION) {
+              RegionAttachment_computeVertices(ra, scx, 0.0, s->bone, verticeBuffer);
+              qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+            }
+          }
+          scx += bgw;
         }
       }
 
@@ -234,22 +238,15 @@ int impl_draw() {
 
       glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 1);
 
-
-      int bgw = 852;
-      int sx = -bgw / 2;
-      for (int i=0; i<2; i++) {
-        translate(&qwqz_engine->m_Linkages[0], NULL, sx, 0, 0);
-        qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-        translate(&qwqz_engine->m_Linkages[0], NULL, -sx, 0, 0);
-        sx += bgw;
-      }
+      translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
+      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
 
     if (1) {
       qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
-      skeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
-      skeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+      skeleton->root->scaleX = 0.75;
+      skeleton->root->scaleY = 0.75;
 
       AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
       AnimationState_apply(state, skeleton);
@@ -259,7 +256,7 @@ int impl_draw() {
         Slot *s = skeleton->drawOrder[i];
         RegionAttachment *ra = (RegionAttachment *)s->attachment;
         if (s->attachment->type == ATTACHMENT_REGION) {
-          RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+          RegionAttachment_computeVertices(ra, 0.0, -200.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
       }
@@ -272,9 +269,7 @@ int impl_draw() {
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-
     }
-
   }
 
   return 0;
@@ -364,9 +359,6 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
-  //TODO: why does this have to happen before linking?
-  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[0], 18);
 
   int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/elle.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/spine/bgs.png");
@@ -387,7 +379,6 @@ int impl_main(int argc, char** argv) {
   }
 
   if (doSpine) {
-
     {
       Atlas* atlas = Atlas_readAtlasFile("assets/spine/elle.atlas");
       SkeletonJson* json = SkeletonJson_create(atlas);
@@ -410,6 +401,11 @@ int impl_main(int argc, char** argv) {
       bgsState = AnimationState_create(bgsStateData);
       AnimationState_setAnimationByName(bgsState, "default", 1);
     }
+
+    //TODO: why does this have to happen before linking?
+    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
+    LOGV("wtf: %d\n", (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
+    qwqz_batch_init(&qwqz_engine->m_Batches[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
