@@ -89,15 +89,11 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
 
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
 
-  qwqz_checkgl("linkage_init");
-
   e->g_TextureUniform = glGetUniformLocation(e->m_Program, "texture1");
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
   e->g_TextureUniform3 = glGetUniformLocation(e->m_Program, "texture3");
 
   free(msg);
-
-  qwqz_checkgl("linkage_init");
 
   return 0;
 }
@@ -159,10 +155,6 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
 
   e->m_IsScreenResized = 1;
 
-  /*
-
-  qwqz_checkgl("resize");
-  */
   float m_Zoom2 = 1.0;
   float a = (-e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
   float b = (e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
@@ -219,8 +211,6 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  qwqz_checkgl("batch_init");
-
   return 0;
 }
 
@@ -253,8 +243,6 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
-  qwqz_checkgl("wtf2");
- 
   // 1st [mode] parameter is what kind of primitive to render.
   // 2nd [count] parameter should be the number of elements to render. ie. the number of vertices
   // 3rd [type] parameter should be the type of the value in the 4th parameter.. can ONLY be either
@@ -277,8 +265,6 @@ void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *col
   }
 
   ff->m_numSpritesBatched++;
-  
-  qwqz_checkgl("add");
 }
 
 
@@ -300,8 +286,6 @@ int qwqz_compile(GLuint type, const char *vsh) {
     free(b);
     free(msg);
   }
-
-  qwqz_checkgl("compile");
 
   return v;
 }
@@ -364,8 +348,6 @@ int qwqz_texture_init(GLuint unit, const char *path) {
   free(data);
   free(tempData);
 
-  qwqz_checkgl("texture_init");
-
   return textureHandle;
 }
 
@@ -399,10 +381,6 @@ int qwqz_buffer_target_init(renderedTexture) {
 
   // Set "renderedTexture" as our colour attachement #0
   glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
-
-  qwqz_checkgl("glFramebufferTexturOES");
-
-  qwqz_checkgl("create");
 
   // Always check that our framebuffer is ok
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
