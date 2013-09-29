@@ -16,9 +16,19 @@ static int RO = 0;
 void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
   //TODO: figure out how to map renderObject
 	self->rendererObject = (void *)RO++;
-  // size is important!!
-	self->width = 256;
-	self->height = 256;
+
+  switch((int)self->rendererObject) {
+    case 0:
+      // size is important!!
+      self->width = 256;
+      self->height = 256;
+      break;
+    case 1:
+      // size is important!!
+      self->width = 2048;
+      self->height = 2048;
+      break;
+  }
   LOGV("_AtlasPage_createTexture: %s\n", path);
 }
 
@@ -188,6 +198,53 @@ int impl_draw() {
 
     // !!!!!!!!!
 
+
+    // !!!!!!
+
+    if (1) {
+      qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+
+      bgsSkeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+      bgsSkeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+
+      AnimationState_update(bgsState, qwqz_engine->m_Timers[0].step * 0.1);
+      AnimationState_apply(bgsState, bgsSkeleton);
+      Skeleton_updateWorldTransform(bgsSkeleton);
+
+
+      for (int i=0; i<bgsSkeleton->slotCount; i++) {
+        Slot *s = bgsSkeleton->drawOrder[i];
+        RegionAttachment *ra = (RegionAttachment *)s->attachment;
+        if (s->attachment->type == ATTACHMENT_REGION) {
+          int spd = (i / 3) + 1;
+          LOGV("spd: %d\n", spd);
+          int scx = -(int)(qwqz_engine->m_Timers[0].m_SimulationTime * 200 * spd) % 852;
+          RegionAttachment_computeVertices(ra, scx, 0.0, s->bone, verticeBuffer);
+          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+        }
+
+        if (i > 4) {
+          break;
+        }
+      }
+
+      glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+      glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+      glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+
+      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 1);
+
+
+      int bgw = 852;
+      int sx = -bgw / 2;
+      for (int i=0; i<2; i++) {
+        translate(&qwqz_engine->m_Linkages[0], NULL, sx, 0, 0);
+        qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+        translate(&qwqz_engine->m_Linkages[0], NULL, -sx, 0, 0);
+        sx += bgw;
+      }
+    }
+
     if (1) {
       qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
@@ -215,37 +272,7 @@ int impl_draw() {
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-    }
 
-    // !!!!!!
-
-    if (1) {
-      qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-
-      bgsSkeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
-      bgsSkeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
-
-      AnimationState_update(bgsState, qwqz_engine->m_Timers[0].step * 0.1);
-      AnimationState_apply(bgsState, bgsSkeleton);
-      Skeleton_updateWorldTransform(bgsSkeleton);
-
-      for (int i=0; i<bgsSkeleton->slotCount; i++) {
-        Slot *s = bgsSkeleton->drawOrder[i];
-        RegionAttachment *ra = (RegionAttachment *)s->attachment;
-        if (s->attachment->type == ATTACHMENT_REGION) {
-          RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
-          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
-        }
-      }
-
-      glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-      glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-      glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-
-      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 1);
-
-      translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
-      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
 
   }
@@ -381,6 +408,7 @@ int impl_main(int argc, char** argv) {
       bgsSkeleton = Skeleton_create(skeletonData2);
       bgsStateData = AnimationStateData_create(skeletonData2);
       bgsState = AnimationState_create(bgsStateData);
+      AnimationState_setAnimationByName(bgsState, "default", 1);
     }
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
