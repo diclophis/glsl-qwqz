@@ -246,7 +246,7 @@ int impl_draw() {
       skeleton->root->scaleX = 0.75;
       skeleton->root->scaleY = 0.75;
 
-      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
+      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.25);
       AnimationState_apply(state, skeleton);
       Skeleton_updateWorldTransform(skeleton);
 
@@ -381,9 +381,6 @@ int impl_main(int argc, char** argv) {
       SkeletonJson* json = SkeletonJson_create(atlas);
       SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/elle.json");
       skeleton = Skeleton_create(skeletonData);
-      //Animation* animation = SkeletonData_findAnimation(skeletonData, "walk");
-      //if (!animation) printf("Error: %s\n", json->error);
-      //printf("Animation timelineCount: %d\n", animation->timelineCount);
       stateData = AnimationStateData_create(skeletonData);
       state = AnimationState_create(stateData);
       //AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
@@ -409,9 +406,7 @@ int impl_main(int argc, char** argv) {
       qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
     }
 
-    //TODO: why does this have to happen before linking?
     qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
-    //LOGV("wtf: %d\n", (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
     qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
   }
 
