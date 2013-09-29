@@ -1,0 +1,59 @@
+{
+"bones": [
+	{ "name": "root" },
+	{ "name": "close-0", "parent": "root", "x": -284, "y": -124 },
+	{ "name": "close-1", "parent": "root", "y": -124 },
+	{ "name": "close-2", "parent": "root", "x": 284, "y": -124 },
+	{ "name": "far-0", "parent": "root", "x": -280 },
+	{ "name": "far-1", "parent": "root" },
+	{ "name": "far-2", "parent": "root", "x": 280 },
+	{ "name": "mid-0", "parent": "root", "x": -284 },
+	{ "name": "mid-1", "parent": "root" },
+	{ "name": "mid-2", "parent": "root", "x": 284 }
+],
+"slots": [
+	{ "name": "bgDunesTile0001", "bone": "far-0", "attachment": "bgDunesTile0001" },
+	{ "name": "bgDunesTile0002", "bone": "far-1", "attachment": "bgDunesTile0002" },
+	{ "name": "bgDunesTile0003", "bone": "far-2", "attachment": "bgDunesTile0003" },
+	{ "name": "cityTiles0001", "bone": "mid-0", "attachment": "cityTiles0001" },
+	{ "name": "cityTiles0002", "bone": "mid-1", "attachment": "cityTiles0002" },
+	{ "name": "cityTiles0003", "bone": "mid-2", "attachment": "cityTiles0003" },
+	{ "name": "RoadTiles0003", "bone": "close-2", "attachment": "RoadTiles0003" },
+	{ "name": "RoadTiles0002", "bone": "close-1", "attachment": "RoadTiles0002" },
+	{ "name": "RoadTiles0001", "bone": "close-0", "attachment": "RoadTiles0001" }
+],
+"skins": {
+	"default": {
+		"RoadTiles0001": {
+			"RoadTiles0001": { "width": 284, "height": 300 }
+		},
+		"RoadTiles0002": {
+			"RoadTiles0002": { "width": 284, "height": 300 }
+		},
+		"RoadTiles0003": {
+			"RoadTiles0003": { "width": 284, "height": 300 }
+		},
+		"bgDunesTile0001": {
+			"bgDunesTile0001": { "width": 280, "height": 550 }
+		},
+		"bgDunesTile0002": {
+			"bgDunesTile0002": { "width": 280, "height": 550 }
+		},
+		"bgDunesTile0003": {
+			"bgDunesTile0003": { "width": 280, "height": 550 }
+		},
+		"cityTiles0001": {
+			"cityTiles0001": { "width": 280, "height": 475 }
+		},
+		"cityTiles0002": {
+			"cityTiles0002": { "width": 280, "height": 475 }
+		},
+		"cityTiles0003": {
+			"cityTiles0003": { "width": 280, "height": 475 }
+		}
+	}
+},
+"animations": {
+	"animation": {}
+}
+}

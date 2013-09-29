@@ -11,10 +11,11 @@
 #include <spine/spine.h>
 #include <spine/extension.h>
 
+static int RO = 0;
 
 void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
   //TODO: figure out how to map renderObject
-	self->rendererObject = 0;
+	self->rendererObject = (void *)RO++;
   // size is important!!
 	self->width = 256;
 	self->height = 256;
@@ -132,6 +133,11 @@ static cpFloat scale = 1.0;
 static int doPhysics = 0;
 static int doSpine = 1;
 static int doMenu = 0;
+
+
+static Skeleton* bgsSkeleton;
+static AnimationStateData* bgsStateData;
+static AnimationState* bgsState;
 static Skeleton* skeleton;
 static AnimationStateData* stateData;
 static AnimationState* state;
@@ -179,35 +185,69 @@ int impl_draw() {
   }
 
   if (doSpine) {
-    skeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
-    skeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
 
-    AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
-    AnimationState_apply(state, skeleton);
-    Skeleton_updateWorldTransform(skeleton);
+    // !!!!!!!!!
 
-    qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-    for (int i=0; i<skeleton->slotCount; i++) {
-      Slot *s = skeleton->drawOrder[i];
-      RegionAttachment *ra = (RegionAttachment *)s->attachment;
-      if (s->attachment->type == ATTACHMENT_REGION) {
-        RegionAttachment_computeVertices(ra, 0.0, -4.0, s->bone, verticeBuffer);
-        qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+    if (1) {
+      qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+
+      skeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+      skeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+
+      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.1);
+      AnimationState_apply(state, skeleton);
+      Skeleton_updateWorldTransform(skeleton);
+
+      for (int i=0; i<skeleton->slotCount; i++) {
+        Slot *s = skeleton->drawOrder[i];
+        RegionAttachment *ra = (RegionAttachment *)s->attachment;
+        if (s->attachment->type == ATTACHMENT_REGION) {
+          RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+        }
       }
+
+      glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+      glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+      glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+
+      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
+
+      translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
+      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
 
-    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-    glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-    glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+    // !!!!!!
 
-    glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
+    if (1) {
+      qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
-    translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
-    qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+      bgsSkeleton->root->scaleX = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
+      bgsSkeleton->root->scaleY = 1.0;// + (2.0 * sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.01));
 
-    //translate(&qwqz_engine->m_Linkages[0], NULL, 50.0, 0, 0);
-    //qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-    //translate(&qwqz_engine->m_Linkages[0], NULL, -50.0, 0, 0);
+      AnimationState_update(bgsState, qwqz_engine->m_Timers[0].step * 0.1);
+      AnimationState_apply(bgsState, bgsSkeleton);
+      Skeleton_updateWorldTransform(bgsSkeleton);
+
+      for (int i=0; i<bgsSkeleton->slotCount; i++) {
+        Slot *s = bgsSkeleton->drawOrder[i];
+        RegionAttachment *ra = (RegionAttachment *)s->attachment;
+        if (s->attachment->type == ATTACHMENT_REGION) {
+          RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+        }
+      }
+
+      glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+      glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+      glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+
+      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 1);
+
+      translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
+      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+    }
+
   }
 
   return 0;
@@ -302,8 +342,7 @@ int impl_main(int argc, char** argv) {
   qwqz_batch_init(&qwqz_engine->m_Batches[0], 18);
 
   int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/elle.png");
-  int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/textures/1.png");
-  int t2 = qwqz_texture_init(GL_TEXTURE2, "assets/textures/2.png");
+  int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/spine/bgs.png");
 
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
 
@@ -321,29 +360,28 @@ int impl_main(int argc, char** argv) {
   }
 
   if (doSpine) {
-    Atlas* atlas = Atlas_readAtlasFile("assets/spine/elle.atlas");
-    //printf("First region name: %s, x: %d, y: %d\n", atlas->regions->name, atlas->regions->x, atlas->regions->y);
-    //printf("First page name: %s, size: %d, %d\n", atlas->pages->name, atlas->pages->width, atlas->pages->height);
 
-    SkeletonJson* json = SkeletonJson_create(atlas);
-    SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/elle.json");
+    {
+      Atlas* atlas = Atlas_readAtlasFile("assets/spine/elle.atlas");
+      SkeletonJson* json = SkeletonJson_create(atlas);
+      SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/elle.json");
+      skeleton = Skeleton_create(skeletonData);
+      //Animation* animation = SkeletonData_findAnimation(skeletonData, "walk");
+      //if (!animation) printf("Error: %s\n", json->error);
+      //printf("Animation timelineCount: %d\n", animation->timelineCount);
+      stateData = AnimationStateData_create(skeletonData);
+      state = AnimationState_create(stateData);
+      //AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
+      //AnimationStateData_setMixByName(stateData, "jump", "walk", 0.4);
+      AnimationState_setAnimationByName(state, "run", 1);
 
-    //if (!skeletonData) printf("Error: %s\n", json->error);
-    //printf("Default skin name: %s\n", skeletonData->defaultSkin->name);
-
-    skeleton = Skeleton_create(skeletonData);
-
-    //Animation* animation = SkeletonData_findAnimation(skeletonData, "walk");
-    //if (!animation) printf("Error: %s\n", json->error);
-    //printf("Animation timelineCount: %d\n", animation->timelineCount);
-
-    stateData = AnimationStateData_create(skeletonData);
-    state = AnimationState_create(stateData);
-
-    //AnimationStateData_setMixByName(stateData, "walk", "jump", 0.2);
-    //AnimationStateData_setMixByName(stateData, "jump", "walk", 0.4);
-
-    AnimationState_setAnimationByName(state, "run", 1);
+      Atlas *atlas2 = Atlas_readAtlasFile("assets/spine/bgs.atlas");
+      SkeletonJson *json2 = SkeletonJson_create(atlas2);
+      SkeletonData *skeletonData2 = SkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
+      bgsSkeleton = Skeleton_create(skeletonData2);
+      bgsStateData = AnimationStateData_create(skeletonData2);
+      bgsState = AnimationState_create(bgsStateData);
+    }
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");

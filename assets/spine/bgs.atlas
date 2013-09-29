@@ -1,0 +1,68 @@
+
+skeleton.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+RoadTiles0001
+  rotate: false
+  xy: 2, 710
+  size: 284, 153
+  orig: 284, 300
+  offset: 0, 0
+  index: -1
+RoadTiles0002
+  rotate: false
+  xy: 2, 417
+  size: 284, 291
+  orig: 284, 300
+  offset: 0, 0
+  index: -1
+RoadTiles0003
+  rotate: false
+  xy: 288, 590
+  size: 284, 273
+  orig: 284, 300
+  offset: 0, 0
+  index: -1
+bgDunesTile0001
+  rotate: false
+  xy: 574, 314
+  size: 280, 549
+  orig: 280, 550
+  offset: 0, 1
+  index: -1
+bgDunesTile0002
+  rotate: false
+  xy: 856, 339
+  size: 280, 524
+  orig: 280, 550
+  offset: 0, 1
+  index: -1
+bgDunesTile0003
+  rotate: false
+  xy: 1138, 332
+  size: 280, 531
+  orig: 280, 550
+  offset: 0, 1
+  index: -1
+cityTiles0001
+  rotate: false
+  xy: 2, 2
+  size: 280, 413
+  orig: 280, 475
+  offset: 0, 0
+  index: -1
+cityTiles0002
+  rotate: false
+  xy: 1420, 568
+  size: 277, 295
+  orig: 280, 475
+  offset: 2, 1
+  index: -1
+cityTiles0003
+  rotate: false
+  xy: 1699, 444
+  size: 270, 419
+  orig: 280, 475
+  offset: 10, 0
+  index: -1
