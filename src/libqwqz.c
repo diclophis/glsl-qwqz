@@ -155,6 +155,8 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
 
   e->m_IsScreenResized = 1;
 
+  LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
+
   float m_Zoom2 = 1.0;
   float a = (-e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
   float b = (e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;

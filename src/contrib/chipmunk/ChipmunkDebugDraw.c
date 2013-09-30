@@ -39,6 +39,9 @@ static GLuint program;
 struct v2f {GLfloat x, y;};
 static struct v2f v2f0 = {0.0f, 0.0f};
 
+static GLfloat ProjectionMatrix[16];
+GLuint ModelViewProjectionMatrix_location;
+
 static inline struct v2f
 v2f(cpVect v)
 {
@@ -51,6 +54,49 @@ typedef struct Triangle {Vertex a, b, c;} Triangle;
 
 static GLuint vao = 0;
 static GLuint vbo = 0;
+
+void HACKtranslate(GLfloat *m, float tx, float ty, float tz) {
+    ProjectionMatrix[12] += (ProjectionMatrix[0] * tx + ProjectionMatrix[4] * ty + ProjectionMatrix[8] * tz);
+    ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
+    ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
+    ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
+    glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+}
+
+void HACKortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
+  
+  GLfloat deltaX = right - left;
+  GLfloat deltaY = top - bottom;
+  GLfloat deltaZ = farZ - nearZ;
+  
+  GLfloat tmp[16];
+  identity(tmp);
+  
+  if ((deltaX == 0) || (deltaY == 0) || (deltaZ == 0)) {
+    LOGV("Invalid ortho\n");
+    return;
+  }
+  
+  tmp[0] = (2.0 / deltaX);
+  tmp[12] = (-(right + left) / deltaX);
+  tmp[5] = (2.0 / deltaY);
+  tmp[13] = (-(top + bottom) / deltaY);
+  tmp[10] = (-2.0 / deltaZ);
+  tmp[14] = (-(nearZ + farZ) / deltaZ);
+  
+  memcpy(m, tmp, sizeof(tmp));
+}
+
+void HACKidentity(GLfloat *m) {
+  GLfloat t[16] = {
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0,
+  };
+  
+  memcpy(m, t, sizeof(t));
+}
 
 void
 ChipmunkDebugDrawInit(void)
@@ -65,10 +111,12 @@ ChipmunkDebugDrawInit(void)
 		varying vec2 v_aa_coord;
 		varying vec4 v_fill_color;
 		varying vec4 v_outline_color;
+    uniform mat4 ModelViewProjectionMatrix;
 		
-		void main(void){
+		void main(void) {
 			// TODO: get rid of the GL 2.x matrix bit eventually?
-			gl_Position = gl_ModelViewProjectionMatrix*vec4(vertex, 0.0, 1.0);
+			//gl_Position = gl_ModelViewProjectionMatrix*vec4(vertex, 0.0, 1.0);
+			gl_Position = ModelViewProjectionMatrix * vec4(vertex, 0.0, 1.0);
 			
 			v_fill_color = fill_color;
 			v_outline_color = outline_color;
@@ -127,6 +175,22 @@ ChipmunkDebugDrawInit(void)
 	SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
 	SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
 	SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+
+  float m_ScreenHalfHeight = 300.0;
+  float m_ScreenAspect = 1.0;
+
+  float m_Zoom2 = 1.0;
+  float a = (-m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
+  float b = (m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
+  float c = (-m_ScreenHalfHeight) * m_Zoom2;
+  float d = m_ScreenHalfHeight * m_Zoom2;
+  float ee = 10.0;
+  float ff = -10.0;
+
+  HACKidentity(ProjectionMatrix);
+  HACKortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
+
+  ModelViewProjectionMatrix_location = glGetUniformLocation(program, "ModelViewProjectionMatrix");
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArrayOES(0);
@@ -308,6 +372,7 @@ ChipmunkDebugDrawFlushRenderer(void)
 	
 	glUseProgram(program);
 	glUniform1f(glGetUniformLocation(program, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
+  glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 	
 	glBindVertexArrayOES(vao);
 	glDrawArrays(GL_TRIANGLES, 0, triangle_count*3);
