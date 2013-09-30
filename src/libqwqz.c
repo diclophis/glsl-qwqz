@@ -224,17 +224,17 @@ void qwqz_batch_clear(qwqz_batch ff) {
 
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
 
-  if (ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
+  if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
   }
 
-  if (ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
+  if (1 || ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
     e->g_lastInterleavedBuffer = ff->m_InterleavedBuffers[0];
     glBindBuffer(GL_ARRAY_BUFFER, e->g_lastInterleavedBuffer);
   }
 
-  if (e->m_NeedsBlendEnabled) {
+  if (1 || e->m_NeedsBlendEnabled) {
     e->m_NeedsBlendEnabled = 0;
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

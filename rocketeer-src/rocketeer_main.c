@@ -141,7 +141,7 @@ static cpSpace *space;
 static cpVect translate2 = {0, 0};
 static cpFloat scale = 1.0;
 static int doPhysics = 1;
-static int doSpine = 0;
+static int doSpine = 1;
 static int doMenu = 0;
 
 
@@ -165,11 +165,6 @@ int impl_draw() {
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
   if (doPhysics) {
-    //glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
-    //glTranslatef((GLfloat)translate2.x, (GLfloat)translate2.y, 0.0f);
-    //glScalef((GLfloat)scale, (GLfloat)scale, 1.0f);
-
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
 
     // Draw the renderer contents and reset it back to the last tick's state.
@@ -179,7 +174,7 @@ int impl_draw() {
     ChipmunkDemoDefaultDrawImpl(space);
 
     ChipmunkDebugDrawFlushRenderer();
-    ChipmunkDebugDrawPopRenderer();
+    //ChipmunkDebugDrawPopRenderer();
   }
 
   if (doMenu) {
@@ -276,22 +271,6 @@ int impl_draw() {
 
 int impl_resize(int width, int height) {
   qwqz_resize(qwqz_engine, width, height);
-
-
-  if (doPhysics) {
-    /*
-    float scale = (float)cpfmin(width/640.0, height/480.0);
-    float hw = width*(0.5f/scale);
-    float hh = height*(0.5f/scale);
-
-    ChipmunkDebugDrawPointLineScale = scale;
-    glLineWidth((GLfloat)scale);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(-hw, hw, -hh, hh);
-    */
-  }
 
   return 0;
 }

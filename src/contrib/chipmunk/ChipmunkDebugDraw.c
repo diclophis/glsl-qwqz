@@ -376,6 +376,7 @@ ChipmunkDebugDrawFlushRenderer(void)
 	
 	glBindVertexArrayOES(vao);
 	glDrawArrays(GL_TRIANGLES, 0, triangle_count*3);
+	glBindVertexArrayOES(0);
 		
 	CHECK_GL_ERRORS();
 }
