@@ -103,6 +103,7 @@ ChipmunkDebugDrawInit(void)
 {
 	// Setup the AA shader.
 	GLint vshader = CompileShader(GL_VERTEX_SHADER, GLSL(
+precision highp float;
 		attribute vec2 vertex;
 		attribute vec2 aa_coord;
 		attribute vec4 fill_color;
@@ -125,6 +126,7 @@ ChipmunkDebugDrawInit(void)
 	));
 	
 	GLint fshader = CompileShader(GL_FRAGMENT_SHADER, GLSL(
+precision highp float;
 		uniform float u_outline_coef;
 		
 		varying vec2 v_aa_coord;
