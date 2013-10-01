@@ -311,7 +311,7 @@ int impl_main(int argc, char** argv) {
     space = cpSpaceNew();
     cpSpaceSetIterations(space, 30);
     cpSpaceSetGravity(space, cpv(0, -100));
-    cpSpaceSetSleepTimeThreshold(space, 1.0f);
+    cpSpaceSetSleepTimeThreshold(space, INFINITY); //1.0f);
     cpSpaceSetCollisionSlop(space, 0.5f);
 
     cpBody *body, *staticBody = cpSpaceGetStaticBody(space);
