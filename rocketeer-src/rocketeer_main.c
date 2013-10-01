@@ -309,10 +309,10 @@ int impl_main(int argc, char** argv) {
     ChipmunkDebugDrawInit();
 
     space = cpSpaceNew();
-    cpSpaceSetIterations(space, 30);
+    cpSpaceSetIterations(space, 1);
     cpSpaceSetGravity(space, cpv(0, -100));
     cpSpaceSetSleepTimeThreshold(space, INFINITY); //1.0f);
-    cpSpaceSetCollisionSlop(space, 0.5f);
+    cpSpaceSetCollisionSlop(space, 1.0f);
 
     cpBody *body, *staticBody = cpSpaceGetStaticBody(space);
     cpShape *shape;
