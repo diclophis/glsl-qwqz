@@ -222,7 +222,7 @@ void qwqz_batch_clear(qwqz_batch ff) {
 }
 
 
-void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
+void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff) {
 
   if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
@@ -240,7 +240,9 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
+}
 
+void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);

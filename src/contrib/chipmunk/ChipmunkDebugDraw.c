@@ -39,8 +39,8 @@ static GLuint program;
 struct v2f {GLfloat x, y;};
 static struct v2f v2f0 = {0.0f, 0.0f};
 
-static GLfloat ProjectionMatrix[16];
-GLuint ModelViewProjectionMatrix_location;
+static GLfloat ProjectionMatrix2[16];
+GLuint ModelViewProjectionMatrix_location2;
 
 static inline struct v2f
 v2f(cpVect v)
@@ -55,12 +55,23 @@ typedef struct Triangle {Vertex a, b, c;} Triangle;
 static GLuint vao = 0;
 static GLuint vbo = 0;
 
+void HACKidentity(GLfloat *m) {
+  GLfloat t[16] = {
+    1.0, 0.0, 0.0, 0.0,
+    0.0, 1.0, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0,
+  };
+  
+  memcpy(m, t, sizeof(t));
+}
+
 void HACKtranslate(GLfloat *m, float tx, float ty, float tz) {
-    ProjectionMatrix[12] += (ProjectionMatrix[0] * tx + ProjectionMatrix[4] * ty + ProjectionMatrix[8] * tz);
-    ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
-    ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
-    ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
-    glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+    ProjectionMatrix2[12] += (ProjectionMatrix2[0] * tx + ProjectionMatrix2[4] * ty + ProjectionMatrix2[8] * tz);
+    ProjectionMatrix2[13] += (ProjectionMatrix2[1] * tx + ProjectionMatrix2[5] * ty + ProjectionMatrix2[9] * tz);
+    ProjectionMatrix2[14] += (ProjectionMatrix2[2] * tx + ProjectionMatrix2[6] * ty + ProjectionMatrix2[10] * tz);
+    ProjectionMatrix2[15] += (ProjectionMatrix2[3] * tx + ProjectionMatrix2[7] * ty + ProjectionMatrix2[11] * tz);
+    glUniformMatrix4fv(ModelViewProjectionMatrix_location2, 1, GL_FALSE, ProjectionMatrix2);
 }
 
 void HACKortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
@@ -70,7 +81,7 @@ void HACKortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat 
   GLfloat deltaZ = farZ - nearZ;
   
   GLfloat tmp[16];
-  identity(tmp);
+  HACKidentity(tmp);
   
   if ((deltaX == 0) || (deltaY == 0) || (deltaZ == 0)) {
     LOGV("Invalid ortho\n");
@@ -85,17 +96,6 @@ void HACKortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat 
   tmp[14] = (-(nearZ + farZ) / deltaZ);
   
   memcpy(m, tmp, sizeof(tmp));
-}
-
-void HACKidentity(GLfloat *m) {
-  GLfloat t[16] = {
-    1.0, 0.0, 0.0, 0.0,
-    0.0, 1.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0,
-    0.0, 0.0, 0.0, 1.0,
-  };
-  
-  memcpy(m, t, sizeof(t));
 }
 
 void
@@ -165,8 +165,8 @@ ChipmunkDebugDrawInit(void)
 	CHECK_GL_ERRORS();
 	
 	// Setu VBO and VAO.
-	glGenVertexArraysOES(1, &vao);
-	glBindVertexArrayOES(vao);
+	//glGenVertexArraysOES(1, &vao);
+	//glBindVertexArrayOES(vao);
 	
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -187,13 +187,18 @@ ChipmunkDebugDrawInit(void)
   float ee = 10.0;
   float ff = -10.0;
 
-  HACKidentity(ProjectionMatrix);
-  HACKortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
+  HACKidentity(ProjectionMatrix2);
+  HACKortho(ProjectionMatrix2, (a), (b), (c), (d), (ee), (ff));
 
-  ModelViewProjectionMatrix_location = glGetUniformLocation(program, "ModelViewProjectionMatrix");
+  ModelViewProjectionMatrix_location2 = glGetUniformLocation(program, "ModelViewProjectionMatrix");
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArrayOES(0);
+	//glBindVertexArrayOES(0);
+
+	UNSET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
+	UNSET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
+	UNSET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
+	UNSET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
 	
 	CHECK_GL_ERRORS();
 }
@@ -369,15 +374,30 @@ ChipmunkDebugDrawFlushRenderer(void)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, triangle_buffer, GL_STREAM_DRAW);
-	
+
 	glUseProgram(program);
 	glUniform1f(glGetUniformLocation(program, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
-  glUniformMatrix4fv(ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+  glUniformMatrix4fv(ModelViewProjectionMatrix_location2, 1, GL_FALSE, ProjectionMatrix2);
+
+	SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
+	SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
+	SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
+	SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+  /*
+  */
 	
-	glBindVertexArrayOES(vao);
+	//glBindVertexArrayOES(vao);
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glDrawArrays(GL_TRIANGLES, 0, triangle_count*3);
-	glBindVertexArrayOES(0);
+	//glBindVertexArrayOES(0);
 		
+	UNSET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
+	UNSET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
+	UNSET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
+	UNSET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	CHECK_GL_ERRORS();
 }
 

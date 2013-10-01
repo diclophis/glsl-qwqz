@@ -174,7 +174,7 @@ int impl_draw() {
     ChipmunkDemoDefaultDrawImpl(space);
 
     ChipmunkDebugDrawFlushRenderer();
-    //ChipmunkDebugDrawPopRenderer();
+    ChipmunkDebugDrawPopRenderer();
   }
 
   if (doMenu) {
@@ -232,6 +232,16 @@ int impl_draw() {
       glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 1);
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
+
+  {
+  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+  }
+
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
 
@@ -261,6 +271,16 @@ int impl_draw() {
       glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
+
+  {
+  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+  }
+
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
   }

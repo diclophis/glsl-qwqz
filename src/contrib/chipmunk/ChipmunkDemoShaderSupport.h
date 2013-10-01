@@ -33,6 +33,10 @@ cpBool ValidateProgram(GLint program);
 #define GLSL(x) #x
 
 void SetAttribute(GLuint program, char *name, GLint size, GLenum gltype, GLsizei stride, GLvoid *offset);
+void UnSetAttribute(GLuint program, char *name, GLint size, GLenum gltype, GLsizei stride, GLvoid *offset);
 
 #define SET_ATTRIBUTE(program, type, name, gltype)\
 	SetAttribute(program, #name, sizeof(((type *)NULL)->name)/sizeof(GLfloat), gltype, sizeof(type), (GLvoid *)offsetof(type, name))
+
+#define UNSET_ATTRIBUTE(program, type, name, gltype)\
+	UnSetAttribute(program, #name, sizeof(((type *)NULL)->name)/sizeof(GLfloat), gltype, sizeof(type), (GLvoid *)offsetof(type, name))
