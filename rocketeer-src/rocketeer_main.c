@@ -25,8 +25,8 @@ void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
       break;
     case 1:
       // size is important!!
-      self->width = 2048;
-      self->height = 2048;
+      self->width = 1024;
+      self->height = 1024;
       break;
   }
   LOGV("_AtlasPage_createTexture: %s\n", path);
@@ -191,7 +191,7 @@ int impl_draw() {
         float bgw = 280.0 * 3.0;
         float spd = 1.0 + (float)a;
 
-        bgsScroll[a] += -100.0 * qwqz_engine->m_Timers[0].step * spd;
+        bgsScroll[a] += -20.0 * qwqz_engine->m_Timers[0].step * spd;
 
         if (bgsScroll[a] < -bgw) {
           bgsScroll[a] = 0.0;
@@ -238,7 +238,7 @@ int impl_draw() {
       skeleton->root->scaleX = 0.75;
       skeleton->root->scaleY = 0.75;
 
-      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.25);
+      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.75);
       AnimationState_apply(state, skeleton);
       Skeleton_updateWorldTransform(skeleton);
 
