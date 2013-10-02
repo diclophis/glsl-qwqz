@@ -1,7 +1,10 @@
 # OSX Makefile
 
-rocketeer:
+rocketeer: ~/Desktop/RobotAttackVector/skeleton.*
 	#cd platforms/osx && IMPL=rocketeer make clean
+	cp ~/Desktop/RobotAttackVector/skeleton.json assets/spine/robot.json
+	cp ~/Desktop/RobotAttackVector/skeleton.atlas assets/spine/robot.atlas
+	cp ~/Desktop/RobotAttackVector/skeleton.png assets/spine/robot.png
 	cd platforms/osx && IMPL=rocketeer make
 	platforms/osx/build/raptor_island
 
