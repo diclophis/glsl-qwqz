@@ -1,55 +1,63 @@
 {
 "bones": [
 	{ "name": "root" },
-	{ "name": "close-0", "parent": "root", "x": -284, "y": -124 },
-	{ "name": "close-1", "parent": "root", "y": -124 },
-	{ "name": "close-2", "parent": "root", "x": 284, "y": -124 },
-	{ "name": "far-0", "parent": "root", "x": -280 },
-	{ "name": "far-1", "parent": "root" },
-	{ "name": "far-2", "parent": "root", "x": 280 },
-	{ "name": "mid-0", "parent": "root", "x": -284 },
-	{ "name": "mid-1", "parent": "root" },
-	{ "name": "mid-2", "parent": "root", "x": 284 }
+	{ "name": "close-0", "parent": "root", "x": -284, "y": 113.87 },
+	{ "name": "close-1", "parent": "root", "y": 113.87 },
+	{ "name": "close-2", "parent": "root", "x": 284, "y": 113.87 },
+	{ "name": "far-0", "parent": "root", "x": -280, "y": 97.62 },
+	{ "name": "far-1", "parent": "root", "y": 97.62 },
+	{ "name": "far-2", "parent": "root", "x": 280, "y": 97.62 },
+	{ "name": "mid-0", "parent": "root", "x": -284, "y": 97.62 },
+	{ "name": "mid-1", "parent": "root", "y": 97.62 },
+	{ "name": "mid-2", "parent": "root", "x": 284, "y": 97.62 }
 ],
 "slots": [
-	{ "name": "bgDunesTile0001", "bone": "far-0", "attachment": "03BgFar/bgDunesTile0001" },
-	{ "name": "bgDunesTile0002", "bone": "far-1", "attachment": "03BgFar/bgDunesTile0002" },
-	{ "name": "bgDunesTile0003", "bone": "far-2", "attachment": "03BgFar/bgDunesTile0003" },
-	{ "name": "cityTiles0001", "bone": "mid-0", "attachment": "02BgMid/cityTiles0001" },
-	{ "name": "cityTiles0002", "bone": "mid-1", "attachment": "02BgMid/cityTiles0002" },
-	{ "name": "cityTiles0003", "bone": "mid-2", "attachment": "02BgMid/cityTiles0003" },
-	{ "name": "RoadTiles0003", "bone": "close-2", "attachment": "01BgClose/RoadTiles0003" },
-	{ "name": "RoadTiles0002", "bone": "close-1", "attachment": "01BgClose/RoadTiles0002" },
-	{ "name": "RoadTiles0001", "bone": "close-0", "attachment": "01BgClose/RoadTiles0001" }
+	{ "name": "lvl3bldg", "bone": "far-0", "attachment": "lvl3bldg" },
+	{ "name": "lvl3bldg2", "bone": "far-1", "attachment": "lvl3bldg" },
+	{ "name": "lvl3bldg3", "bone": "far-2", "attachment": "lvl3bldg" },
+	{ "name": "lvl2bldg", "bone": "mid-0", "attachment": "lvl2bldg" },
+	{ "name": "lvl2bldg2", "bone": "mid-1", "attachment": "lvl2bldg" },
+	{ "name": "lvl2bldg3", "bone": "mid-2", "attachment": "lvl2bldg" },
+	{ "name": "buildingA_0001", "bone": "close-0", "attachment": "buildingA_0001" },
+	{ "name": "buildingB_0001", "bone": "close-1", "attachment": "buildingB_0001" },
+	{ "name": "buildingC_0001", "bone": "close-2", "attachment": "buildingC_0001" },
+	{ "name": "close-2", "bone": "close-2", "attachment": "buildingB_0001" },
+	{ "name": "close-22", "bone": "close-2", "attachment": "buildingD_0001" }
 ],
 "skins": {
 	"default": {
-		"RoadTiles0001": {
-			"01BgClose/RoadTiles0001": { "width": 284, "height": 300 }
+		"buildingA_0001": {
+			"buildingA_0001": { "y": -10, "width": 76, "height": 207 }
 		},
-		"RoadTiles0002": {
-			"01BgClose/RoadTiles0002": { "width": 284, "height": 300 }
+		"buildingB_0001": {
+			"buildingB_0001": { "y": -2, "width": 71, "height": 223 }
 		},
-		"RoadTiles0003": {
-			"01BgClose/RoadTiles0003": { "width": 284, "height": 300 }
+		"buildingC_0001": {
+			"buildingC_0001": { "x": 103.12, "width": 83, "height": 222 }
 		},
-		"bgDunesTile0001": {
-			"03BgFar/bgDunesTile0001": { "width": 280, "height": 550 }
+		"close-2": {
+			"buildingB_0001": { "width": 71, "height": 223 }
 		},
-		"bgDunesTile0002": {
-			"03BgFar/bgDunesTile0002": { "width": 280, "height": 550 }
+		"close-22": {
+			"buildingD_0001": { "x": -79.74, "width": 71, "height": 218 }
 		},
-		"bgDunesTile0003": {
-			"03BgFar/bgDunesTile0003": { "width": 280, "height": 550 }
+		"lvl2bldg": {
+			"lvl2bldg": { "width": 351, "height": 192 }
 		},
-		"cityTiles0001": {
-			"02BgMid/cityTiles0001": { "width": 280, "height": 475 }
+		"lvl2bldg2": {
+			"lvl2bldg": { "width": 351, "height": 192 }
 		},
-		"cityTiles0002": {
-			"02BgMid/cityTiles0002": { "width": 280, "height": 475 }
+		"lvl2bldg3": {
+			"lvl2bldg": { "width": 351, "height": 192 }
 		},
-		"cityTiles0003": {
-			"02BgMid/cityTiles0003": { "width": 280, "height": 475 }
+		"lvl3bldg": {
+			"lvl3bldg": { "width": 259, "height": 129 }
+		},
+		"lvl3bldg2": {
+			"lvl3bldg": { "width": 259, "height": 129 }
+		},
+		"lvl3bldg3": {
+			"lvl3bldg": { "width": 259, "height": 129 }
 		}
 	}
 },

@@ -3,66 +3,45 @@ skeleton.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-01BgClose/RoadTiles0001
+buildingA_0001
   rotate: false
-  xy: 848, 520
-  size: 284, 153
-  orig: 284, 300
+  xy: 835, 17
+  size: 76, 207
+  orig: 76, 207
   offset: 0, 0
   index: -1
-01BgClose/RoadTiles0002
+buildingB_0001
   rotate: false
-  xy: 848, 675
-  size: 284, 291
-  orig: 284, 300
+  xy: 690, 3
+  size: 70, 221
+  orig: 71, 223
   offset: 0, 0
   index: -1
-01BgClose/RoadTiles0003
+buildingC_0001
   rotate: false
-  xy: 1413, 693
-  size: 284, 273
-  orig: 284, 300
+  xy: 610, 2
+  size: 78, 222
+  orig: 83, 222
+  offset: 5, 0
+  index: -1
+buildingD_0001
+  rotate: false
+  xy: 762, 6
+  size: 71, 218
+  orig: 71, 218
   offset: 0, 0
   index: -1
-02BgMid/cityTiles0001
+lvl2bldg
   rotate: false
-  xy: 2, 2
-  size: 280, 413
-  orig: 280, 475
-  offset: 0, 0
+  xy: 2, 51
+  size: 348, 173
+  orig: 351, 192
+  offset: 3, 0
   index: -1
-02BgMid/cityTiles0002
+lvl3bldg
   rotate: false
-  xy: 1134, 671
-  size: 277, 295
-  orig: 280, 475
-  offset: 2, 1
-  index: -1
-02BgMid/cityTiles0003
-  rotate: false
-  xy: 284, 14
-  size: 270, 419
-  orig: 280, 475
-  offset: 10, 0
-  index: -1
-03BgFar/bgDunesTile0001
-  rotate: false
-  xy: 2, 417
-  size: 280, 549
-  orig: 280, 550
-  offset: 0, 1
-  index: -1
-03BgFar/bgDunesTile0002
-  rotate: false
-  xy: 566, 442
-  size: 280, 524
-  orig: 280, 550
-  offset: 0, 1
-  index: -1
-03BgFar/bgDunesTile0003
-  rotate: false
-  xy: 284, 435
-  size: 280, 531
-  orig: 280, 550
-  offset: 0, 1
+  xy: 352, 99
+  size: 256, 125
+  orig: 259, 129
+  offset: 3, 0
   index: -1
