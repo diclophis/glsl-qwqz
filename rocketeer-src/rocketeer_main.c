@@ -20,13 +20,13 @@ void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
   switch((int)self->rendererObject) {
     case 0:
       // size is important!!
-      self->width = 512;
-      self->height = 512;
+      self->width = 2048;
+      self->height = 2048;
       break;
     case 1:
       // size is important!!
-      self->width = 1024;
-      self->height = 1024;
+      self->width = 2048;
+      self->height = 2048;
       break;
   }
   LOGV("_AtlasPage_createTexture: %s\n", path);
@@ -238,7 +238,7 @@ int impl_draw() {
       skeleton->root->scaleX = 0.75;
       skeleton->root->scaleY = 0.75;
 
-      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 0.75);
+      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.25);
       AnimationState_apply(state, skeleton);
       Skeleton_updateWorldTransform(skeleton);
 
@@ -360,7 +360,7 @@ int impl_main(int argc, char** argv) {
       skeleton = Skeleton_create(skeletonData);
       stateData = AnimationStateData_create(skeletonData);
       state = AnimationState_create(stateData);
-      AnimationState_setAnimationByName(state, "walk", 1);
+      AnimationState_setAnimationByName(state, "walk_alt", 1);
 
       Atlas *atlas2 = Atlas_readAtlasFile("assets/spine/bgs.atlas");
       SkeletonJson *json2 = SkeletonJson_create(atlas2);

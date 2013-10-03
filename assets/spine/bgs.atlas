@@ -4,43 +4,43 @@ format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 buildingA_0001
-  rotate: false
-  xy: 835, 17
+  rotate: true
+  xy: 576, 449
   size: 76, 207
   orig: 76, 207
   offset: 0, 0
   index: -1
 buildingB_0001
   rotate: false
-  xy: 690, 3
+  xy: 2, 2
   size: 70, 221
   orig: 71, 223
   offset: 0, 0
   index: -1
 buildingC_0001
-  rotate: false
-  xy: 610, 2
+  rotate: true
+  xy: 352, 447
   size: 78, 222
   orig: 83, 222
   offset: 5, 0
   index: -1
 buildingD_0001
-  rotate: false
-  xy: 762, 6
+  rotate: true
+  xy: 352, 374
   size: 71, 218
   orig: 71, 218
   offset: 0, 0
   index: -1
 lvl2bldg
   rotate: false
-  xy: 2, 51
+  xy: 2, 352
   size: 348, 173
   orig: 351, 192
   offset: 3, 0
   index: -1
 lvl3bldg
   rotate: false
-  xy: 352, 99
+  xy: 2, 225
   size: 256, 125
   orig: 259, 129
   offset: 3, 0
