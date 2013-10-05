@@ -26,6 +26,7 @@ struct qwqz_handle_t {
   float m_ScreenHeight;
   float m_ScreenAspect;
   float m_ScreenHalfHeight;
+  float m_ScreenHalfWidth;
   struct qwqz_batch_t *m_Batches;
   struct qwqz_linkage_t *m_Linkages;
   struct qwqz_timer_t *m_Timers;
@@ -92,8 +93,8 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff);
 int qwqz_linkage_init(GLuint program, qwqz_linkage e);
 int qwqz_compile(GLuint type, const char *path);
 int qwqz_texture_init(GLuint u, const char *path);
-int qwqz_buffer_texture_init();
-int qwqz_buffer_target_init(int texture);
+int qwqz_buffer_texture_init(GLuint t);
+int qwqz_buffer_target_init(GLuint texture);
 int qwqz_timer_init(qwqz_timer t);
 void qwqz_tick_timer(qwqz_timer t);
 void translate(qwqz_linkage e, float *m, float x, float y, float z);

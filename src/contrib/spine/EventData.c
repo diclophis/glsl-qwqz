@@ -31,25 +31,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_ATLASATTACHMENTLOADER_H_
-#define SPINE_ATLASATTACHMENTLOADER_H_
+#include <spine/EventData.h>
+#include <spine/extension.h>
 
-#include <spine/AttachmentLoader.h>
-#include <spine/Atlas.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct {
-	AttachmentLoader super;
-	Atlas* atlas;
-} AtlasAttachmentLoader;
-
-AtlasAttachmentLoader* AtlasAttachmentLoader_create (Atlas* atlas);
-
-#ifdef __cplusplus
+EventData* EventData_create (const char* name) {
+	EventData* self = NEW(EventData);
+	MALLOC_STR(self->name, name);
+	return self;
 }
-#endif
 
-#endif /* SPINE_ATLASATTACHMENTLOADER_H_ */
+void EventData_dispose (EventData* self) {
+	FREE(self->stringValue);
+	FREE(self->name);
+	FREE(self);
+}

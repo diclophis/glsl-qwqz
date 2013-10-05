@@ -31,25 +31,26 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_ATLASATTACHMENTLOADER_H_
-#define SPINE_ATLASATTACHMENTLOADER_H_
+#include <spine/BoundingBoxAttachment.h>
+#include <spine/extension.h>
 
-#include <spine/AttachmentLoader.h>
-#include <spine/Atlas.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct {
-	AttachmentLoader super;
-	Atlas* atlas;
-} AtlasAttachmentLoader;
-
-AtlasAttachmentLoader* AtlasAttachmentLoader_create (Atlas* atlas);
-
-#ifdef __cplusplus
+BoundingBoxAttachment* BoundingBoxAttachment_create (const char* name) {
+	BoundingBoxAttachment* self = NEW(BoundingBoxAttachment);
+	_Attachment_init(SUPER(self), name, ATTACHMENT_BOUNDING_BOX, _Attachment_deinit);
+	return self;
 }
-#endif
 
-#endif /* SPINE_ATLASATTACHMENTLOADER_H_ */
+void BoundingBoxAttachment_computeWorldVertices (BoundingBoxAttachment* self, float x, float y, Bone* bone, float* worldVertices) {
+	int i;
+	float px, py;
+	float* vertices = self->vertices;
+
+	x += bone->worldX;
+	y += bone->worldY;
+	for (i = 0; i < self->verticesCount; i += 2) {
+		px = vertices[i];
+		py = vertices[i + 1];
+		worldVertices[i] = px * bone->m00 + py * bone->m01 + x;
+		worldVertices[i + 1] = px * bone->m10 + py * bone->m11 + y;
+	}
+}

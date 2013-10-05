@@ -1,15 +1,23 @@
-/*******************************************************************************
+/******************************************************************************
+ * Spine Runtime Software License - Version 1.1
+ * 
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms in whole or in part, with
+ * or without modification, are permitted provided that the following conditions
+ * are met:
  * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * 1. A Spine Essential, Professional, Enterprise, or Education License must
+ *    be purchased from Esoteric Software and the license must remain valid:
+ *    http://esotericsoftware.com/
+ * 2. Redistributions of source code must retain this license, which is the
+ *    above copyright notice, this declaration of conditions and the following
+ *    disclaimer.
+ * 3. Redistributions in binary form must reproduce this license, which is the
+ *    above copyright notice, this declaration of conditions and the following
+ *    disclaimer, in the documentation and/or other materials provided with the
+ *    distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -21,10 +29,12 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+ *****************************************************************************/
 
 #ifndef SPINE_ANIMATION_H_
 #define SPINE_ANIMATION_H_
+
+#include <spine/Event.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,8 +54,18 @@ typedef struct {
 Animation* Animation_create (const char* name, int timelineCount);
 void Animation_dispose (Animation* self);
 
-void Animation_apply (const Animation* self, struct Skeleton* skeleton, float time, int/*bool*/loop);
-void Animation_mix (const Animation* self, struct Skeleton* skeleton, float time, int/*bool*/loop, float alpha);
+/** Poses the skeleton at the specified time for this animation.
+ * @param lastTime The last time the animation was applied.
+ * @param events Any triggered events are added. */
+void Animation_apply (const Animation* self, struct Skeleton* skeleton, float lastTime, float time, int loop,
+		Event** events, int* eventCount);
+
+/** Poses the skeleton at the specified time for this animation mixed with the current pose.
+ * @param lastTime The last time the animation was applied.
+ * @param events Any triggered events are added.
+ * @param alpha The amount of this animation that affects the current pose. */
+void Animation_mix (const Animation* self, struct Skeleton* skeleton, float lastTime, float time, int loop, Event** events,
+		int* eventCount, float alpha);
 
 /**/
 
@@ -54,7 +74,8 @@ struct Timeline {
 };
 
 void Timeline_dispose (Timeline* self);
-void Timeline_apply (const Timeline* self, struct Skeleton* skeleton, float time, float alpha);
+void Timeline_apply (const Timeline* self, struct Skeleton* skeleton, float lastTime, float time, Event** firedEvents,
+		int* eventCount, float alpha);
 
 /**/
 
@@ -128,6 +149,33 @@ AttachmentTimeline* AttachmentTimeline_create (int frameCount);
 
 /* @param attachmentName May be 0. */
 void AttachmentTimeline_setFrame (AttachmentTimeline* self, int frameIndex, float time, const char* attachmentName);
+
+/**/
+
+typedef struct {
+	Timeline super;
+	int const framesLength;
+	float* const frames; /* time, ... */
+	Event** const events;
+} EventTimeline;
+
+EventTimeline* EventTimeline_create (int frameCount);
+
+void EventTimeline_setFrame (EventTimeline* self, int frameIndex, float time, Event* event);
+
+/**/
+
+typedef struct {
+	Timeline super;
+	int const framesLength;
+	float* const frames; /* time, ... */
+	const int** const drawOrders;
+	int const slotCount;
+} DrawOrderTimeline;
+
+DrawOrderTimeline* DrawOrderTimeline_create (int frameCount, int slotCount);
+
+void DrawOrderTimeline_setFrame (DrawOrderTimeline* self, int frameIndex, float time, const int* drawOrder);
 
 #ifdef __cplusplus
 }

@@ -1,27 +1,4 @@
-/*******************************************************************************
- * Copyright (c) 2013, Esoteric Software
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+
 
 /*
  Implementation notes:
@@ -56,7 +33,7 @@
 
 /* All allocation uses these. */
 #define MALLOC(TYPE,COUNT) ((TYPE*)_malloc(sizeof(TYPE) * COUNT))
-#define CALLOC(TYPE,COUNT) ((TYPE*)_calloc(1, sizeof(TYPE) * COUNT))
+#define CALLOC(TYPE,COUNT) ((TYPE*)_calloc(COUNT, sizeof(TYPE)))
 #define NEW(TYPE) CALLOC(TYPE,1)
 
 /* Gets the direct super class. Type safe. */
@@ -80,10 +57,18 @@
 /* Allocates a new char[], assigns it to TO, and copies FROM to it. Can be used on const types. */
 #define MALLOC_STR(TO,FROM) strcpy(CONST_CAST(char*, TO) = (char*)malloc(strlen(FROM) + 1), FROM)
 
+#ifdef __STDC_VERSION__
+	#define FMOD(A,B) fmodf(A, B)
+#else
+	#define FMOD(A,B) (float)fmod(A, B)
+#endif
+
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <spine/Skeleton.h>
 #include <spine/RegionAttachment.h>
+#include <spine/BoundingBoxAttachment.h>
 #include <spine/Animation.h>
 #include <spine/Atlas.h>
 #include <spine/AttachmentLoader.h>
@@ -132,14 +117,16 @@ void _Attachment_deinit (Attachment* self);
 
 void _Timeline_init (Timeline* self, /**/
 		void (*dispose) (Timeline* self), /**/
-		void (*apply) (const Timeline* self, Skeleton* skeleton, float time, float alpha));
+		void (*apply) (const Timeline* self, Skeleton* skeleton, float lastTime, float time, Event** firedEvents, int* eventCount,
+				float alpha));
 void _Timeline_deinit (Timeline* self);
 
 /**/
 
 void _CurveTimeline_init (CurveTimeline* self, int frameCount, /**/
 		void (*dispose) (Timeline* self), /**/
-		void (*apply) (const Timeline* self, Skeleton* skeleton, float time, float alpha));
+		void (*apply) (const Timeline* self, Skeleton* skeleton, float lastTime, float time, Event** firedEvents, int* eventCount,
+				float alpha));
 void _CurveTimeline_deinit (CurveTimeline* self);
 
 #ifdef __cplusplus

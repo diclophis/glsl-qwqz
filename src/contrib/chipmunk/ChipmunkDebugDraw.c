@@ -52,7 +52,7 @@ v2f(cpVect v)
 typedef struct Vertex {struct v2f vertex, aa_coord; cpSpaceDebugColor fill_color, outline_color;} Vertex;
 typedef struct Triangle {Vertex a, b, c;} Triangle;
 
-static GLuint vao = 0;
+//static GLuint vao = 0;
 static GLuint vbo = 0;
 
 void HACKidentity(GLfloat *m) {
