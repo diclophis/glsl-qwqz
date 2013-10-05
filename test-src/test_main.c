@@ -34,6 +34,7 @@ int impl_draw() {
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
 
+
   verticeBuffer[0] = -1.0;
   verticeBuffer[1] = -1.0;
 
@@ -67,6 +68,15 @@ int impl_draw() {
 
   translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
+  {
+  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+  }
+
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
   // Render to the screen
@@ -88,7 +98,7 @@ int impl_draw() {
 
 
 int impl_resize(int width, int height) {
-  qwqz_resize(qwqz_engine, width, height);
+  return qwqz_resize(qwqz_engine, width, height);
 }
 
 

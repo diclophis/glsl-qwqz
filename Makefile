@@ -12,7 +12,7 @@ rocketeer: ~/Desktop/RobotAttackVector/skeleton.* ~/Desktop/RobotAttackVectorBac
 	platforms/osx/build/raptor_island
 
 test:
-	cd platforms/osx && IMPL=test make clean
+	#cd platforms/osx && IMPL=test make clean
 	cd platforms/osx && IMPL=test make
 	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/flower.fsh
 
