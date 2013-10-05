@@ -1,15 +1,23 @@
-/*******************************************************************************
+/******************************************************************************
+ * Spine Runtime Software License - Version 1.1
+ * 
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms in whole or in part, with
+ * or without modification, are permitted provided that the following conditions
+ * are met:
  * 
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * 1. A Spine Essential, Professional, Enterprise, or Education License must
+ *    be purchased from Esoteric Software and the license must remain valid:
+ *    http://esotericsoftware.com/
+ * 2. Redistributions of source code must retain this license, which is the
+ *    above copyright notice, this declaration of conditions and the following
+ *    disclaimer.
+ * 3. Redistributions in binary form must reproduce this license, which is the
+ *    above copyright notice, this declaration of conditions and the following
+ *    disclaimer, in the documentation and/or other materials provided with the
+ *    distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -21,10 +29,9 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ******************************************************************************/
+ *****************************************************************************/
 
 #include <spine/Bone.h>
-#include <math.h>
 #include <spine/extension.h>
 
 static int yDown;
@@ -58,9 +65,15 @@ void Bone_updateWorldTransform (Bone* self, int flipX, int flipY) {
 	if (self->parent) {
 		CONST_CAST(float, self->worldX) = self->x * self->parent->m00 + self->y * self->parent->m01 + self->parent->worldX;
 		CONST_CAST(float, self->worldY) = self->x * self->parent->m10 + self->y * self->parent->m11 + self->parent->worldY;
-		CONST_CAST(float, self->worldScaleX) = self->parent->worldScaleX * self->scaleX;
-		CONST_CAST(float, self->worldScaleY) = self->parent->worldScaleY * self->scaleY;
-		CONST_CAST(float, self->worldRotation) = self->parent->worldRotation + self->rotation;
+		if (self->data->inheritScale) {
+			CONST_CAST(float, self->worldScaleX) = self->parent->worldScaleX * self->scaleX;
+			CONST_CAST(float, self->worldScaleY) = self->parent->worldScaleY * self->scaleY;
+		} else {
+			CONST_CAST(float, self->worldScaleX) = self->scaleX;
+			CONST_CAST(float, self->worldScaleY) = self->scaleY;
+		}
+		CONST_CAST(float, self->worldRotation) =
+				self->data->inheritRotation ? self->parent->worldRotation + self->rotation : self->rotation;
 	} else {
 		CONST_CAST(float, self->worldX) = flipX ? -self->x : self->x;
 		CONST_CAST(float, self->worldY) = flipX ? -self->y : self->y;

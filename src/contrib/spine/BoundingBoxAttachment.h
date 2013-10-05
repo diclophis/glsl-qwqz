@@ -31,25 +31,29 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_ATLASATTACHMENTLOADER_H_
-#define SPINE_ATLASATTACHMENTLOADER_H_
+#ifndef SPINE_BOUNDINGBOXATTACHMENT_H_
+#define SPINE_BOUNDINGBOXATTACHMENT_H_
 
-#include <spine/AttachmentLoader.h>
+#include <spine/Attachment.h>
 #include <spine/Atlas.h>
+#include <spine/Slot.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct {
-	AttachmentLoader super;
-	Atlas* atlas;
-} AtlasAttachmentLoader;
+typedef struct BoundingBoxAttachment BoundingBoxAttachment;
+struct BoundingBoxAttachment {
+	Attachment super;
+	int verticesCount;
+	float* vertices;
+};
 
-AtlasAttachmentLoader* AtlasAttachmentLoader_create (Atlas* atlas);
+BoundingBoxAttachment* BoundingBoxAttachment_create (const char* name);
+void BoundingBoxAttachment_computeWorldVertices (BoundingBoxAttachment* self, float x, float y, Bone* bone, float* vertices);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SPINE_ATLASATTACHMENTLOADER_H_ */
+#endif /* SPINE_BOUNDINGBOXATTACHMENT_H_ */
