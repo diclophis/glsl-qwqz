@@ -464,7 +464,7 @@ int impl_main(int argc, char** argv) {
     qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
-    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/starnest.fsh");
+    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/shadowgrid.fsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/testquad.fsh");
 
     if (v && f && f2) {
