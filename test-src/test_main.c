@@ -34,18 +34,17 @@ int impl_draw() {
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
 
+  verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
 
-  verticeBuffer[0] = -1.0;
-  verticeBuffer[1] = -1.0;
+  verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
 
-  verticeBuffer[2] = -1.0;
-  verticeBuffer[3] = 1.0;
+  verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
 
-  verticeBuffer[4] = 1.0;
-  verticeBuffer[5] = 1.0;
-
-  verticeBuffer[6] = 1.0;
-  verticeBuffer[7] = -1.0;
+  verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
 
   uvBuffer[0] = 0.0;
   uvBuffer[1] = 0.0;
@@ -117,7 +116,7 @@ int impl_main(int argc, char** argv) {
     qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
     // render target
-    int renderBufferTexture = qwqz_buffer_texture_init();
+    int renderBufferTexture = qwqz_buffer_texture_init(GL_TEXTURE0);
     qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
     qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);

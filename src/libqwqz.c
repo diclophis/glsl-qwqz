@@ -150,6 +150,7 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
+  e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
   glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -356,12 +357,12 @@ int qwqz_texture_init(GLuint unit, const char *path) {
 }
 
 
-int qwqz_buffer_texture_init() {
+int qwqz_buffer_texture_init(GLuint t) {
   // The texture we're going to render to
   GLuint renderedTexture = 0;
   glGenTextures(1, &renderedTexture);
 
-  glActiveTexture(GL_TEXTURE0);
+  glActiveTexture(t);
   glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
   int m_RenderTextureWidth = 512;
@@ -376,7 +377,7 @@ int qwqz_buffer_texture_init() {
 }
 
 
-int qwqz_buffer_target_init(renderedTexture) {
+int qwqz_buffer_target_init(GLuint renderedTexture) {
 
   // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
   GLuint FramebufferName = 0;

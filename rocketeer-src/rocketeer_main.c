@@ -142,6 +142,7 @@ static cpVect translate2 = {0, 0};
 static cpFloat scale = 1.0;
 static int doPhysics = 1;
 static int doSpine = 1;
+static int doShaderBg = 1;
 
 
 static Skeleton* bgsSkeleton;
@@ -151,6 +152,7 @@ static Skeleton* skeleton;
 static AnimationStateData* stateData;
 static AnimationState* state;
 static float verticeBuffer[8];
+static float uvBuffer[8];
 static float bgsScroll[3] = { 0.0, 0.0, 0.0 };
 
 
@@ -160,8 +162,70 @@ int impl_draw() {
 
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+  //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  //glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+
+  if (doShaderBg) {
+    qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
+    qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
+
+    verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
+    verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
+
+    verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
+    verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
+
+    verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
+    verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
+
+    verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
+    verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
+
+    uvBuffer[0] = 0.0;
+    uvBuffer[1] = 0.0;
+    uvBuffer[2] = 0.0;
+    uvBuffer[3] = 0.0;
+    uvBuffer[4] = 0.0;
+    uvBuffer[5] = 0.0;
+    uvBuffer[6] = 0.0;
+    uvBuffer[7] = 0.0;
+
+    qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
+    qwqz_batch_add(&qwqz_engine->m_Batches[2], 0, verticeBuffer, NULL, uvBuffer);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
+    glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+
+    glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
+    glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
+    glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+
+    translate(&qwqz_engine->m_Linkages[1], NULL, 0, 0, 0);
+
+    {
+    qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1]);
+    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+    glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_PositionAttribute);
+    glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+    glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_TextureAttribute);
+    }
+
+    qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
+
+    // Render to the screen
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+
+    glUseProgram(qwqz_engine->m_Linkages[2].m_Program);
+    glUniform2f(qwqz_engine->m_Linkages[2].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    glUniform1f(qwqz_engine->m_Linkages[2].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+    glUniform1i(qwqz_engine->m_Linkages[2].g_TextureUniform, 2);
+
+    translate(&qwqz_engine->m_Linkages[2], NULL, 0, 0, 0);
+
+    qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
+  }
 
   if (doPhysics) {
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
@@ -352,7 +416,8 @@ int impl_main(int argc, char** argv) {
 
   LOGV("fix implied assumption about texture bindings %d %d\n", t0, t1);
 
-  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
+  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 3);
+  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 3);
 
   if (doSpine) {
     {
@@ -383,8 +448,40 @@ int impl_main(int argc, char** argv) {
       qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
     }
 
-    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
     qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
+  }
+
+  if (doShaderBg) {
+    qwqz_engine->m_RenderTextureWidth = 256;
+
+    GLuint v = 0;
+    GLuint f = 0;
+    GLuint f2 = 0;
+    GLuint program = 0;
+
+    // render target
+    int renderBufferTexture = qwqz_buffer_texture_init(GL_TEXTURE2);
+    qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
+
+    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
+    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/starnest.fsh");
+    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/testquad.fsh");
+
+    if (v && f && f2) {
+      // Create and link the shader program
+      program = glCreateProgram();
+      glAttachShader(program, v);
+      glAttachShader(program, f);
+      qwqz_linkage_init(program, &qwqz_engine->m_Linkages[1]);
+
+      program = glCreateProgram();
+      glAttachShader(program, v);
+      glAttachShader(program, f2);
+      qwqz_linkage_init(program, &qwqz_engine->m_Linkages[2]);
+    }
+
+    qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
+    qwqz_batch_init(&qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2], 1);
   }
 
   return 0;
