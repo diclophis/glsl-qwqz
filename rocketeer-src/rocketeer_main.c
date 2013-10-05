@@ -204,7 +204,7 @@ int impl_draw() {
             Slot *s = bgsSkeleton->drawOrder[c];
             RegionAttachment *ra = (RegionAttachment *)s->attachment;
             if (s->attachment->type == ATTACHMENT_REGION) {
-              RegionAttachment_computeVertices(ra, scx, 0.0, s->bone, verticeBuffer);
+              RegionAttachment_computeWorldVertices(ra, scx, 0.0, s->bone, verticeBuffer);
               qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
             }
           }
@@ -246,7 +246,7 @@ int impl_draw() {
         Slot *s = skeleton->drawOrder[i];
         RegionAttachment *ra = (RegionAttachment *)s->attachment;
         if (s->attachment->type == ATTACHMENT_REGION) {
-          RegionAttachment_computeVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+          RegionAttachment_computeWorldVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
       }
@@ -350,6 +350,8 @@ int impl_main(int argc, char** argv) {
   int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/robot.png");
   int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/spine/bgs.png");
 
+  LOGV("fix implied assumption about texture bindings %d %d\n", t0, t1);
+
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
 
   if (doSpine) {
@@ -360,7 +362,7 @@ int impl_main(int argc, char** argv) {
       skeleton = Skeleton_create(skeletonData);
       stateData = AnimationStateData_create(skeletonData);
       state = AnimationState_create(stateData);
-      AnimationState_setAnimationByName(state, "walk_alt", 1);
+      AnimationState_setAnimationByName(state, 0, "walk_alt", 1);
 
       Atlas *atlas2 = Atlas_readAtlasFile("assets/spine/bgs.atlas");
       SkeletonJson *json2 = SkeletonJson_create(atlas2);
@@ -368,7 +370,7 @@ int impl_main(int argc, char** argv) {
       bgsSkeleton = Skeleton_create(skeletonData2);
       bgsStateData = AnimationStateData_create(skeletonData2);
       bgsState = AnimationState_create(bgsStateData);
-      AnimationState_setAnimationByName(bgsState, "default", 1);
+      AnimationState_setAnimationByName(bgsState, 0, "default", 1);
     }
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
