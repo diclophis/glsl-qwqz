@@ -252,10 +252,11 @@
 			},
 			"bone9-copy": {
 				"rotate": [
-					{ "time": 0, "angle": 87.11 },
+					{ "time": 0, "angle": -244.6 },
 					{ "time": 1.6666, "angle": 98.32 },
-					{ "time": 3.3333, "angle": 68.12 },
-					{ "time": 6.6333, "angle": 86.72 }
+					{ "time": 3.3333, "angle": -264.33 },
+					{ "time": 5, "angle": -254.37 },
+					{ "time": 6.6333, "angle": -244.62 }
 				]
 			},
 			"thigh_far": {
@@ -276,10 +277,11 @@
 			},
 			"bone9": {
 				"rotate": [
-					{ "time": 0, "angle": 62.81 },
-					{ "time": 3.3333, "angle": 86.84 },
+					{ "time": 0, "angle": -261.31 },
+					{ "time": 1.6666, "angle": -250.5 },
+					{ "time": 3.3333, "angle": -239.68 },
 					{ "time": 5, "angle": 80.82 },
-					{ "time": 6.6333, "angle": 62.81 }
+					{ "time": 6.6333, "angle": -258.31 }
 				]
 			},
 			"bone13": {

@@ -1,5 +1,6 @@
 // test impl
 
+#define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
 
 #include "opengles_bridge.h"
 #include "libqwqz.h"
@@ -233,7 +234,7 @@ int impl_draw() {
       bgsSkeleton->root->scaleX = 1.0;
       bgsSkeleton->root->scaleY = 1.0;
 
-      AnimationState_update(bgsState, qwqz_engine->m_Timers[0].step * 0.1);
+      AnimationState_update(bgsState, 0); //qwqz_engine->m_Timers[0].step * 0.1);
       AnimationState_apply(bgsState, bgsSkeleton);
       Skeleton_updateWorldTransform(bgsSkeleton);
 
@@ -295,11 +296,11 @@ close-0
     if (1) {
       qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
-      skeleton->root->scaleX = 0.75;
-      skeleton->root->scaleY = 0.75;
+      skeleton->root->scaleX = 1.0;
+      skeleton->root->scaleY = 1.0;
 
-      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.25);
-      AnimationState_apply(state, skeleton);
+      //AnimationState_update(state, 0); //qwqz_engine->m_Timers[0].step * 3.25);
+      //AnimationState_apply(state, skeleton);
       Skeleton_updateWorldTransform(skeleton);
 
       for (int i=0; i<skeleton->slotCount; i++) {
@@ -399,7 +400,7 @@ int impl_main(int argc, char** argv) {
     for(int i=0; i<5; i++){
       for(int j=0; j<=i; j++){
         body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(1.0f, 30.0f, 30.0f)));
-        cpBodySetPosition(body, cpv(j*43 - i*16, 400 + i*64));
+        cpBodySetPosition(body, cpv(j*43 - i*16, 500 + i*64));
         
         shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.5f));
         cpShapeSetElasticity(shape, 0.0f);
@@ -410,7 +411,7 @@ int impl_main(int argc, char** argv) {
     // Add a ball to make things more interesting
     cpFloat radius = 15.0f;
     body = cpSpaceAddBody(space, cpBodyNew(10.0f, cpMomentForCircle(10.0f, 0.0f, radius, cpvzero)));
-    cpBodySetPosition(body, cpv(0, 340 + radius+5));
+    cpBodySetPosition(body, cpv(0, 440 + radius+5));
 
     shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
     cpShapeSetElasticity(shape, 0.0f);
@@ -474,6 +475,48 @@ close-0
     for (int i=0; i<9; i++) {
       bgsScroll[i] = (2 - (i % 3)) * 1024.0;
     }
+
+      skeleton->root->scaleX = 1.0;
+      skeleton->root->scaleY = 1.0;
+
+      //AnimationState_update(state, 1.0);
+      //AnimationState_apply(state, skeleton);
+      Skeleton_updateWorldTransform(skeleton);
+
+      cpGroup spineGroup = 1;
+
+      for (int i=0; i<skeleton->slotCount; i++) {
+        Slot *s = skeleton->drawOrder[i];
+        if (s->attachment->type == ATTACHMENT_REGION) {
+
+          RegionAttachment *ra = (RegionAttachment *)s->attachment;
+          //RegionAttachment_computeWorldVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+          //qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+          float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
+          float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation); //DEGREES_TO_RADIANS(s->bone->worldRotation);
+
+          float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
+          float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
+
+          LOGV("%s %f %f %f\n", s->data->name, x, y, r);
+
+          //LOGV("%s %f %f %f %f %f\n", ra->super.name, s->bone->worldX + ra->x, s->bone->worldY + ra->y, ra->width, ra->height, ra->rotation);
+
+          cpBody *body;
+          cpShape *shape;
+
+          //body = cpSpaceAddBody(space, cpBodyNewStatic()); //cpBodyNew(1.0f, cpMomentForBox(1.0f, ra->width, ra->height)));
+          body = cpBodyNewStatic();
+          cpBodySetAngle(body, r);
+          cpBodySetPosition(body, cpv(x, y));
+          
+          shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
+          cpShapeSetElasticity(shape, 0.0f);
+          cpShapeSetFriction(shape, 0.8f);
+          //cpShapeSetGroup(shape, spineGroup);
+          shape->filter.group = spineGroup;
+        }
+      }
   }
 
   if (doShaderBg) {

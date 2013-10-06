@@ -163,7 +163,7 @@ precision highp float;
 			vec4 fo_color = mix(v_fill_color, v_outline_color, fo_step);
 			
 			// Use pre-multiplied alpha.
-			float alpha = 1.0 - aa_step(1.0 - fw, 1.0, l);
+			float alpha = 0.75; //1.0 - aa_step(1.0 - fw, 1.0, l);
 			gl_FragColor = fo_color*(fo_color.a*alpha);
 			//gl_FragColor = vec4(vec3(l), 1);
 		}
@@ -184,10 +184,10 @@ precision highp float;
 	SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
 	SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
 
-  float m_ScreenHalfHeight = 300.0;
+  float m_ScreenHalfHeight = 256.0;
   float m_ScreenAspect = 1.0;
 
-  float m_Zoom2 = 1.0;
+  float m_Zoom2 = 2.0;
   float a = (-m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
   float b = (m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
   float c = (-m_ScreenHalfHeight) * m_Zoom2;
