@@ -1,63 +1,55 @@
 {
 "bones": [
 	{ "name": "root" },
-	{ "name": "close-0", "parent": "root", "x": -522.35, "y": 326.55 },
+	{ "name": "close-0", "parent": "root", "y": 326.55 },
 	{ "name": "close-1", "parent": "root", "y": 326.55 },
-	{ "name": "close-2", "parent": "root", "x": 460.01, "y": 326.55 },
-	{ "name": "far-0", "parent": "root", "x": -280, "y": 261.72 },
+	{ "name": "close-2", "parent": "root", "y": 326.55 },
+	{ "name": "far-0", "parent": "root", "y": 261.72 },
 	{ "name": "far-1", "parent": "root", "y": 261.72 },
-	{ "name": "far-2", "parent": "root", "x": 280, "y": 261.72 },
-	{ "name": "mid-0", "parent": "root", "x": -284, "y": 282.34 },
+	{ "name": "far-2", "parent": "root", "y": 261.72 },
+	{ "name": "mid-0", "parent": "root", "y": 282.34 },
 	{ "name": "mid-1", "parent": "root", "y": 282.34 },
-	{ "name": "mid-2", "parent": "root", "x": 284, "y": 282.34 }
+	{ "name": "mid-2", "parent": "root", "y": 282.34 }
 ],
 "slots": [
-	{ "name": "lvl3bldg", "bone": "far-0", "attachment": "lvl3bldg" },
-	{ "name": "lvl3bldg2", "bone": "far-1", "attachment": "lvl3bldg" },
-	{ "name": "lvl3bldg3", "bone": "far-2", "attachment": "lvl3bldg" },
-	{ "name": "lvl2bldg", "bone": "mid-0", "attachment": "lvl2bldg" },
-	{ "name": "lvl2bldg2", "bone": "mid-1", "attachment": "lvl2bldg" },
-	{ "name": "lvl2bldg3", "bone": "mid-2", "attachment": "lvl2bldg" },
-	{ "name": "buildingA_0001", "bone": "close-0", "attachment": "buildingA_0001" },
-	{ "name": "buildingB_0001", "bone": "close-1", "attachment": "buildingB_0001" },
-	{ "name": "buildingC_0001", "bone": "close-2", "attachment": "buildingC_0001" },
-	{ "name": "close-2", "bone": "close-2", "attachment": "buildingB_0001" },
-	{ "name": "close-22", "bone": "close-2", "attachment": "buildingD_0001" }
+	{ "name": "far-2", "bone": "far-2", "attachment": "lvl3bldg" },
+	{ "name": "far-1", "bone": "far-1", "attachment": "lvl3bldg" },
+	{ "name": "far-0", "bone": "far-0", "attachment": "lvl3bldg" },
+	{ "name": "mid-2", "bone": "mid-2", "attachment": "lvl2bldg" },
+	{ "name": "mid-1", "bone": "mid-1", "attachment": "lvl2bldg" },
+	{ "name": "mid-0", "bone": "mid-0", "attachment": "lvl2bldg" },
+	{ "name": "close-2", "bone": "close-2", "attachment": "buildingD_0001" },
+	{ "name": "close-1", "bone": "close-1", "attachment": "buildingB_0001" },
+	{ "name": "close-0", "bone": "close-0", "attachment": "buildingA_0001" }
 ],
 "skins": {
 	"default": {
-		"buildingA_0001": {
-			"buildingA_0001": { "y": -10, "scaleX": 3, "scaleY": 3, "width": 76, "height": 207 }
+		"close-0": {
+			"buildingA_0001": { "y": -25.91, "scaleX": 3, "scaleY": 3, "width": 76, "height": 207 }
 		},
-		"buildingB_0001": {
-			"buildingB_0001": { "y": -2, "scaleX": 3, "scaleY": 3, "width": 71, "height": 223 }
-		},
-		"buildingC_0001": {
-			"buildingC_0001": { "x": 103.12, "y": -1, "scaleX": 3, "scaleY": 3, "width": 83, "height": 222 }
+		"close-1": {
+			"buildingB_0001": { "scaleX": 3, "scaleY": 3, "width": 71, "height": 223 }
 		},
 		"close-2": {
-			"buildingB_0001": { "x": -135.67, "scaleX": 3, "scaleY": 3, "width": 71, "height": 223 }
+			"buildingD_0001": { "y": -8.63, "scaleX": 3, "scaleY": 3, "width": 71, "height": 218 }
 		},
-		"close-22": {
-			"buildingD_0001": { "x": 426.29, "scaleX": 3, "scaleY": 3, "width": 71, "height": 218 }
+		"far-0": {
+			"lvl3bldg": { "scaleX": 3, "scaleY": 3, "width": 259, "height": 129 }
 		},
-		"lvl2bldg": {
-			"lvl2bldg": { "x": -935.08, "scaleX": 3, "scaleY": 3, "width": 351, "height": 192 }
+		"far-1": {
+			"lvl3bldg": { "scaleX": 3, "scaleY": 3, "width": 259, "height": 129 }
 		},
-		"lvl2bldg2": {
+		"far-2": {
+			"lvl3bldg": { "scaleX": 3, "scaleY": 3, "width": 259, "height": 129 }
+		},
+		"mid-0": {
 			"lvl2bldg": { "scaleX": 3, "scaleY": 3, "width": 351, "height": 192 }
 		},
-		"lvl2bldg3": {
-			"lvl2bldg": { "x": 938.75, "scaleX": 3, "scaleY": 3, "width": 351, "height": 192 }
+		"mid-1": {
+			"lvl2bldg": { "scaleX": 3, "scaleY": 3, "width": 351, "height": 192 }
 		},
-		"lvl3bldg": {
-			"lvl3bldg": { "x": -462.04, "y": 33, "scaleX": 3, "scaleY": 3, "width": 259, "height": 129 }
-		},
-		"lvl3bldg2": {
-			"lvl3bldg": { "y": 33, "scaleX": 3, "scaleY": 3, "width": 259, "height": 129 }
-		},
-		"lvl3bldg3": {
-			"lvl3bldg": { "x": 465.7, "y": 33, "scaleX": 3, "scaleY": 3, "width": 259, "height": 129 }
+		"mid-2": {
+			"lvl2bldg": { "scaleX": 3, "scaleY": 3, "width": 351, "height": 192 }
 		}
 	}
 },

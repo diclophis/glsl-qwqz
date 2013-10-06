@@ -12,8 +12,8 @@
 #include "libqwqz.h"
 #include "impl_main.h"
 
-static int kWindowWidth = 600;
-static int kWindowHeight = 600;
+static int kWindowWidth = 512;
+static int kWindowHeight = 512;
 static bool left_down = false;
 static bool right_down = false;
 static bool reset_down = false;
