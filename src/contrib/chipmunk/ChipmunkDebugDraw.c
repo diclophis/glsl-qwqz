@@ -120,7 +120,7 @@ precision highp float;
 			// TODO: get rid of the GL 2.x matrix bit eventually?
 			//gl_Position = gl_ModelViewProjectionMatrix*vec4(vertex, 0.0, 1.0);
       vec4 p = ModelViewProjectionMatrix * vec4(vertex, 0.0, 1.0);
-      p.y -= 0.5;
+      p.y -= 1.0;
 			gl_Position = p;
 			
 			v_fill_color = fill_color;

@@ -153,7 +153,7 @@ static AnimationStateData* stateData;
 static AnimationState* state;
 static float verticeBuffer[8];
 static float uvBuffer[8];
-static float bgsScroll[3] = { 0.0, 0.0, 0.0 };
+static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
 
 int impl_draw() {
@@ -227,18 +227,6 @@ int impl_draw() {
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
   }
 
-  if (doPhysics) {
-    cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
-
-    // Draw the renderer contents and reset it back to the last tick's state.
-    ChipmunkDebugDrawClearRenderer();
-    ChipmunkDebugDrawPushRenderer();
-
-    ChipmunkDemoDefaultDrawImpl(space);
-
-    ChipmunkDebugDrawFlushRenderer();
-    ChipmunkDebugDrawPopRenderer();
-  }
 
   if (doSpine) {
     if (1) {
@@ -251,30 +239,41 @@ int impl_draw() {
       AnimationState_apply(bgsState, bgsSkeleton);
       Skeleton_updateWorldTransform(bgsSkeleton);
 
-      for (int a=0; a<3; a++) {
-        float bgw = 280.0 * 3.0;
-        float spd = 1.0 + (float)a;
+/*
+far-2
+far-1
+far-0
+mid-2
+mid-1
+mid-0
+close-2
+close-1
+close-0
+*/
 
-        bgsScroll[a] += -20.0 * qwqz_engine->m_Timers[0].step * spd;
+      for (int a=0; a<9; a++) {
+        float bgw = 0.0;
+        float spd_m = 1.0 + (float)(a / 3);
+        float spd_x = 24.0;
+        float total_w = 1024.0;
 
-        if (bgsScroll[a] < -bgw) {
-          bgsScroll[a] = 0.0;
+        bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step * spd_m;
+
+        if (bgsScroll[a] < -(total_w)) {
+          bgsScroll[a] = total_w * 2;
         }
 
-        float scx = -(bgw / 2) + bgsScroll[a];
-        for (int i=0; i<3; i++) {
-          for (int j=0; j<3; j++) {
-            int c = (a * 3) + j;
-            Slot *s = bgsSkeleton->drawOrder[c];
-            RegionAttachment *ra = (RegionAttachment *)s->attachment;
-            if (s->attachment->type == ATTACHMENT_REGION) {
-              RegionAttachment_computeWorldVertices(ra, scx, 0.0, s->bone, verticeBuffer);
-              qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
-            }
-          }
-          scx += bgw;
+        int c = a;
+        Slot *s = bgsSkeleton->drawOrder[c];
+        //LOGV("%s %f\n", s->data->name, bgsScroll[a]);
+        RegionAttachment *ra = (RegionAttachment *)s->attachment;
+        if (s->attachment->type == ATTACHMENT_REGION) {
+          RegionAttachment_computeWorldVertices(ra, bgsScroll[a], 0.0, s->bone, verticeBuffer);
+          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
       }
+
+      //LOGV("end\n");
 
       glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
       glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -284,14 +283,14 @@ int impl_draw() {
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
-  {
-  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
-  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
-  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
-  }
+      {
+      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+      size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+      }
 
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
@@ -323,17 +322,30 @@ int impl_draw() {
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
-  {
-  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
-  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
-  glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-  glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
-  }
+      {
+      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+      size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+      }
 
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
+  }
+
+  if (doPhysics) {
+    cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
+
+    // Draw the renderer contents and reset it back to the last tick's state.
+    ChipmunkDebugDrawClearRenderer();
+    ChipmunkDebugDrawPushRenderer();
+
+    ChipmunkDemoDefaultDrawImpl(space);
+
+    ChipmunkDebugDrawFlushRenderer();
+    ChipmunkDebugDrawPopRenderer();
   }
 
   return 0;
@@ -449,6 +461,22 @@ int impl_main(int argc, char** argv) {
     }
 
     qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
+
+/*
+far-2
+far-1
+far-0
+mid-2
+mid-1
+mid-0
+close-2
+close-1
+close-0
+*/
+
+    for (int i=0; i<9; i++) {
+      bgsScroll[i] = (2 - (i % 3)) * 1024.0;
+    }
   }
 
   if (doShaderBg) {
