@@ -138,8 +138,6 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 static qwqz_handle qwqz_engine = NULL;
 static cpSpace *space;
-static cpVect translate2 = {0, 0};
-static cpFloat scale = 1.0;
 static int doPhysics = 1;
 static int doSpine = 1;
 static int doShaderBg = 1;
@@ -252,7 +250,6 @@ close-0
 */
 
       for (int a=0; a<9; a++) {
-        float bgw = 0.0;
         float spd_m = 1.0 + (float)(a / 3);
         float spd_x = 24.0;
         float total_w = 1024.0;
@@ -402,7 +399,7 @@ int impl_main(int argc, char** argv) {
     for(int i=0; i<5; i++){
       for(int j=0; j<=i; j++){
         body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(1.0f, 30.0f, 30.0f)));
-        cpBodySetPosition(body, cpv(j*43 - i*16, 100 + i*64));
+        cpBodySetPosition(body, cpv(j*43 - i*16, 400 + i*64));
         
         shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.5f));
         cpShapeSetElasticity(shape, 0.0f);
@@ -413,7 +410,7 @@ int impl_main(int argc, char** argv) {
     // Add a ball to make things more interesting
     cpFloat radius = 15.0f;
     body = cpSpaceAddBody(space, cpBodyNew(10.0f, cpMomentForCircle(10.0f, 0.0f, radius, cpvzero)));
-    cpBodySetPosition(body, cpv(0, 240 + radius+5));
+    cpBodySetPosition(body, cpv(0, 340 + radius+5));
 
     shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
     cpShapeSetElasticity(shape, 0.0f);
