@@ -406,7 +406,7 @@ ChipmunkDebugDrawFlushRenderer(void)
 
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	CHECK_GL_ERRORS();
+	//CHECK_GL_ERRORS();
 }
 
 void

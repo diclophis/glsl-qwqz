@@ -153,6 +153,7 @@ static AnimationState* state;
 static float verticeBuffer[8];
 static float uvBuffer[8];
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static cpBody **bodies;
 
 
 int impl_draw() {
@@ -309,8 +310,21 @@ close-0
         if (s->attachment->type == ATTACHMENT_REGION) {
           RegionAttachment_computeWorldVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+
+          float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
+          float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
+
+          float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
+          float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
+
+          cpBody *body = bodies[i];
+
+          cpBodySetAngle(body, r);
+          cpBodySetPosition(body, cpv(x, y));
         }
       }
+
+      cpSpaceReindexStatic(space);
 
       glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
       glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -333,6 +347,7 @@ close-0
     }
   }
 
+  /*
   if (doPhysics) {
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
 
@@ -345,6 +360,7 @@ close-0
     ChipmunkDebugDrawFlushRenderer();
     ChipmunkDebugDrawPopRenderer();
   }
+  */
 
   return 0;
 }
@@ -370,10 +386,10 @@ int impl_main(int argc, char** argv) {
     ChipmunkDebugDrawInit();
 
     space = cpSpaceNew();
-    cpSpaceSetIterations(space, 10);
+    cpSpaceSetIterations(space, 5);
     cpSpaceSetGravity(space, cpv(0, -100));
     cpSpaceSetSleepTimeThreshold(space, INFINITY); //1.0f);
-    cpSpaceSetCollisionSlop(space, 1.0f);
+    cpSpaceSetCollisionSlop(space, 5.0f);
 
     cpBody *body, *staticBody = cpSpaceGetStaticBody(space);
     cpShape *shape;
@@ -485,35 +501,32 @@ close-0
 
       cpGroup spineGroup = 1;
 
+      bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotCount);
+
       for (int i=0; i<skeleton->slotCount; i++) {
         Slot *s = skeleton->drawOrder[i];
         if (s->attachment->type == ATTACHMENT_REGION) {
 
           RegionAttachment *ra = (RegionAttachment *)s->attachment;
-          //RegionAttachment_computeWorldVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
-          //qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+
           float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
-          float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation); //DEGREES_TO_RADIANS(s->bone->worldRotation);
+          float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
 
           float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
           float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
 
-          LOGV("%s %f %f %f\n", s->data->name, x, y, r);
-
-          //LOGV("%s %f %f %f %f %f\n", ra->super.name, s->bone->worldX + ra->x, s->bone->worldY + ra->y, ra->width, ra->height, ra->rotation);
-
           cpBody *body;
           cpShape *shape;
 
-          //body = cpSpaceAddBody(space, cpBodyNewStatic()); //cpBodyNew(1.0f, cpMomentForBox(1.0f, ra->width, ra->height)));
           body = cpBodyNewStatic();
+          bodies[i] = body;
+
           cpBodySetAngle(body, r);
           cpBodySetPosition(body, cpv(x, y));
           
           shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
           cpShapeSetElasticity(shape, 0.0f);
           cpShapeSetFriction(shape, 0.8f);
-          //cpShapeSetGroup(shape, spineGroup);
           shape->filter.group = spineGroup;
         }
       }
