@@ -234,8 +234,8 @@ int impl_draw() {
       bgsSkeleton->root->scaleX = 1.0;
       bgsSkeleton->root->scaleY = 1.0;
 
-      AnimationState_update(bgsState, 0); //qwqz_engine->m_Timers[0].step * 0.1);
-      AnimationState_apply(bgsState, bgsSkeleton);
+      //AnimationState_update(bgsState, 0); //qwqz_engine->m_Timers[0].step * 0.1);
+      //AnimationState_apply(bgsState, bgsSkeleton);
       Skeleton_updateWorldTransform(bgsSkeleton);
 
 /*
@@ -299,8 +299,8 @@ close-0
       skeleton->root->scaleX = 1.0;
       skeleton->root->scaleY = 1.0;
 
-      //AnimationState_update(state, 0); //qwqz_engine->m_Timers[0].step * 3.25);
-      //AnimationState_apply(state, skeleton);
+      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.125);
+      AnimationState_apply(state, skeleton);
       Skeleton_updateWorldTransform(skeleton);
 
       for (int i=0; i<skeleton->slotCount; i++) {
