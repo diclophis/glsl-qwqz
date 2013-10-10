@@ -154,7 +154,7 @@ static float verticeBuffer[8];
 static float uvBuffer[8];
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
-
+static int jumped = 0;
 
 int impl_draw() {
 
@@ -304,6 +304,29 @@ close-0
       AnimationState_apply(state, skeleton);
       Skeleton_updateWorldTransform(skeleton);
 
+      if (0 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 3.0) {
+        jumped = 1;
+        //AnimationState_setAnimationByName(state, 0, "jump", false);
+
+        AnimationState_addAnimationByName(state, 0, "jump", false, 0); // trackIndex, name, loop, delay
+        AnimationState_addAnimationByName(state, 0, "walk_alt", true, 0);
+
+      }
+
+      if (qwqz_engine->m_Timers[0].m_SimulationTime > 6.0) {
+        jumped = 0;
+        qwqz_engine->m_Timers[0].m_SimulationTime = 0;
+      }
+
+      /*
+
+      if (1 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 6.25) {
+        jumped = 0;
+        AnimationState_setAnimationByName(state, 0, "walk_alt", true);
+        qwqz_engine->m_Timers[0].m_SimulationTime = 0;
+      }
+      */
+
       for (int i=0; i<skeleton->slotCount; i++) {
         Slot *s = skeleton->drawOrder[i];
         RegionAttachment *ra = (RegionAttachment *)s->attachment;
@@ -452,6 +475,8 @@ int impl_main(int argc, char** argv) {
       SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
       skeleton = Skeleton_create(skeletonData);
       stateData = AnimationStateData_create(skeletonData);
+      AnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
+      AnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
       state = AnimationState_create(stateData);
       AnimationState_setAnimationByName(state, 0, "walk_alt", 1);
 
