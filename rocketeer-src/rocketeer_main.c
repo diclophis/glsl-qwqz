@@ -308,8 +308,8 @@ close-0
         jumped = 1;
         //AnimationState_setAnimationByName(state, 0, "jump", false);
 
-        AnimationState_addAnimationByName(state, 0, "jump", false, 0); // trackIndex, name, loop, delay
-        AnimationState_addAnimationByName(state, 0, "walk_alt", true, 0);
+        AnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
+        AnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
 
       }
 
