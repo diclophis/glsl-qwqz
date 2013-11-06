@@ -342,12 +342,15 @@ close-0
 
           cpBody *body = bodies[i];
 
+          cpVect newPos = cpv(x, y);
+          cpBodySetVelocity(body, cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step));
+          cpBodySetPosition(body, newPos);
+
           cpBodySetAngle(body, r);
-          cpBodySetPosition(body, cpv(x, y));
         }
       }
 
-      cpSpaceReindexStatic(space);
+      //cpSpaceReindexStatic(space);
 
       glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
       glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -370,7 +373,6 @@ close-0
     }
   }
 
-  /*
   if (doPhysics) {
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
 
@@ -383,7 +385,6 @@ close-0
     ChipmunkDebugDrawFlushRenderer();
     ChipmunkDebugDrawPopRenderer();
   }
-  */
 
   return 0;
 }
@@ -409,13 +410,14 @@ int impl_main(int argc, char** argv) {
     ChipmunkDebugDrawInit();
 
     space = cpSpaceNew();
-    cpSpaceSetIterations(space, 5);
-    cpSpaceSetGravity(space, cpv(0, -100));
-    cpSpaceSetSleepTimeThreshold(space, INFINITY); //1.0f);
-    cpSpaceSetCollisionSlop(space, 5.0f);
+    //cpSpaceSetIterations(space, 10);
+    cpSpaceSetGravity(space, cpv(0, -200));
+    //cpSpaceSetSleepTimeThreshold(space, INFINITY); //1.0f);
+    //cpSpaceSetCollisionSlop(space, 0.1f);
 
-    cpBody *body, *staticBody = cpSpaceGetStaticBody(space);
     cpShape *shape;
+    cpBody *body;
+    cpBody *staticBody = cpSpaceGetStaticBody(space);
 
     // Create segments around the edge of the screen.
     /*
@@ -430,20 +432,24 @@ int impl_main(int argc, char** argv) {
     cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
     */
 
-    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320, 0), cpv(320, 0), 0.0f));
-    cpShapeSetElasticity(shape, 1.0f);
+    //foor
+    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 0), cpv(1000, 0), 0.0f));
+    cpShapeSetElasticity(shape, 0.0f);
     cpShapeSetFriction(shape, 1.0f);
     cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
 
     // Add lots of boxes.
-    for(int i=0; i<5; i++){
+    for(int i=0; i<15; i++){
       for(int j=0; j<=i; j++){
         body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(1.0f, 30.0f, 30.0f)));
-        cpBodySetPosition(body, cpv(j*43 - i*16, 500 + i*64));
+
+        cpBodySetPosition(body, cpv(j*43 - i*16, 600 + i*64));
         
         shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.5f));
-        cpShapeSetElasticity(shape, 0.0f);
-        cpShapeSetFriction(shape, 0.8f);
+        cpShapeSetElasticity(shape, 1.0f);
+        cpShapeSetFriction(shape, 1.0f);
+        cpGroup boxGroup = 1;
+        shape->filter.group = boxGroup;
       }
     }
 
@@ -501,18 +507,6 @@ int impl_main(int argc, char** argv) {
 
     qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
 
-/*
-far-2
-far-1
-far-0
-mid-2
-mid-1
-mid-0
-close-2
-close-1
-close-0
-*/
-
     for (int i=0; i<9; i++) {
       bgsScroll[i] = (2 - (i % 3)) * 1024.0;
     }
@@ -520,11 +514,7 @@ close-0
       skeleton->root->scaleX = 1.0;
       skeleton->root->scaleY = 1.0;
 
-      //AnimationState_update(state, 1.0);
-      //AnimationState_apply(state, skeleton);
       Skeleton_updateWorldTransform(skeleton);
-
-      cpGroup spineGroup = 1;
 
       bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotCount);
 
@@ -543,7 +533,8 @@ close-0
           cpBody *body;
           cpShape *shape;
 
-          body = cpBodyNewStatic();
+          //body = cpBodyNewStatic(); //(10.0, cpMomentForBox(1.0f, ra->width, ra->height));
+          body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
           bodies[i] = body;
 
           cpBodySetAngle(body, r);
@@ -551,7 +542,8 @@ close-0
           
           shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
           cpShapeSetElasticity(shape, 0.0f);
-          cpShapeSetFriction(shape, 0.8f);
+          cpShapeSetFriction(shape, 1.0f);
+          cpGroup spineGroup = 2;
           shape->filter.group = spineGroup;
         }
       }
