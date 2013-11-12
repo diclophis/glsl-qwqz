@@ -5,77 +5,77 @@ filter: Nearest,Nearest
 repeat: none
 player_calf
   rotate: false
-  xy: 2, 256
+  xy: 142, 100
   size: 76, 126
   orig: 76, 126
   offset: 0, 0
   index: -1
 player_chest
   rotate: false
-  xy: 2, 384
+  xy: 2, 95
   size: 138, 131
   orig: 138, 131
   offset: 0, 0
   index: -1
 player_fist_a
   rotate: false
-  xy: 447, 450
+  xy: 206, 33
   size: 69, 65
   orig: 69, 65
   offset: 0, 0
   index: -1
 player_fist_b
-  rotate: true
-  xy: 2, 86
+  rotate: false
+  xy: 376, 97
   size: 72, 63
   orig: 72, 63
   offset: 0, 0
   index: -1
 player_foot
-  rotate: true
-  xy: 2, 160
+  rotate: false
+  xy: 284, 163
   size: 94, 63
   orig: 94, 63
   offset: 0, 0
   index: -1
 player_head
   rotate: false
-  xy: 296, 436
-  size: 69, 79
+  xy: 92, 14
+  size: 70, 79
   orig: 70, 79
-  offset: 1, 0
+  offset: 0, 0
   index: -1
 player_hip
-  rotate: true
-  xy: 80, 292
+  rotate: false
+  xy: 284, 110
   size: 90, 51
   orig: 90, 51
   offset: 0, 0
   index: -1
 player_shoulder
   rotate: false
-  xy: 206, 424
+  xy: 2, 2
   size: 88, 91
   orig: 88, 91
   offset: 0, 0
   index: -1
 player_thigh
   rotate: false
-  xy: 2, 2
+  xy: 164, 16
   size: 40, 82
   orig: 40, 82
   offset: 0, 0
   index: -1
 player_torso
   rotate: false
-  xy: 367, 451
+  xy: 380, 162
   size: 78, 64
   orig: 78, 64
   offset: 0, 0
   index: -1
 player_upperarm
   rotate: false
-  xy: 142, 393
+  xy: 220, 104
   size: 62, 122
   orig: 62, 122
   offset: 0, 0
