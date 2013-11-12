@@ -16,9 +16,11 @@ rocketeer-clean:
 	cd platforms/osx && IMPL=rocketeer make clean
 
 test:
-	#cd platforms/osx && IMPL=test make clean
 	cd platforms/osx && IMPL=test make
 	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/flower.fsh
+
+test-clean:
+	cd platforms/osx && IMPL=test make clean
 
 emscripten-rocketeer:
 	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make clean

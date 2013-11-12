@@ -7,25 +7,12 @@
 #include "test_main.h"
 #include <spine/spine.h>
 #include <spine/extension.h>
+#include "spine_bridge.h"
 
 
 static qwqz_handle qwqz_engine = NULL;
 static float verticeBuffer[8];
 static float uvBuffer[8];
-
-void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
-	self->rendererObject = 0;
-	self->width = 123;
-	self->height = 456;
-  LOGV("_AtlasPage_createTexture: %s\n", path);
-}
-
-void _AtlasPage_disposeTexture (AtlasPage* self) {
-}
-
-char* _Util_readFile (const char* path, int* length) {
-	return _readFile(path, length);
-}
 
 
 int impl_draw() {
