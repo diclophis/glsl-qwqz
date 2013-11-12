@@ -279,7 +279,7 @@ int impl_draw() {
         spSlot *s = skeleton->drawOrder[i];
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
         if (s->attachment->type == ATTACHMENT_REGION) {
-          float ox = qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
+          float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
           spRegionAttachment_computeWorldVertices(ra, ox, 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
 
@@ -357,7 +357,7 @@ int impl_main(int argc, char** argv) {
     ChipmunkDebugDrawInit();
 
     space = cpSpaceNew();
-    cpSpaceSetGravity(space, cpv(0, -200));
+    cpSpaceSetGravity(space, cpv(0, -500));
 
     cpShape *shape;
     cpBody *body;
@@ -370,13 +370,13 @@ int impl_main(int argc, char** argv) {
     cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
 
     // Add lots of boxes.
-    for(int i=0; i<15; i++){
-      for(int j=0; j<=i; j++){
-        body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(1.0f, 30.0f, 30.0f)));
+    for(int i=0; i<30; i++) {
+      for(int j=0; j<=i; j++) {
+        body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(200.0f, 30.0f, 30.0f)));
 
         cpBodySetPosition(body, cpv(j*43 - i*16, 600 + i*64));
         
-        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.5f));
+        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.0f));
         cpShapeSetElasticity(shape, 1.0f);
         cpShapeSetFriction(shape, 1.0f);
         cpGroup boxGroup = 1;
@@ -391,7 +391,7 @@ int impl_main(int argc, char** argv) {
 
     shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
     cpShapeSetElasticity(shape, 0.0f);
-    cpShapeSetFriction(shape, 0.9f);
+    cpShapeSetFriction(shape, 1.0f);
   }
 
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
