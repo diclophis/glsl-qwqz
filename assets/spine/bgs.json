@@ -18,20 +18,20 @@
 	{ "name": "mid-2", "bone": "mid-2", "attachment": "lvl2bldg" },
 	{ "name": "mid-1", "bone": "mid-1", "attachment": "lvl2bldg" },
 	{ "name": "mid-0", "bone": "mid-0", "attachment": "lvl2bldg" },
-	{ "name": "close-2", "bone": "close-2", "attachment": "buildingD_0001" },
-	{ "name": "close-1", "bone": "close-1", "attachment": "buildingB_0001" },
-	{ "name": "close-0", "bone": "close-0", "attachment": "buildingA_0001" }
+	{ "name": "close-2", "bone": "close-2", "attachment": "buildingD" },
+	{ "name": "close-1", "bone": "close-1", "attachment": "buildingB" },
+	{ "name": "close-0", "bone": "close-0", "attachment": "buildingA" }
 ],
 "skins": {
 	"default": {
 		"close-0": {
-			"buildingA_0001": { "y": -25.91, "scaleX": 3, "scaleY": 3, "width": 76, "height": 207 }
+			"buildingA": { "y": -25.91, "scaleX": 3, "scaleY": 3, "width": 76, "height": 207 }
 		},
 		"close-1": {
-			"buildingB_0001": { "scaleX": 3, "scaleY": 3, "width": 71, "height": 223 }
+			"buildingB": { "scaleX": 3, "scaleY": 3, "width": 71, "height": 223 }
 		},
 		"close-2": {
-			"buildingD_0001": { "y": -8.63, "scaleX": 3, "scaleY": 3, "width": 71, "height": 218 }
+			"buildingD": { "y": -8.63, "scaleX": 3, "scaleY": 3, "width": 71, "height": 218 }
 		},
 		"far-0": {
 			"lvl3bldg": { "scaleX": 3, "scaleY": 3, "width": 259, "height": 129 }
@@ -134,17 +134,6 @@
 				]
 			},
 			"close-1": {
-				"rotate": [
-					{ "time": 0, "angle": 0 }
-				],
-				"translate": [
-					{ "time": 0, "x": 0, "y": 0 }
-				],
-				"scale": [
-					{ "time": 0, "x": 1, "y": 1 }
-				]
-			},
-			"close-0": {
 				"rotate": [
 					{ "time": 0, "angle": 0 }
 				],

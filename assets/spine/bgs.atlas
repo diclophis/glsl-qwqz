@@ -3,38 +3,38 @@ bgs.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-buildingA_0001
-  rotate: true
-  xy: 352, 374
+buildingA
+  rotate: false
+  xy: 616, 18
   size: 76, 207
   orig: 76, 207
   offset: 0, 0
   index: -1
-buildingB_0001
-  rotate: true
-  xy: 352, 452
-  size: 70, 221
+buildingB
+  rotate: false
+  xy: 694, 2
+  size: 71, 223
   orig: 71, 223
   offset: 0, 0
   index: -1
-buildingD_0001
+buildingD
   rotate: false
-  xy: 2, 2
+  xy: 767, 7
   size: 71, 218
   orig: 71, 218
   offset: 0, 0
   index: -1
 lvl2bldg
   rotate: false
-  xy: 2, 349
-  size: 348, 173
+  xy: 2, 33
+  size: 351, 192
   orig: 351, 192
-  offset: 3, 0
+  offset: 0, 0
   index: -1
 lvl3bldg
   rotate: false
-  xy: 2, 222
-  size: 256, 125
+  xy: 355, 96
+  size: 259, 129
   orig: 259, 129
-  offset: 3, 0
+  offset: 0, 0
   index: -1

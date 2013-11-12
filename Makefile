@@ -5,9 +5,9 @@ rocketeer:
 	platforms/osx/build/raptor_island
 
 rocketeer-assets:~/Desktop/RobotAttackVector/skeleton.* ~/Desktop/RobotAttackVectorBackground/skeleton.*
-	#cp ~/Desktop/RobotAttackVectorBackground/bgs.json assets/spine/bgs.json
-	#cp ~/Desktop/RobotAttackVectorBackground/bgs.atlas assets/spine/bgs.atlas
-	#cp ~/Desktop/RobotAttackVectorBackground/bgs.png assets/spine/bgs.png
+	cp ~/Desktop/RobotAttackVectorBackground/bgs.json assets/spine/bgs.json
+	cp ~/Desktop/RobotAttackVectorBackground/bgs.atlas assets/spine/bgs.atlas
+	cp ~/Desktop/RobotAttackVectorBackground/bgs.png assets/spine/bgs.png
 	cp ~/Desktop/RobotAttackVector/robot.json assets/spine/robot.json
 	cp ~/Desktop/RobotAttackVector/robot.atlas assets/spine/robot.atlas
 	cp ~/Desktop/RobotAttackVector/robot.png assets/spine/robot.png
