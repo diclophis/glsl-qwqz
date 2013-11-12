@@ -5,12 +5,12 @@ rocketeer:
 	platforms/osx/build/raptor_island
 
 rocketeer-assets:~/Desktop/RobotAttackVector/skeleton.* ~/Desktop/RobotAttackVectorBackground/skeleton.*
-	cp ~/Desktop/RobotAttackVectorBackground/skeleton.json assets/spine/bgs.json
-	cp ~/Desktop/RobotAttackVectorBackground/skeleton.atlas assets/spine/bgs.atlas
-	cp ~/Desktop/RobotAttackVectorBackground/skeleton.png assets/spine/bgs.png
-	cp ~/Desktop/RobotAttackVector/skeleton.json assets/spine/robot.json
-	cp ~/Desktop/RobotAttackVector/skeleton.atlas assets/spine/robot.atlas
-	cp ~/Desktop/RobotAttackVector/skeleton.png assets/spine/robot.png
+	#cp ~/Desktop/RobotAttackVectorBackground/bgs.json assets/spine/bgs.json
+	#cp ~/Desktop/RobotAttackVectorBackground/bgs.atlas assets/spine/bgs.atlas
+	#cp ~/Desktop/RobotAttackVectorBackground/bgs.png assets/spine/bgs.png
+	cp ~/Desktop/RobotAttackVector/robot.json assets/spine/robot.json
+	cp ~/Desktop/RobotAttackVector/robot.atlas assets/spine/robot.atlas
+	cp ~/Desktop/RobotAttackVector/robot.png assets/spine/robot.png
 
 rocketeer-clean:
 	cd platforms/osx && IMPL=rocketeer make clean

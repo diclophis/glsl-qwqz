@@ -2,6 +2,8 @@
 
 #define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
 
+static int RO = 0;
+
 #include "opengles_bridge.h"
 #include "libqwqz.h"
 #include "impl_main.h"
@@ -207,6 +209,8 @@ int impl_draw() {
 
       spSkeleton_updateWorldTransform(bgsSkeleton);
 
+      int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
+
       for (int a=0; a<9; a++) {
         float spd_m = 1.0 + (float)(a / 3);
         float spd_x = 24.0;
@@ -231,7 +235,7 @@ int impl_draw() {
       glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
       glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 1);
+      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
@@ -269,6 +273,9 @@ int impl_draw() {
         qwqz_engine->m_Timers[0].m_SimulationTime = 0;
       }
 
+      int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
+      //LOGV("wtf %d\n", roboRegionRenderObject);
+
       for (int i=0; i<skeleton->slotCount; i++) {
         spSlot *s = skeleton->drawOrder[i];
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
@@ -297,7 +304,7 @@ int impl_draw() {
       glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
       glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, 0);
+      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
@@ -391,17 +398,13 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
-  int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/robot.png");
-  int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/spine/bgs.png");
-
-  LOGV("fix implied assumption about texture bindings %d %d\n", t0, t1);
-
-  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 3);
-  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 3);
+  int ox;
+  int oy;
 
   if (doSpine) {
     {
       spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
+      //int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/robot.png", &ox, &oy);
       spSkeletonJson* json = spSkeletonJson_create(atlas);
       spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
       skeleton = spSkeleton_create(skeletonData);
@@ -412,13 +415,19 @@ int impl_main(int argc, char** argv) {
       spAnimationState_setAnimationByName(state, 0, "walk_alt", 1);
 
       spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/bgs.atlas");
+      //int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/spine/bgs.png", &ox, &oy);
       spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
       spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
       bgsSkeleton = spSkeleton_create(skeletonData2);
       bgsStateData = spAnimationStateData_create(skeletonData2);
       bgsState = spAnimationState_create(bgsStateData);
       spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
+
+      //LOGV("fix implied assumption about texture bindings %d %d\n", t0, t1);
     }
+
+    qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 3);
+    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 3);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");

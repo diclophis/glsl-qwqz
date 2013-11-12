@@ -295,7 +295,7 @@ int qwqz_compile(GLuint type, const char *vsh) {
 }
 
 
-int qwqz_texture_init(GLuint unit, const char *path) {
+int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   png_t tex;
   //char* data = qwqz_load("assets/textures/0.png");
   FILE *fp = fopen(path, "rb");
@@ -305,6 +305,8 @@ int qwqz_texture_init(GLuint unit, const char *path) {
   png_init(0, 0);
   //fseek(m_TextureFileHandles->at(i)->fp, m_TextureFileHandles->at(i)->off, 0);
   png_open_read(&tex, 0, fp);
+  *w = tex.width;
+  *h = tex.height;
   data = (unsigned char*)malloc(tex.width * tex.height * tex.bpp);
   for(int i=0; i < tex.width*tex.height*tex.bpp; ++i) {
     data[i] = 0;
@@ -352,6 +354,7 @@ int qwqz_texture_init(GLuint unit, const char *path) {
   free(data);
   free(tempData);
 
+  LOGV("created opengles texture: %d\n", textureHandle);
   return textureHandle;
 }
 
