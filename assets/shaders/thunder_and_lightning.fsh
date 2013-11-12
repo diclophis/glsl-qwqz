@@ -6,6 +6,9 @@ precision highp float;
 uniform float iGlobalTime;
 uniform vec2 iResolution;
 
+uniform sampler2D texture1;
+varying vec2 OutTexture;
+
 float rand(vec2 p){
   p+=.2127+p.x+.3713*p.y;
   vec2 r=4.789*sin(789.123*(p));
@@ -23,6 +26,8 @@ float sn(vec2 p){
 
 void main(void)
 {
+  vec4 t1 = texture2D(texture1, OutTexture);
+
   vec2 uv = gl_FragCoord.xy / iResolution.y;
 
   vec2 iMouse = vec2(0.0, 0.0);

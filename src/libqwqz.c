@@ -224,7 +224,6 @@ void qwqz_batch_clear(qwqz_batch ff) {
 
 
 void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff) {
-
   if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
@@ -286,7 +285,7 @@ int qwqz_compile(GLuint type, const char *vsh) {
     glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
     msg = (char *)malloc(sizeof(char) * l);
     glGetShaderInfoLog(v, l, NULL, msg);
-    LOGV("shader info: %s\n", msg);
+    LOGV("shader info: %s %s\n", vsh, msg);
 
     free(b);
     free(msg);

@@ -468,7 +468,7 @@ int impl_main(int argc, char** argv) {
       spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
     }
 
-    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
+    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
 
     if (v && f2) {
@@ -535,8 +535,8 @@ int impl_main(int argc, char** argv) {
     qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
-    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/shadowgrid.fsh");
-    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/testquad.fsh");
+    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/thunder_and_lightning.fsh");
+    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rocketeer_background.fsh");
 
     if (v && f && f2) {
       // Create and link the shader program

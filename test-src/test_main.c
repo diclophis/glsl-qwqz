@@ -110,7 +110,7 @@ int impl_main(int argc, char** argv) {
 
     v = qwqz_compile(GL_VERTEX_SHADER, argv[1]);
     f = qwqz_compile(GL_FRAGMENT_SHADER, argv[2]);
-    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/testquad.fsh");
+    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/test_background.fsh");
 
     if (v && f && f2) {
       // Create and link the shader program
