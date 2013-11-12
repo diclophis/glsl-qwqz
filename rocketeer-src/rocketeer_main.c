@@ -1,4 +1,4 @@
-// test impl
+// rocketeer run and jump
 
 #define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
 
@@ -14,8 +14,7 @@
 #include "spine_bridge.h"
 
 
-
-
+//TODO: abstract chipmunk render system into bridge functions
 #define GRABBABLE_MASK_BIT (1<<31)
 cpShapeFilter GRAB_FILTER = {CP_NO_GROUP, GRABBABLE_MASK_BIT, GRABBABLE_MASK_BIT};
 cpShapeFilter NOT_GRABBABLE_FILTER = {CP_NO_GROUP, ~GRABBABLE_MASK_BIT, ~GRABBABLE_MASK_BIT};
@@ -135,9 +134,6 @@ int impl_draw() {
 
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-  //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  //glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-
   if (doShaderBg) {
     qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
     qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
@@ -175,13 +171,14 @@ int impl_draw() {
 
     translate(&qwqz_engine->m_Linkages[1], NULL, 0, 0, 0);
 
+    //TODO: abstract render passes
     {
-    qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1]);
-    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-    glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-    glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_PositionAttribute);
-    glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-    glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_TextureAttribute);
+      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1]);
+      size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+      glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+      glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_PositionAttribute);
+      glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+      glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_TextureAttribute);
     }
 
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
@@ -208,21 +205,7 @@ int impl_draw() {
       bgsSkeleton->root->scaleX = 1.0;
       bgsSkeleton->root->scaleY = 1.0;
 
-      //AnimationState_update(bgsState, 0); //qwqz_engine->m_Timers[0].step * 0.1);
-      //AnimationState_apply(bgsState, bgsSkeleton);
       spSkeleton_updateWorldTransform(bgsSkeleton);
-
-/*
-far-2
-far-1
-far-0
-mid-2
-mid-1
-mid-0
-close-2
-close-1
-close-0
-*/
 
       for (int a=0; a<9; a++) {
         float spd_m = 1.0 + (float)(a / 3);
@@ -237,15 +220,12 @@ close-0
 
         int c = a;
         spSlot *s = bgsSkeleton->drawOrder[c];
-        //LOGV("%s %f\n", s->data->name, bgsScroll[a]);
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
         if (s->attachment->type == ATTACHMENT_REGION) {
           spRegionAttachment_computeWorldVertices(ra, bgsScroll[a], 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
       }
-
-      //LOGV("end\n");
 
       glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
       glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -255,13 +235,14 @@ close-0
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
+      //TODO: abstract render passes
       {
-      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
-      size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
-      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+        size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
       }
 
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
@@ -279,26 +260,14 @@ close-0
 
       if (0 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 3.0) {
         jumped = 1;
-        //AnimationState_setAnimationByName(state, 0, "jump", false);
-
         spAnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
         spAnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
-
       }
 
       if (qwqz_engine->m_Timers[0].m_SimulationTime > 6.0) {
         jumped = 0;
         qwqz_engine->m_Timers[0].m_SimulationTime = 0;
       }
-
-      /*
-
-      if (1 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 6.25) {
-        jumped = 0;
-        AnimationState_setAnimationByName(state, 0, "walk_alt", true);
-        qwqz_engine->m_Timers[0].m_SimulationTime = 0;
-      }
-      */
 
       for (int i=0; i<skeleton->slotCount; i++) {
         spSlot *s = skeleton->drawOrder[i];
@@ -323,8 +292,6 @@ close-0
         }
       }
 
-      //cpSpaceReindexStatic(space);
-
       glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
       glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
       glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
@@ -333,13 +300,14 @@ close-0
 
       translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
 
+      //TODO: abstract render passes
       {
-      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
-      size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
-      glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-      glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+        size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
       }
 
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
@@ -378,32 +346,15 @@ int impl_main(int argc, char** argv) {
   GLuint f2 = 0;
   GLuint program = 0;
 
-
   if (doPhysics) {
     ChipmunkDebugDrawInit();
 
     space = cpSpaceNew();
-    //cpSpaceSetIterations(space, 10);
     cpSpaceSetGravity(space, cpv(0, -200));
-    //cpSpaceSetSleepTimeThreshold(space, INFINITY); //1.0f);
-    //cpSpaceSetCollisionSlop(space, 0.1f);
 
     cpShape *shape;
     cpBody *body;
     cpBody *staticBody = cpSpaceGetStaticBody(space);
-
-    // Create segments around the edge of the screen.
-    /*
-    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-320,-240), cpv(-320,240), 0.0f));
-    cpShapeSetElasticity(shape, 1.0f);
-    cpShapeSetFriction(shape, 1.0f);
-    cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
-
-    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(320,-240), cpv(320,240), 0.0f));
-    cpShapeSetElasticity(shape, 1.0f);
-    cpShapeSetFriction(shape, 1.0f);
-    cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
-    */
 
     //foor
     shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 0), cpv(1000, 0), 0.0f));
@@ -506,7 +457,6 @@ int impl_main(int argc, char** argv) {
           cpBody *body;
           cpShape *shape;
 
-          //body = cpBodyNewStatic(); //(10.0, cpMomentForBox(1.0f, ra->width, ra->height));
           body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
           bodies[i] = body;
 
