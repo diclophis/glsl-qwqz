@@ -273,7 +273,8 @@ int impl_draw() {
         spSlot *s = skeleton->drawOrder[i];
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
         if (s->attachment->type == ATTACHMENT_REGION) {
-          spRegionAttachment_computeWorldVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+          float ox = qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
+          spRegionAttachment_computeWorldVertices(ra, ox, 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
 
           float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
@@ -284,7 +285,7 @@ int impl_draw() {
 
           cpBody *body = bodies[i];
 
-          cpVect newPos = cpv(x, y);
+          cpVect newPos = cpv(x + ox, y);
           cpBodySetVelocity(body, cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step));
           cpBodySetPosition(body, newPos);
 
@@ -435,41 +436,41 @@ int impl_main(int argc, char** argv) {
       bgsScroll[i] = (2 - (i % 3)) * 1024.0;
     }
 
-      skeleton->root->scaleX = 1.0;
-      skeleton->root->scaleY = 1.0;
+    skeleton->root->scaleX = 1.0;
+    skeleton->root->scaleY = 1.0;
 
-      spSkeleton_updateWorldTransform(skeleton);
+    spSkeleton_updateWorldTransform(skeleton);
 
-      bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotCount);
+    bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotCount);
 
-      for (int i=0; i<skeleton->slotCount; i++) {
-        spSlot *s = skeleton->drawOrder[i];
-        if (s->attachment->type == ATTACHMENT_REGION) {
+    for (int i=0; i<skeleton->slotCount; i++) {
+      spSlot *s = skeleton->drawOrder[i];
+      if (s->attachment->type == ATTACHMENT_REGION) {
 
-          spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
+        spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
 
-          float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
-          float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
+        float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
+        float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
 
-          float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-          float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
+        float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
+        float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
 
-          cpBody *body;
-          cpShape *shape;
+        cpBody *body;
+        cpShape *shape;
 
-          body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
-          bodies[i] = body;
+        body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
+        bodies[i] = body;
 
-          cpBodySetAngle(body, r);
-          cpBodySetPosition(body, cpv(x, y));
-          
-          shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
-          cpShapeSetElasticity(shape, 0.0f);
-          cpShapeSetFriction(shape, 1.0f);
-          cpGroup spineGroup = 2;
-          shape->filter.group = spineGroup;
-        }
+        cpBodySetAngle(body, r);
+        cpBodySetPosition(body, cpv(x, y));
+        
+        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
+        cpShapeSetElasticity(shape, 0.0f);
+        cpShapeSetFriction(shape, 1.0f);
+        cpGroup spineGroup = 2;
+        shape->filter.group = spineGroup;
       }
+    }
   }
 
   if (doShaderBg) {
