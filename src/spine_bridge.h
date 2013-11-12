@@ -1,3 +1,4 @@
+static int RO = 0;
 
 void _spAtlasPage_createTexture (spAtlasPage* self, const char* path) {
   //TODO: figure out how to map renderObject

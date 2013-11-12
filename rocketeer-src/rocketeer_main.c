@@ -2,7 +2,6 @@
 
 #define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
 
-static int RO = 0;
 
 #include "opengles_bridge.h"
 #include "libqwqz.h"
@@ -397,9 +396,6 @@ int impl_main(int argc, char** argv) {
 
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
-
-  int ox;
-  int oy;
 
   if (doSpine) {
     {
