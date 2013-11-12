@@ -14,7 +14,7 @@
 
 static int RO = 0;
 
-void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
+void _spAtlasPage_createTexture (spAtlasPage* self, const char* path) {
   //TODO: figure out how to map renderObject
 	self->rendererObject = (void *)RO++;
 
@@ -34,11 +34,11 @@ void _AtlasPage_createTexture (AtlasPage* self, const char* path) {
 }
 
 
-void _AtlasPage_disposeTexture (AtlasPage* self) {
+void _spAtlasPage_disposeTexture (spAtlasPage* self) {
 }
 
 
-char* _Util_readFile (const char* path, int* length) {
+char* _spUtil_readFile (const char* path, int* length) {
 	return _readFile(path, length);
 }
 
@@ -144,12 +144,12 @@ static int doSpine = 1;
 static int doShaderBg = 1;
 
 
-static Skeleton* bgsSkeleton;
-static AnimationStateData* bgsStateData;
-static AnimationState* bgsState;
-static Skeleton* skeleton;
-static AnimationStateData* stateData;
-static AnimationState* state;
+static spSkeleton* bgsSkeleton;
+static spAnimationStateData* bgsStateData;
+static spAnimationState* bgsState;
+static spSkeleton* skeleton;
+static spAnimationStateData* stateData;
+static spAnimationState* state;
 static float verticeBuffer[8];
 static float uvBuffer[8];
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -237,7 +237,7 @@ int impl_draw() {
 
       //AnimationState_update(bgsState, 0); //qwqz_engine->m_Timers[0].step * 0.1);
       //AnimationState_apply(bgsState, bgsSkeleton);
-      Skeleton_updateWorldTransform(bgsSkeleton);
+      spSkeleton_updateWorldTransform(bgsSkeleton);
 
 /*
 far-2
@@ -263,11 +263,11 @@ close-0
         }
 
         int c = a;
-        Slot *s = bgsSkeleton->drawOrder[c];
+        spSlot *s = bgsSkeleton->drawOrder[c];
         //LOGV("%s %f\n", s->data->name, bgsScroll[a]);
-        RegionAttachment *ra = (RegionAttachment *)s->attachment;
+        spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
         if (s->attachment->type == ATTACHMENT_REGION) {
-          RegionAttachment_computeWorldVertices(ra, bgsScroll[a], 0.0, s->bone, verticeBuffer);
+          spRegionAttachment_computeWorldVertices(ra, bgsScroll[a], 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
       }
@@ -300,16 +300,16 @@ close-0
       skeleton->root->scaleX = 1.0;
       skeleton->root->scaleY = 1.0;
 
-      AnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.125);
-      AnimationState_apply(state, skeleton);
-      Skeleton_updateWorldTransform(skeleton);
+      spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.125);
+      spAnimationState_apply(state, skeleton);
+      spSkeleton_updateWorldTransform(skeleton);
 
       if (0 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 3.0) {
         jumped = 1;
         //AnimationState_setAnimationByName(state, 0, "jump", false);
 
-        AnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
-        AnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
+        spAnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
+        spAnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
 
       }
 
@@ -328,10 +328,10 @@ close-0
       */
 
       for (int i=0; i<skeleton->slotCount; i++) {
-        Slot *s = skeleton->drawOrder[i];
-        RegionAttachment *ra = (RegionAttachment *)s->attachment;
+        spSlot *s = skeleton->drawOrder[i];
+        spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
         if (s->attachment->type == ATTACHMENT_REGION) {
-          RegionAttachment_computeWorldVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
+          spRegionAttachment_computeWorldVertices(ra, 0.0, 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
 
           float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
@@ -476,23 +476,23 @@ int impl_main(int argc, char** argv) {
 
   if (doSpine) {
     {
-      Atlas* atlas = Atlas_readAtlasFile("assets/spine/robot.atlas");
-      SkeletonJson* json = SkeletonJson_create(atlas);
-      SkeletonData *skeletonData = SkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
-      skeleton = Skeleton_create(skeletonData);
-      stateData = AnimationStateData_create(skeletonData);
-      AnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
-      AnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
-      state = AnimationState_create(stateData);
-      AnimationState_setAnimationByName(state, 0, "walk_alt", 1);
+      spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
+      spSkeletonJson* json = spSkeletonJson_create(atlas);
+      spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
+      skeleton = spSkeleton_create(skeletonData);
+      stateData = spAnimationStateData_create(skeletonData);
+      spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
+      spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
+      state = spAnimationState_create(stateData);
+      spAnimationState_setAnimationByName(state, 0, "walk_alt", 1);
 
-      Atlas *atlas2 = Atlas_readAtlasFile("assets/spine/bgs.atlas");
-      SkeletonJson *json2 = SkeletonJson_create(atlas2);
-      SkeletonData *skeletonData2 = SkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
-      bgsSkeleton = Skeleton_create(skeletonData2);
-      bgsStateData = AnimationStateData_create(skeletonData2);
-      bgsState = AnimationState_create(bgsStateData);
-      AnimationState_setAnimationByName(bgsState, 0, "default", 1);
+      spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/bgs.atlas");
+      spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
+      spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
+      bgsSkeleton = spSkeleton_create(skeletonData2);
+      bgsStateData = spAnimationStateData_create(skeletonData2);
+      bgsState = spAnimationState_create(bgsStateData);
+      spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
     }
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine.vsh");
@@ -514,15 +514,15 @@ int impl_main(int argc, char** argv) {
       skeleton->root->scaleX = 1.0;
       skeleton->root->scaleY = 1.0;
 
-      Skeleton_updateWorldTransform(skeleton);
+      spSkeleton_updateWorldTransform(skeleton);
 
       bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotCount);
 
       for (int i=0; i<skeleton->slotCount; i++) {
-        Slot *s = skeleton->drawOrder[i];
+        spSlot *s = skeleton->drawOrder[i];
         if (s->attachment->type == ATTACHMENT_REGION) {
 
-          RegionAttachment *ra = (RegionAttachment *)s->attachment;
+          spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
 
           float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
           float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
