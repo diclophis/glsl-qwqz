@@ -463,8 +463,11 @@ int impl_main(int argc, char** argv) {
 
         cpBodySetAngle(body, r);
         cpBodySetPosition(body, cpv(x, y));
-        
-        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
+
+        //cpPolyShape* roundedBox = cpBoxShapeInit2(cpPolyShape *poly, body, cpBB box, cpFloat radius);
+        //shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
+
+        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * 0.5, ra->height * 0.5, 20.0f));
         cpShapeSetElasticity(shape, 0.0f);
         cpShapeSetFriction(shape, 1.0f);
         cpGroup spineGroup = 2;
