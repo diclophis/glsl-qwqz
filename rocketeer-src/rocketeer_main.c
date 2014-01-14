@@ -49,7 +49,11 @@ ColorForShape(cpShape *shape, cpDataPointer *data)
     return LAColor(1.0f, 0.1f);
   } else {
     cpBody *body = shape->body;
-    
+   
+    if (body->userData) {
+      return LAColor(0.0f, 0.0f);
+    }
+
     if(cpBodyIsSleeping(body)){
       return LAColor(0.2f, 1.0f);
     } else if(body->node.idleTime > shape->space->sleepTimeThreshold) {
@@ -257,7 +261,7 @@ int impl_draw() {
       skeleton->root->scaleX = 1.0;
       skeleton->root->scaleY = 1.0;
 
-      spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.125);
+      spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.0); //3.125
       spAnimationState_apply(state, skeleton);
       spSkeleton_updateWorldTransform(skeleton);
 
@@ -357,7 +361,7 @@ int impl_main(int argc, char** argv) {
     ChipmunkDebugDrawInit();
 
     space = cpSpaceNew();
-    cpSpaceSetGravity(space, cpv(0, -500));
+    cpSpaceSetGravity(space, cpv(0, -100));
 
     cpShape *shape;
     cpBody *body;
@@ -372,7 +376,8 @@ int impl_main(int argc, char** argv) {
     // Add lots of boxes.
     for(int i=0; i<30; i++) {
       for(int j=0; j<=i; j++) {
-        body = cpSpaceAddBody(space, cpBodyNew(1.0f, cpMomentForBox(200.0f, 30.0f, 30.0f)));
+        float m = 1000.0;
+        body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, 30.0f, 30.0f)));
 
         cpBodySetPosition(body, cpv(j*43 - i*16, 600 + i*64));
         
@@ -464,6 +469,7 @@ int impl_main(int argc, char** argv) {
         cpShape *shape;
 
         body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
+        body->userData = 1;
         bodies[i] = body;
 
         cpBodySetAngle(body, r);
@@ -472,7 +478,7 @@ int impl_main(int argc, char** argv) {
         //cpPolyShape* roundedBox = cpBoxShapeInit2(cpPolyShape *poly, body, cpBB box, cpFloat radius);
         //shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 0.0f));
 
-        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * 0.5, ra->height * 0.5, 20.0f));
+        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * 0.3, ra->height * 0.3, 20.0f));
         cpShapeSetElasticity(shape, 0.0f);
         cpShapeSetFriction(shape, 1.0f);
         cpGroup spineGroup = 2;

@@ -17,5 +17,4 @@ void main() {
 
   gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
   gl_FragColor = (gl_FragColor * (1.0 - t1.a)) + (t1 * t1.a);
-
 }

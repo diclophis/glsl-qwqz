@@ -17,7 +17,8 @@ rocketeer-clean:
 
 test:
 	cd platforms/osx && IMPL=test make
-	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/flower.fsh
+	#platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/flower.fsh
+	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/trail.fsh
 
 test-clean:
 	cd platforms/osx && IMPL=test make clean

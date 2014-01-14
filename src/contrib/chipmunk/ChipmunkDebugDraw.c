@@ -163,7 +163,7 @@ precision highp float;
 			vec4 fo_color = mix(v_fill_color, v_outline_color, fo_step);
 			
 			// Use pre-multiplied alpha.
-			float alpha = 0.75; //1.0 - aa_step(1.0 - fw, 1.0, l);
+			float alpha = 0.5; //1.0 - aa_step(1.0 - fw, 1.0, l);
 			gl_FragColor = fo_color*(fo_color.a*alpha);
 			//gl_FragColor = vec4(vec3(l), 1);
 		}
