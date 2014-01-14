@@ -28,12 +28,13 @@ void main(void)
 {
   vec4 t1 = texture2D(texture1, OutTexture);
 
-  vec2 uv = gl_FragCoord.xy / iResolution.y;
+  vec2 uv = gl_FragCoord.xy / iResolution.y / (iResolution.y / 1024.0);
 
-  vec2 iMouse = vec2(0.0, 0.0);
-  uv+=iMouse.xy/ iResolution.xy;
+  //vec2 iMouse = vec2(0.0, 0.0);
+  //uv += iMouse.xy / iResolution.xy;
+  uv.y += 0.5;
   
-  vec2 p=uv.xy*vec2(3.,4.3);
+  vec2 p=uv.xy*vec2(4.0, 4.0);
   float f =
   .5*sn(p)
   +.25*sn(2.*p)
@@ -73,7 +74,7 @@ void main(void)
   lightning = smoothstep(0.76,1.,lightning);
   lightning=lightning*2.;
   
-  vec2 moonp = vec2(0.5,0.8);
+  vec2 moonp = vec2(0.5, 1.25);
   float moon = smoothstep(0.95,0.956,1.-length(uv-moonp));
   vec2 moonp2 = moonp + vec2(0.015, 0);
   moon -= smoothstep(0.93,0.956,1.-length(uv-moonp2));

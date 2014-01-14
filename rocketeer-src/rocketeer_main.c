@@ -143,9 +143,6 @@ int impl_draw() {
 
   if (doShaderBg) {
 
-//wtf
-//wtf
-
     glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
     glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -420,7 +417,6 @@ int impl_main(int argc, char** argv) {
   if (doSpine) {
     {
       spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
-      //int t0 = qwqz_texture_init(GL_TEXTURE0, "assets/spine/robot.png", &ox, &oy);
       spSkeletonJson* json = spSkeletonJson_create(atlas);
       spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
       skeleton = spSkeleton_create(skeletonData);
@@ -431,17 +427,13 @@ int impl_main(int argc, char** argv) {
       spAnimationState_setAnimationByName(state, 0, "walk_alt", 1);
 
       spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/bgs.atlas");
-      //int t1 = qwqz_texture_init(GL_TEXTURE1, "assets/spine/bgs.png", &ox, &oy);
       spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
       spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
       bgsSkeleton = spSkeleton_create(skeletonData2);
       bgsStateData = spAnimationStateData_create(skeletonData2);
       bgsState = spAnimationState_create(bgsStateData);
       spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
-
-      //LOGV("fix implied assumption about texture bindings %d %d\n", t0, t1);
     }
-
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
@@ -541,10 +533,6 @@ int impl_main(int argc, char** argv) {
     GLuint v = 0;
     GLuint f = 0;
     GLuint program = 0;
-
-    // render target
-    //int renderBufferTexture = qwqz_buffer_texture_init(GL_TEXTURE3);
-    //qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
     f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/metaballs.fsh");

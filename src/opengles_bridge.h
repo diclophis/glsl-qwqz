@@ -1,6 +1,5 @@
 // stuff
 
-
 #ifdef ANDROID_NDK
 #include <android/log.h>
 #define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, "libnav", __VA_ARGS__)
@@ -117,26 +116,11 @@
   #endif
 #endif
 
-
 #ifdef EMSCRIPTEN
   #ifndef MSG_NOSIGNAL
     #define MSG_NOSIGNAL 0
   #endif
 #endif
-
-/*
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <netdb.h>
-*/
 
 #if EMSCRIPTEN
   #include <emscripten.h>
