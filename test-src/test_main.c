@@ -6,7 +6,6 @@
 #include "impl_main.h"
 #include "test_main.h"
 #include <spine/spine.h>
-#include <spine/extension.h>
 #include "spine_bridge.h"
 
 
@@ -18,38 +17,12 @@ static float uvBuffer[8];
 int impl_draw() {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-  qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
-
-  verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
-
-  verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
-
-  verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
-
-  verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
-
-  uvBuffer[0] = 0.0;
-  uvBuffer[1] = 0.0;
-  uvBuffer[2] = 0.0;
-  uvBuffer[3] = 0.0;
-  uvBuffer[4] = 0.0;
-  uvBuffer[5] = 0.0;
-  uvBuffer[6] = 0.0;
-  uvBuffer[7] = 0.0;
-
-  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
-  qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
 
   glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
   glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-  glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
+  glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
   translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
@@ -84,7 +57,36 @@ int impl_draw() {
 
 
 int impl_resize(int width, int height) {
-  return qwqz_resize(qwqz_engine, width, height);
+  int resized = qwqz_resize(qwqz_engine, width, height);
+
+  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
+
+  verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
+
+  verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
+
+  verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
+
+  verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
+
+  uvBuffer[0] = 0.0;
+  uvBuffer[1] = 0.0;
+  uvBuffer[2] = 0.0;
+  uvBuffer[3] = 0.0;
+  uvBuffer[4] = 0.0;
+  uvBuffer[5] = 0.0;
+  uvBuffer[6] = 0.0;
+  uvBuffer[7] = 0.0;
+
+  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
+  qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
+
+  return resized;
 }
 
 
@@ -133,4 +135,3 @@ int impl_main(int argc, char** argv) {
 
   return 0;
 }
-

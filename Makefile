@@ -32,3 +32,5 @@ emscripten-test:
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make clean
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make install
+
+clean: rocketeer-clean test-clean

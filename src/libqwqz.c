@@ -30,13 +30,13 @@ void qwqz_checkgl(const char *s) {
 qwqz_handle qwqz_create() {
   qwqz_handle e = malloc(sizeof(struct qwqz_handle_t));
   e->m_SpriteCount = 0;
-	e->m_IsSceneBuilt = 0;
-	e->m_IsScreenResized = 0;
+  e->m_IsSceneBuilt = 0;
+  e->m_IsScreenResized = 0;
   e->m_Batches = 0;
 
   e->g_lastElementBuffer = -1;
   e->g_lastInterleavedBuffer = -1;
-	e->m_NeedsBlendEnabled = 1;
+  e->m_NeedsBlendEnabled = 1;
 
   return e;
 }
@@ -380,7 +380,6 @@ int qwqz_buffer_texture_init(GLuint t) {
 
 
 int qwqz_buffer_target_init(GLuint renderedTexture) {
-
   // The framebuffer, which regroups 0, 1, or more textures, and 0 or 1 depth buffer.
   GLuint FramebufferName = 0;
   glGenFramebuffers(1, &FramebufferName);

@@ -12,8 +12,8 @@ struct qwqz_batch_t {
   int m_numInterleavedBuffers;
   int m_numIndexBuffers;
   struct qwqz_sprite_t *m_Sprites;
-	GLuint *m_InterleavedBuffers;
-	GLuint *m_IndexBuffers;
+  GLuint *m_InterleavedBuffers;
+  GLuint *m_IndexBuffers;
   size_t m_Stride;
 };
 typedef struct qwqz_batch_t * qwqz_batch;
@@ -30,20 +30,6 @@ struct qwqz_handle_t {
   struct qwqz_batch_t *m_Batches;
   struct qwqz_linkage_t *m_Linkages;
   struct qwqz_timer_t *m_Timers;
-
-
-
-  /*
-  int m_Program;
-  GLuint g_PositionAttribute;
-  GLuint g_ResolutionUniform;
-  GLuint g_TimeUniform;
-
-  int m_Program2;
-  GLuint g_PositionAttribute2;
-  GLuint g_ResolutionUniform2;
-  GLuint g_TimeUniform2;
-  */
 
   GLuint FramebufferName;
   GLuint renderedTexture;

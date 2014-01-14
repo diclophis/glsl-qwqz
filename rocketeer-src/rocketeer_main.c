@@ -137,41 +137,21 @@ int impl_draw() {
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
+  // not needed explicitly given that doShaderBg draws the to the entire screen
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   if (doShaderBg) {
-    qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
-    qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
 
-    verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
-    verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
-
-    verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
-    verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
-
-    verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
-    verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
-
-    verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
-    verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
-
-    uvBuffer[0] = 0.0;
-    uvBuffer[1] = 0.0;
-    uvBuffer[2] = 0.0;
-    uvBuffer[3] = 0.0;
-    uvBuffer[4] = 0.0;
-    uvBuffer[5] = 0.0;
-    uvBuffer[6] = 0.0;
-    uvBuffer[7] = 0.0;
-
-    qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
-    qwqz_batch_add(&qwqz_engine->m_Batches[2], 0, verticeBuffer, NULL, uvBuffer);
+//wtf
+//wtf
 
     glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
     glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
-    glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
+    glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
     translate(&qwqz_engine->m_Linkages[1], NULL, 0, 0, 0);
@@ -338,14 +318,46 @@ int impl_draw() {
     ChipmunkDebugDrawPopRenderer();
   }
 
+  if (1) {
+  }
+
   return 0;
 }
 
 
 int impl_resize(int width, int height) {
-  qwqz_resize(qwqz_engine, width, height);
+  int resized = qwqz_resize(qwqz_engine, width, height);
 
-  return 0;
+    qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
+    qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
+
+//LOGV("wha!! %f %f\n", qwqz_engine->m_ScreenHalfWidth, qwqz_engine->m_ScreenHalfHeight);
+
+verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
+verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
+
+verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
+verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
+
+verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
+verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
+
+verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
+verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
+
+uvBuffer[0] = 0.0;
+uvBuffer[1] = 0.0;
+uvBuffer[2] = 0.0;
+uvBuffer[3] = 0.0;
+uvBuffer[4] = 0.0;
+uvBuffer[5] = 0.0;
+uvBuffer[6] = 0.0;
+uvBuffer[7] = 0.0;
+
+    qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
+    qwqz_batch_add(&qwqz_engine->m_Batches[2], 0, verticeBuffer, NULL, uvBuffer);
+
+  return resized;
 }
 
 
@@ -402,6 +414,9 @@ int impl_main(int argc, char** argv) {
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
+  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 4);
+  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 4);
+
   if (doSpine) {
     {
       spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
@@ -427,8 +442,6 @@ int impl_main(int argc, char** argv) {
       //LOGV("fix implied assumption about texture bindings %d %d\n", t0, t1);
     }
 
-    qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 3);
-    qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 3);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
@@ -469,7 +482,7 @@ int impl_main(int argc, char** argv) {
         cpShape *shape;
 
         body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
-        body->userData = 1;
+        body->userData = (void *)1;
         bodies[i] = body;
 
         cpBodySetAngle(body, r);
@@ -486,6 +499,7 @@ int impl_main(int argc, char** argv) {
       }
     }
   }
+
 
   if (doShaderBg) {
     qwqz_engine->m_RenderTextureWidth = 256;
@@ -518,6 +532,32 @@ int impl_main(int argc, char** argv) {
 
     qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
     qwqz_batch_init(&qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2], 1);
+
+  }
+
+  if (1) {
+    qwqz_engine->m_RenderTextureWidth = 256;
+
+    GLuint v = 0;
+    GLuint f = 0;
+    GLuint program = 0;
+
+    // render target
+    //int renderBufferTexture = qwqz_buffer_texture_init(GL_TEXTURE3);
+    //qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
+
+    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
+    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/metaballs.fsh");
+
+    if (v && f) {
+      // Create and link the shader program
+      program = glCreateProgram();
+      glAttachShader(program, v);
+      glAttachShader(program, f);
+      qwqz_linkage_init(program, &qwqz_engine->m_Linkages[3]);
+    }
+
+    qwqz_batch_init(&qwqz_engine->m_Batches[3], &qwqz_engine->m_Linkages[3], 1);
   }
 
   return 0;
