@@ -6,8 +6,10 @@
     <title>MemoryLeak</title>
     <style>
       html { margin: 0; padding: 0; height: 100%; }
-      body { margin: 0; padding: 0; overflow: hidden; width: 512px; height: 512px; }
-      canvas { padding: 0; margin: 0; display: block; width: 512px; height: 512px; }
+      x-body { margin: 0; padding: 0; overflow: hidden; width: 512px; height: 512px; }
+      x-canvas { padding: 0; margin: 0; display: block; width: 512px; height: 512px; }
+      body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
+      canvas { padding: 0; margin: 0; display: block; width: 100%; height: 100%; }
     </style>
     <script>
       var queryString = (function(a) {
@@ -69,7 +71,43 @@
         onUpdateReady();  
       }
 
-      document.addEventListener("DOMContentLoaded", function () {
+    </script>
+  </head>
+  <body>
+    <script>
+      var Module = {
+        TOTAL_MEMORY: 20971520 * 4, 
+        noInitialRun: true,
+        print: (function() {
+          return function(text) {
+            console.log(text);
+          };
+        })(),
+        canvas: (function() {
+          var canvas = document.createElement("canvas");
+          //canvas.width = document.body.offsetWidth;
+          //canvas.height = document.body.offsetHeight;
+          //console.log(canvas);
+          document.body.appendChild(canvas);
+          return canvas; 
+        })(),
+        setStatus: function(text) {
+          console.log(text);
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Downloading: ' + (this.totalDependencies-left) + '/' + this.totalDependencies : 'All downloads complete.');
+        },
+        arguments: [
+          "assets/shaders/basic.vsh",
+          queryString["fragment"] || "assets/shaders/flower.fsh"
+        ]
+      };
+    </script>
+    <script src="raptor_island.js"></script>
+    <script>
+      //document.addEventListener("DOMContentLoaded", function () {
         /*
         var startGame = cwrap('start_game', 'number', ['number']);
         var buttons = document.getElementsByTagName("button");
@@ -116,41 +154,8 @@
           Module.removeRunDependency("manifest");
         }
         manifestFile.send(null);
-      });
+      //});
+
     </script>
-  </head>
-  <body>
-    <script>
-      var Module = {
-        TOTAL_MEMORY: 20971520 * 4, 
-        noInitialRun: true,
-        print: (function() {
-          return function(text) {
-            console.log(text);
-          };
-        })(),
-        canvas: (function() {
-          var canvas = document.createElement("canvas");
-          //canvas.width = document.body.offsetWidth;
-          //canvas.height = document.body.offsetHeight;
-          //console.log(canvas);
-          document.body.appendChild(canvas);
-          return canvas; 
-        })(),
-        setStatus: function(text) {
-          console.log(text);
-        },
-        totalDependencies: 0,
-        monitorRunDependencies: function(left) {
-          this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? 'Downloading: ' + (this.totalDependencies-left) + '/' + this.totalDependencies : 'All downloads complete.');
-        },
-        arguments: [
-          "assets/shaders/basic.vsh",
-          queryString["fragment"] || "assets/shaders/flower.fsh"
-        ]
-      };
-    </script>
-    <script src="raptor_island.js"></script>
   </body>
 </html>
