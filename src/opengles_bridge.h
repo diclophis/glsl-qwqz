@@ -19,7 +19,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <errno.h>
