@@ -193,7 +193,7 @@ int impl_draw() {
 
       for (int a=0; a<9; a++) {
         float spd_m = 1.0 + (float)(a / 3);
-        float spd_x = 24.0;
+        float spd_x = 200.0;
         float total_w = 1024.0;
 
         bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step * spd_m;
@@ -238,7 +238,7 @@ int impl_draw() {
       skeleton->root->scaleX = 1.0;
       skeleton->root->scaleY = 1.0;
 
-      spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.0); //3.125
+      spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 13.0); //3.125
       spAnimationState_apply(state, skeleton);
       spSkeleton_updateWorldTransform(skeleton);
 
@@ -273,7 +273,16 @@ int impl_draw() {
           cpBody *body = bodies[i];
 
           cpVect newPos = cpv(x + ox, y);
-          cpBodySetVelocity(body, cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step));
+          cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
+
+          float velocity_limit = 150;
+          float velocity_mag = cpvlength(newVel);
+          if (velocity_mag > velocity_limit) {
+            float velocity_scale = velocity_limit / velocity_mag;
+            newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+          }
+
+          cpBodySetVelocity(body, newVel);
           cpBodySetPosition(body, newPos);
 
           cpBodySetAngle(body, r);
@@ -375,7 +384,7 @@ int impl_main(int argc, char** argv) {
     ChipmunkDebugDrawInit();
 
     space = cpSpaceNew();
-    cpSpaceSetGravity(space, cpv(0, -100));
+    cpSpaceSetGravity(space, cpv(0, -200));
 
     cpShape *shape;
     cpBody *body;
@@ -390,13 +399,13 @@ int impl_main(int argc, char** argv) {
     // Add lots of boxes.
     for(int i=0; i<30; i++) {
       for(int j=0; j<=i; j++) {
-        float m = 1000.0;
+        float m = 99999.0;
         body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, 30.0f, 30.0f)));
 
         cpBodySetPosition(body, cpv(j*43 - i*16, 600 + i*64));
         
         shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.0f));
-        cpShapeSetElasticity(shape, 1.0f);
+        cpShapeSetElasticity(shape, 0.0f);
         cpShapeSetFriction(shape, 1.0f);
         cpGroup boxGroup = 1;
         shape->filter.group = boxGroup;
