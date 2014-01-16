@@ -1,4 +1,7 @@
 //
+#ifdef GL_ES
+precision highp float;
+#endif
 
 attribute vec2 Position;
 
