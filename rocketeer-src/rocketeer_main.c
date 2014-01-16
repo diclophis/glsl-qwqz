@@ -330,8 +330,6 @@ int impl_resize(int width, int height) {
 
   ChipmunkDebugDrawResizeRenderer(width, height);
 
-return 1;
-
     qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
     qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
 

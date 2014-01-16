@@ -243,6 +243,8 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff) {
 }
 
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
+  assert(ff->m_numSpritesBatched > 0);
+
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
   glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
@@ -254,6 +256,7 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   // 4th [indices] parameter is a pointer to where the indices are stored.
 
   glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+  //LOGV("%d\n", (ff->m_numSpritesBatched));
 }
 
 
