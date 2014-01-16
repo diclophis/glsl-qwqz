@@ -6,8 +6,6 @@
     <title>MemoryLeak</title>
     <style>
       html { margin: 0; padding: 0; height: 100%; }
-      x-body { margin: 0; padding: 0; overflow: hidden; width: 512px; height: 512px; }
-      x-canvas { padding: 0; margin: 0; display: block; width: 512px; height: 512px; }
       body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
       canvas { padding: 0; margin: 0; display: block; width: 100%; height: 100%; }
     </style>
@@ -70,7 +68,6 @@
       if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {  
         onUpdateReady();  
       }
-
     </script>
   </head>
   <body>
@@ -85,9 +82,6 @@
         })(),
         canvas: (function() {
           var canvas = document.createElement("canvas");
-          //canvas.width = document.body.offsetWidth;
-          //canvas.height = document.body.offsetHeight;
-          //console.log(canvas);
           document.body.appendChild(canvas);
           return canvas; 
         })(),
@@ -107,18 +101,6 @@
     </script>
     <script src="raptor_island.js"></script>
     <script>
-      //document.addEventListener("DOMContentLoaded", function () {
-        /*
-        var startGame = cwrap('start_game', 'number', ['number']);
-        var buttons = document.getElementsByTagName("button");
-        for (i in buttons) {
-          if (buttons[i].className == "game") {
-            buttons[i].onclick = function(e) {
-              startGame(this.value);
-            };
-          }
-        }
-        */
         var manifestFile = new XMLHttpRequest();
         var manifestUrl = "index.appcache";
         manifestFile.open("GET", manifestUrl, true);
@@ -141,7 +123,6 @@
                 dataFile.responseType = "arraybuffer";
                 Module.addRunDependency(line);
                 dataFile.onload = function(e) {
-                  console.log(line, this);
                   var arrayBuffer = this.response;
                   var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
                   Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
@@ -154,8 +135,6 @@
           Module.removeRunDependency("manifest");
         }
         manifestFile.send(null);
-      //});
-
     </script>
   </body>
 </html>
