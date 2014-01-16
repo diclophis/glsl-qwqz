@@ -47,6 +47,8 @@ void ChipmunkDebugDrawFlushRenderer(void);
 void ChipmunkDebugDrawClearRenderer(void);
 
 // Save the current contents of the renderer.
-void ChipmunkDebugDrawPushRenderer(void);
+int ChipmunkDebugDrawPushRenderer(void);
 // Reset the renderer back to it's last pushed state.
 void ChipmunkDebugDrawPopRenderer(void);
+
+void ChipmunkDebugDrawResizeRenderer(float w, float h);

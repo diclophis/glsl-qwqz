@@ -150,13 +150,13 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
-  e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
+  //e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
   glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
 
-  LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
+  //LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
 
   float m_Zoom2 = 1.0;
   float a = (-e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;

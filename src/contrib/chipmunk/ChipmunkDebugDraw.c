@@ -41,6 +41,7 @@ static struct v2f v2f0 = {0.0f, 0.0f};
 
 static GLfloat ProjectionMatrix2[16];
 GLuint ModelViewProjectionMatrix_location2;
+GLuint resolutionHackLocation;
 
 static inline struct v2f
 v2f(cpVect v)
@@ -115,13 +116,20 @@ precision highp float;
 		varying vec4 v_fill_color;
 		varying vec4 v_outline_color;
     uniform mat4 ModelViewProjectionMatrix;
+    uniform vec2 iResolution;
 		
 		void main(void) {
 			// TODO: get rid of the GL 2.x matrix bit eventually?
 			//gl_Position = gl_ModelViewProjectionMatrix*vec4(vertex, 0.0, 1.0);
-      vec4 p = ModelViewProjectionMatrix * vec4(vertex, 0.0, 1.0);
-      p.y -= 1.0;
-			gl_Position = p;
+      //vec4 p = ModelViewProjectionMatrix * vec4(vertex, 0.0, 1.0);
+      //p.y -= 1.0;
+			//gl_Position = p;
+
+  //float zoom = (256.0 / 512.0);
+  float zoom = (iResolution.y / 1024.0);
+  vec4 p = ModelViewProjectionMatrix * vec4(vertex * zoom, 1.0, 1.0);
+  p.y -= 1.0;
+  gl_Position = p;
 			
 			v_fill_color = fill_color;
 			v_outline_color = outline_color;
@@ -184,21 +192,11 @@ precision highp float;
 	SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
 	SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
 
-  float m_ScreenHalfHeight = 256.0;
-  float m_ScreenAspect = 1.0;
-
-  float m_Zoom2 = 2.0;
-  float a = (-m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
-  float b = (m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
-  float c = (-m_ScreenHalfHeight) * m_Zoom2;
-  float d = m_ScreenHalfHeight * m_Zoom2;
-  float ee = 10.0;
-  float ff = -10.0;
-
-  HACKidentity(ProjectionMatrix2);
-  HACKortho(ProjectionMatrix2, (a), (b), (c), (d), (ee), (ff));
+  ChipmunkDebugDrawResizeRenderer(128.0, 128.0);
 
   ModelViewProjectionMatrix_location2 = glGetUniformLocation(program, "ModelViewProjectionMatrix");
+  resolutionHackLocation = glGetUniformLocation(program, "iResolution");
+
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//glBindVertexArrayOES(0);
@@ -383,10 +381,6 @@ ChipmunkDebugDrawFlushRenderer(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, triangle_buffer, GL_STREAM_DRAW);
 
-	glUseProgram(program);
-	glUniform1f(glGetUniformLocation(program, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
-  glUniformMatrix4fv(ModelViewProjectionMatrix_location2, 1, GL_FALSE, ProjectionMatrix2);
-
 	SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
 	SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
 	SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
@@ -416,14 +410,37 @@ ChipmunkDebugDrawClearRenderer(void)
 }
 
 static int pushed_triangle_count = 0;
-void
+int
 ChipmunkDebugDrawPushRenderer(void)
 {
 	pushed_triangle_count = triangle_count;
+
+	glUseProgram(program);
+  glUniformMatrix4fv(ModelViewProjectionMatrix_location2, 1, GL_FALSE, ProjectionMatrix2);
+	glUniform1f(glGetUniformLocation(program, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
+
+  return resolutionHackLocation;
 }
 
 void
 ChipmunkDebugDrawPopRenderer(void)
 {
 	triangle_count = pushed_triangle_count;
+}
+
+void ChipmunkDebugDrawResizeRenderer(float w, float h) {
+  float m_ScreenHalfHeight = h / 2.0;
+  //float m_ScreenHalfWidth = w / 2.0;
+  float m_ScreenAspect = w / h;
+
+  float m_Zoom2 = 1.0;
+  float a = (-m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
+  float b = (m_ScreenHalfHeight * m_ScreenAspect) * m_Zoom2;
+  float c = (-m_ScreenHalfHeight) * m_Zoom2;
+  float d = m_ScreenHalfHeight * m_Zoom2;
+  float ee = 10.0;
+  float ff = -10.0;
+
+  HACKidentity(ProjectionMatrix2);
+  HACKortho(ProjectionMatrix2, (a), (b), (c), (d), (ee), (ff));
 }

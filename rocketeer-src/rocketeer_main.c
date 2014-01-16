@@ -307,7 +307,9 @@ int impl_draw() {
 
     // Draw the renderer contents and reset it back to the last tick's state.
     ChipmunkDebugDrawClearRenderer();
-    ChipmunkDebugDrawPushRenderer();
+    //ChipmunkDebugDrawPushRenderer();
+
+    glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
     ChipmunkDemoDefaultDrawImpl(space);
 
@@ -323,7 +325,12 @@ int impl_draw() {
 
 
 int impl_resize(int width, int height) {
+
   int resized = qwqz_resize(qwqz_engine, width, height);
+
+  ChipmunkDebugDrawResizeRenderer(width, height);
+
+return 1;
 
     qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
     qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
