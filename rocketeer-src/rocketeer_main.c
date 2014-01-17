@@ -139,15 +139,16 @@ int impl_draw() {
 
   // not needed explicitly given that doShaderBg draws the to the entire screen
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   if (doShaderBg) {
     glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
+    glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
 
     glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
     glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-    translate(&qwqz_engine->m_Linkages[1], NULL, 0, 0, 0);
+    //translate(&qwqz_engine->m_Linkages[1], NULL, 0, 0, 0);
 
     //TODO: abstract render passes
     {
@@ -159,22 +160,23 @@ int impl_draw() {
       glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_TextureAttribute);
     }
 
-    glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
 
     // Render to the screen
-    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
-    //glUseProgram(qwqz_engine->m_Linkages[2].m_Program);
-    //glUniform1f(qwqz_engine->m_Linkages[2].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+    glUseProgram(qwqz_engine->m_Linkages[2].m_Program);
+    glUniform1f(qwqz_engine->m_Linkages[2].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
     //translate(&qwqz_engine->m_Linkages[2], NULL, 0, 0, 0);
 
-    //qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
+    qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
   }
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+
   if (doSpine) {
     if (1) {
       qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
@@ -223,7 +225,6 @@ int impl_draw() {
         glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
       }
 
-      glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
 
@@ -301,7 +302,6 @@ int impl_draw() {
         glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
       }
 
-      glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
       qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
   }
@@ -515,7 +515,7 @@ int impl_main(int argc, char** argv) {
 
 
   if (doShaderBg) {
-    qwqz_engine->m_RenderTextureWidth = 256;
+    qwqz_engine->m_RenderTextureWidth = 512;
 
     GLuint v = 0;
     GLuint f = 0;
@@ -527,7 +527,7 @@ int impl_main(int argc, char** argv) {
     qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
-    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/flowers.fsh");
+    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/thunder_and_lightning.fsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rocketeer_background.fsh");
 
     if (v && f && f2) {
@@ -548,11 +548,10 @@ int impl_main(int argc, char** argv) {
 
     qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
     qwqz_batch_init(&qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2], 1);
-
   }
 
   if (0) {
-    qwqz_engine->m_RenderTextureWidth = 256;
+    qwqz_engine->m_RenderTextureWidth = 512;
 
     GLuint v = 0;
     GLuint f = 0;
