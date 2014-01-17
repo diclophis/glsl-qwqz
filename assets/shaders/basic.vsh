@@ -12,6 +12,8 @@ uniform float iGlobalTime;
 uniform vec2 iResolution;
 uniform mat4 ModelViewProjectionMatrix;
 
+uniform sampler2D texture1;
+
 void main() {
   float zoom = (iResolution.y / 512.0);
   vec4 p = ModelViewProjectionMatrix * vec4(Position * zoom, 1.0 * zoom, 1.0);
