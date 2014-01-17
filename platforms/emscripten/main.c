@@ -10,6 +10,11 @@
 #include "libqwqz.h"
 #include "impl_main.h"
 
+
+// Adds the given callback function to listen to the changes in browser window size.
+void set_window_resize_handler(void *userData, void (*handlerFunc)(int newWidth, int newHeight, void *userData));
+
+
 static int game_index = 0;
 static int left_down = 0;
 static int right_down = 0;
@@ -25,10 +30,11 @@ void draw(void) {
 }
 
 
-void resize(int width, int height) {
+void resize(int width, int height, void *userData) {
   kWindowWidth = width;
   kWindowHeight = height;
   impl_resize(width, height);
+  glutInitWindowSize(kWindowWidth, kWindowHeight);
 }
 
 
@@ -93,18 +99,19 @@ int main(int argc, char** argv) {
 
   LOGV("%s %d %d\n", wh, kWindowWidth, kWindowHeight);
 
+
   glutInit(&argc,argv);
   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(kWindowWidth, kWindowHeight);
   glutCreateWindow("does emscripten GLUT wrapper set window.title?, do I need a title? //TODO");
   glutKeyboardFunc(processNormalKeys);
   glutKeyboardUpFunc(processNormalKeys);
   glutMouseFunc(processMouse);
   glutMotionFunc(processMouseMotion);
   glutDisplayFunc(draw);
-  glutReshapeFunc(resize);
+  set_window_resize_handler(0, resize);
 
   if (0 == impl_main(argc, argv)) {
+    resize(kWindowWidth, kWindowHeight, 0);
     glutMainLoop();
   }
 

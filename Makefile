@@ -25,8 +25,10 @@ test:
 test-clean:
 	cd platforms/osx && IMPL=test make clean
 
-emscripten-rocketeer:
+emscripten-rocketeer-clean:
 	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make clean
+
+emscripten-rocketeer:
 	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make
 	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make install
 
