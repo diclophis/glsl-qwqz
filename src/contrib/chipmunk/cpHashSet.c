@@ -229,6 +229,19 @@ cpHashSetEach(cpHashSet *set, cpHashSetIteratorFunc func, void *data)
 }
 
 void
+cpHashSetEach2(cpHashSet *set, cpHashSetIteratorFunc2 func, void *data)
+{
+	for(unsigned int i=0; i<set->size; i++){
+		cpHashSetBin *bin = set->table[i];
+		while(bin){
+			cpHashSetBin *next = bin->next;
+			func(bin->elt, data);
+			bin = next;
+		}
+	}
+}
+
+void
 cpHashSetFilter(cpHashSet *set, cpHashSetFilterFunc func, void *data)
 {
 	for(unsigned int i=0; i<set->size; i++){

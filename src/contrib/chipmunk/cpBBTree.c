@@ -26,7 +26,7 @@
 
 static inline cpSpatialIndexClass *Klass();
 
-typedef struct Node Node;
+//typedef struct Node Node;
 typedef struct Pair Pair;
 
 struct cpBBTree {
@@ -639,7 +639,7 @@ cpBBTreeReindexQuery(cpBBTree *tree, cpSpatialIndexQueryFunc func, void *data)
 	if(!tree->root) return;
 	
 	// LeafUpdate() may modify tree->root. Don't cache it.
-	cpHashSetEach(tree->leaves, (cpHashSetIteratorFunc)LeafUpdate, tree);
+	cpHashSetEach2(tree->leaves, (cpHashSetIteratorFunc2)LeafUpdate, tree);
 	
 	cpSpatialIndex *staticIndex = tree->spatialIndex.staticIndex;
 	Node *staticRoot = (staticIndex && staticIndex->klass == Klass() ? ((cpBBTree *)staticIndex)->root : NULL);

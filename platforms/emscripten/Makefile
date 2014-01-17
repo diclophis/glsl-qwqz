@@ -27,7 +27,7 @@ hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
 raptor_island: $(build) $(objects)
 	$(CXX) -O2 $(objects) -o $(build)/raptor_island.bc
-	$(CXX) -O2 -s ASM_JS=0 -s VERBOSE=0 -s GL_DEBUG=0 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js --js-library library_window.js
+	$(CXX) -O2 -s ASM_JS=1 -s VERBOSE=1 -s GL_DEBUG=0 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js --js-library library_window.js
 
 $(build)/%.bc: %.c
 	$(CC) $(CXXFLAGS) -c $< -o $@

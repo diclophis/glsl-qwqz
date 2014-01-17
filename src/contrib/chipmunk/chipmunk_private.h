@@ -69,8 +69,13 @@ void *cpHashSetInsert(cpHashSet *set, cpHashValue hash, void *ptr, cpHashSetTran
 void *cpHashSetRemove(cpHashSet *set, cpHashValue hash, void *ptr);
 void *cpHashSetFind(cpHashSet *set, cpHashValue hash, void *ptr);
 
+//extern struct Node Node;
+typedef struct Node Node;
+
 typedef void (*cpHashSetIteratorFunc)(void *elt, void *data);
+typedef int (*cpHashSetIteratorFunc2)(Node *leaf, cpBBTree *tree);//(void *elt, void *data);
 void cpHashSetEach(cpHashSet *set, cpHashSetIteratorFunc func, void *data);
+void cpHashSetEach2(cpHashSet *set, cpHashSetIteratorFunc2 func, void *data);
 
 typedef cpBool (*cpHashSetFilterFunc)(void *elt, void *data);
 void cpHashSetFilter(cpHashSet *set, cpHashSetFilterFunc func, void *data);
