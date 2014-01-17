@@ -50,6 +50,9 @@ v2f(cpVect v)
 	return v2;
 }
 
+struct ExtrudeVerts {cpVect offset, n;};
+struct ExtrudeVerts *extrude;
+
 typedef struct Vertex {struct v2f vertex, aa_coord; cpSpaceDebugColor fill_color, outline_color;} Vertex;
 typedef struct Triangle {Vertex a, b, c;} Triangle;
 
@@ -102,6 +105,9 @@ void HACKortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat 
 void
 ChipmunkDebugDrawInit(void)
 {
+	size_t bytes = sizeof(struct ExtrudeVerts) * 64; //TODO: fix this hack
+  extrude = (struct ExtrudeVerts *)malloc(bytes);
+
 	// Setup the AA shader.
 	GLint vshader = CompileShader(GL_VERTEX_SHADER, GLSL(
 #if defined(GL_ES) || defined(EMSCRIPTEN)
@@ -287,9 +293,8 @@ extern cpVect ChipmunkDemoMouse;
 
 void ChipmunkDebugDrawPolygon(int count, const cpVect *verts, cpFloat radius, cpSpaceDebugColor outlineColor, cpSpaceDebugColor fillColor)
 {
-	struct ExtrudeVerts {cpVect offset, n;};
 	size_t bytes = sizeof(struct ExtrudeVerts)*count;
-	struct ExtrudeVerts *extrude = (struct ExtrudeVerts *)alloca(bytes);
+	//struct ExtrudeVerts *extrude = (struct ExtrudeVerts *)alloca(bytes);
 	memset(extrude, 0, sizeof(bytes));
 	
 	for(int i=0; i<count; i++){
