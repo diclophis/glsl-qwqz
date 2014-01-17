@@ -412,14 +412,16 @@ int impl_main(int argc, char** argv) {
       }
     }
 
-    // Add a ball to make things more interesting
-    cpFloat radius = 15.0f;
-    body = cpSpaceAddBody(space, cpBodyNew(10.0f, cpMomentForCircle(10.0f, 0.0f, radius, cpvzero)));
-    cpBodySetPosition(body, cpv(0, 440 + radius+5));
+    if (0) {
+      // Add a ball to make things more interesting
+      cpFloat radius = 15.0f;
+      body = cpSpaceAddBody(space, cpBodyNew(10.0f, cpMomentForCircle(10.0f, 0.0f, radius, cpvzero)));
+      cpBodySetPosition(body, cpv(0, 440 + radius+5));
 
-    shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
-    cpShapeSetElasticity(shape, 0.0f);
-    cpShapeSetFriction(shape, 1.0f);
+      shape = cpSpaceAddShape(space, cpCircleShapeNew(body, radius, cpvzero));
+      cpShapeSetElasticity(shape, 0.0f);
+      cpShapeSetFriction(shape, 1.0f);
+    }
   }
 
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
