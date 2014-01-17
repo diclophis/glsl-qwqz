@@ -85,7 +85,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
 
   e->ModelViewProjectionMatrix_location = glGetUniformLocation(e->m_Program, "ModelViewProjectionMatrix");
-  glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+  //glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 
   e->g_TimeUniform = glGetUniformLocation(e->m_Program, "iGlobalTime");
 
@@ -118,7 +118,7 @@ void translate(qwqz_linkage e, GLfloat *m, float tx, float ty, float tz) {
     ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
     ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
     ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
-    glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+    //glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 }
 
 void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
@@ -169,6 +169,12 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   identity(ProjectionMatrix);
   ortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
 
+
+  return 0;
+}
+
+int qwqz_linkage_resize(qwqz_linkage e) {
+  glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
   return 0;
 }
 
@@ -224,17 +230,17 @@ void qwqz_batch_clear(qwqz_batch ff) {
 
 
 void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff) {
-  if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
+  if (ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
   }
 
-  if (1 || ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
+  if (ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
     e->g_lastInterleavedBuffer = ff->m_InterleavedBuffers[0];
     glBindBuffer(GL_ARRAY_BUFFER, e->g_lastInterleavedBuffer);
   }
 
-  if (1 || e->m_NeedsBlendEnabled) {
+  if (e->m_NeedsBlendEnabled) {
     e->m_NeedsBlendEnabled = 0;
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);

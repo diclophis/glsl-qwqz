@@ -84,3 +84,5 @@ int qwqz_buffer_target_init(GLuint texture);
 int qwqz_timer_init(qwqz_timer t);
 void qwqz_tick_timer(qwqz_timer t);
 void translate(qwqz_linkage e, float *m, float x, float y, float z);
+
+int qwqz_linkage_resize(qwqz_linkage e);
