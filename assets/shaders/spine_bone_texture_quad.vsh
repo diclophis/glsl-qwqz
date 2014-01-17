@@ -10,6 +10,7 @@ varying vec2 OutTexture;
 
 uniform mat4 ModelViewProjectionMatrix;
 uniform vec2 iResolution;
+uniform float iGlobalTime;
 
 void main() {
   float zoom = (iResolution.y / 1024.0);

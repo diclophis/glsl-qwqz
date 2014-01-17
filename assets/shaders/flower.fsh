@@ -34,5 +34,6 @@ void main(void)
   vec3 bcol = mix( 0.5*vec3(0.8,0.9,1.0), vec3(1.0), 0.5+0.5*p.y );
   col = mix( col, bcol, smoothstep(-0.3,0.6,r-d) );
 
+  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0 );
   gl_FragColor = vec4( col, 1.0 );
 }
