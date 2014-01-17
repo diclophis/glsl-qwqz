@@ -150,7 +150,7 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
-  //e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
+  e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
   glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -168,7 +168,6 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
 
   identity(ProjectionMatrix);
   ortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
-
 
   return 0;
 }
