@@ -542,7 +542,7 @@ int impl_main(int argc, char** argv) {
       glAttachShader(program, f2);
       qwqz_linkage_init(program, &qwqz_engine->m_Linkages[2]);
       //GL_TEXTURE2
-      glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 2);
+      //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 2);
       glUniform1i(qwqz_engine->m_Linkages[2].g_TextureUniform, 2);
     }
 
