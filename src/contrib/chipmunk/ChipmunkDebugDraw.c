@@ -110,7 +110,7 @@ ChipmunkDebugDrawInit(void)
 
 	// Setup the AA shader.
 	GLint vshader = CompileShader(GL_VERTEX_SHADER, GLSL(
-#if defined(GL_ES) || defined(EMSCRIPTEN)
+#if defined(GL_ES) || defined(EMSCRIPTEN) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 precision highp float;
 #endif
 		attribute vec2 vertex;
@@ -144,7 +144,7 @@ precision highp float;
 	));
 	
 	GLint fshader = CompileShader(GL_FRAGMENT_SHADER, GLSL(
-#if defined(GL_ES) || defined(EMSCRIPTEN)
+#if defined(GL_ES) || defined(EMSCRIPTEN) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
 precision highp float;
 #endif
 		uniform float u_outline_coef;
@@ -167,8 +167,9 @@ precision highp float;
 			// Different pixel size estimations are handy.
 			//float fw = fwidth(l);
 			//float fw = length(vec2(dFdx(l), dFdy(l)));
-			float fw = length(fwidth(v_aa_coord));
-			
+			//float fw = length(fwidth(v_aa_coord));
+			float fw = 0.1;
+      
 			// Outline width threshold.
 			float ow = 1.0 - fw;//*u_outline_coef;
 			
@@ -295,7 +296,7 @@ void ChipmunkDebugDrawPolygon(int count, const cpVect *verts, cpFloat radius, cp
 {
 	size_t bytes = sizeof(struct ExtrudeVerts)*count;
 	//struct ExtrudeVerts *extrude = (struct ExtrudeVerts *)alloca(bytes);
-	memset(extrude, 0, sizeof(bytes));
+	memset(extrude, 0, bytes);
 	
 	for(int i=0; i<count; i++){
 		cpVect v0 = verts[(i-1+count)%count];

@@ -62,6 +62,7 @@
 #endif
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <spine/Skeleton.h>
@@ -155,6 +156,9 @@ void _spCurveTimeline_deinit (spCurveTimeline* self);
 #define _CurveTimeline_deinit(...) _spCurveTimeline_deinit(__VA_ARGS__)
 #endif
 
+  
+FILE *iosfopen(const char *filename, const char *mode);
+  
 #ifdef __cplusplus
 }
 #endif
