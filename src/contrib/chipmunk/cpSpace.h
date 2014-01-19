@@ -40,7 +40,7 @@ typedef void (*cpCollisionPostSolveFunc)(cpArbiter *arb, cpSpace *space, void *d
 typedef void (*cpCollisionSeparateFunc)(cpArbiter *arb, cpSpace *space, void *data);
 
 struct cpCollisionHandler {
-	const cpCollisionType typeA, typeB;
+	cpCollisionType typeA, typeB;
 	cpCollisionBeginFunc beginFunc;
 	cpCollisionPreSolveFunc preSolveFunc;
 	cpCollisionPostSolveFunc postSolveFunc;

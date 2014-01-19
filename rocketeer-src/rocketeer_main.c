@@ -518,7 +518,7 @@ int impl_main(int argc, char** argv) {
 
 
   if (doShaderBg) {
-    qwqz_engine->m_RenderTextureWidth = 128;
+    qwqz_engine->m_RenderTextureWidth = 512;
 
     GLuint v = 0;
     GLuint f = 0;
