@@ -195,7 +195,8 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * ff->m_numSprites * 4);
   GLushort *indices = (GLushort *)malloc(max_frame_count * 6 * sizeof(GLushort));
 
-  for (unsigned int i=0; i<max_frame_count; i++) {
+  unsigned int i;
+  for (i=0; i<max_frame_count; i++) {
     indices[(i * 6) + 0] = (i * 4) + 1;
     indices[(i * 6) + 1] = (i * 4) + 2;
     indices[(i * 6) + 2] = (i * 4) + 0;
@@ -268,7 +269,8 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
 
 
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv) {
-  for (int i=0; i<4; i++) {
+  int i=0;
+  for (i=0; i<4; i++) {
     int batched_times_four = (ff->m_numSpritesBatched * 4) + i;
     
     ff->m_Sprites[(batched_times_four)].vertex[0] = vertices[0 + (i * 2)];
@@ -318,7 +320,8 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   *w = tex.width;
   *h = tex.height;
   data = (unsigned char*)malloc(tex.width * tex.height * tex.bpp);
-  for(int i=0; i < tex.width*tex.height*tex.bpp; ++i) {
+  int i=0;
+  for(i=0; i < tex.width*tex.height*tex.bpp; ++i) {
     data[i] = 0;
   }
   png_get_data(&tex, data);
@@ -333,7 +336,7 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   outPixel16 = (unsigned short *)tempData;
 
   //Convert "RRRRRRRRRGGGGGGGGBBBBBBBBAAAAAAAA" to "RRRRGGGGBBBBAAAA"
-  for (int i=0; i<(tex.height * tex.width); i++) {
+  for (i=0; i<(tex.height * tex.width); i++) {
     unsigned int inP = ((unsigned int *)textureData)[i];
     outPixel16[i] = ((((inP >> 0) & 0xFF) >> 4) << 12) | ((((inP >> 8) & 0xFF) >> 4) << 8) | ((((inP >> 16) & 0xFF) >> 4) << 4) | ((((inP >> 24) & 0xFF) >> 4) << 0);
   }

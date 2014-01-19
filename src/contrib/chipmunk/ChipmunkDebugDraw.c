@@ -297,8 +297,9 @@ void ChipmunkDebugDrawPolygon(int count, const cpVect *verts, cpFloat radius, cp
 	size_t bytes = sizeof(struct ExtrudeVerts)*count;
 	//struct ExtrudeVerts *extrude = (struct ExtrudeVerts *)alloca(bytes);
 	memset(extrude, 0, bytes);
-	
-	for(int i=0; i<count; i++){
+
+  int i=0;
+	for(i=0; i<count; i++){
 		cpVect v0 = verts[(i-1+count)%count];
 		cpVect v1 = verts[i];
 		cpVect v2 = verts[(i+1)%count];
@@ -315,7 +316,7 @@ void ChipmunkDebugDrawPolygon(int count, const cpVect *verts, cpFloat radius, cp
 	Triangle *cursor = triangles;
 	
 	cpFloat inset = -cpfmax(0.0f, 1.0f/ChipmunkDebugDrawPointLineScale - radius);
-	for(int i=0; i<count-2; i++){
+	for(i=0; i<count-2; i++){
 		struct v2f v0 = v2f(cpvadd(verts[  0], cpvmult(extrude[  0].offset, inset)));
 		struct v2f v1 = v2f(cpvadd(verts[i+1], cpvmult(extrude[i+1].offset, inset)));
 		struct v2f v2 = v2f(cpvadd(verts[i+2], cpvmult(extrude[i+2].offset, inset)));
@@ -324,7 +325,8 @@ void ChipmunkDebugDrawPolygon(int count, const cpVect *verts, cpFloat radius, cp
 	}
 	
 	cpFloat outset = 1.0f/ChipmunkDebugDrawPointLineScale + radius - inset;
-	for(int i=0, j=count-1; i<count; j=i, i++){
+  int j=0;
+	for(i=0, j=count-1; i<count; j=i, i++){
 		cpVect vA = verts[i];
 		cpVect vB = verts[j];
 		

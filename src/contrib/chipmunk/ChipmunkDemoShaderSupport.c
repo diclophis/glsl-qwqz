@@ -30,7 +30,8 @@
 void
 CheckGLErrors(void)
 {
-	for(GLenum err = glGetError(); err; err = glGetError()){
+  GLenum err = 0;
+	for(err = glGetError(); err; err = glGetError()){
 		if(err){
 			fprintf(stderr, "GLError(%s:%d) 0x%04X\n", __FILE__, __LINE__, err);
 			abort();
