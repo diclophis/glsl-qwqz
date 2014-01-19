@@ -111,7 +111,7 @@ ChipmunkDebugDrawInit(void)
 	// Setup the AA shader.
 	GLint vshader = CompileShader(GL_VERTEX_SHADER, GLSL(
 #if defined(GL_ES) || defined(EMSCRIPTEN) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-precision highp float;
+precision lowp float;
 #endif
 		attribute vec2 vertex;
 		attribute vec2 aa_coord;
@@ -145,7 +145,7 @@ precision highp float;
 	
 	GLint fshader = CompileShader(GL_FRAGMENT_SHADER, GLSL(
 #if defined(GL_ES) || defined(EMSCRIPTEN) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-precision highp float;
+precision lowp float;
 #endif
 		uniform float u_outline_coef;
 		

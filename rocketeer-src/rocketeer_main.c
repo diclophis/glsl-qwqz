@@ -160,7 +160,7 @@ int impl_draw(int b) {
       glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_TextureAttribute);
     }
 
-    //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
 
     // Render to the screen
@@ -390,6 +390,8 @@ int impl_main(int argc, char** argv) {
 
     space = cpSpaceNew();
     cpSpaceSetGravity(space, cpv(0, -200));
+    cpSpaceSetIterations(space, 1);
+    cpSpaceSetCollisionSlop(space, 1.0);
 
     cpShape *shape;
     cpBody *body;
@@ -516,7 +518,7 @@ int impl_main(int argc, char** argv) {
 
 
   if (doShaderBg) {
-    qwqz_engine->m_RenderTextureWidth = 512;
+    qwqz_engine->m_RenderTextureWidth = 128;
 
     GLuint v = 0;
     GLuint f = 0;

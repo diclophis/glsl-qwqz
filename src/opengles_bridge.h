@@ -50,10 +50,10 @@
     #include <GLUT/glut.h>    // Header File For The GLut Library
     #define glOrthof glOrtho
   #else
-    #ifdef USE_GLES2
+    //#ifdef USE_GLES2
       #include <OpenGLES/ES2/gl.h>
       #include <OpenGLES/ES2/glext.h>
-    #endif
+    //#endif
     #define glFrustum glFrustumf
   #endif
 #else
