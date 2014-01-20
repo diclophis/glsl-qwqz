@@ -1,9 +1,11 @@
-#define tSize 0.05
-#define blobPower 0.45
+
 
 #ifdef GL_ES
-precision highp float;
+precision mediump float;
 #endif
+
+#define tSize 0.05
+#define blobPower 0.45
 
 uniform float iGlobalTime;
 uniform vec2 iResolution;

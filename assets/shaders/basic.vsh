@@ -1,6 +1,6 @@
 //
 #ifdef GL_ES
-precision highp float;
+precision mediump float;
 #endif
 
 attribute vec2 Position;
@@ -17,6 +17,6 @@ uniform sampler2D texture1;
 void main() {
   float zoom = (iResolution.y / 512.0);
   vec4 p = ModelViewProjectionMatrix * vec4(Position * zoom, 1.0 * zoom, 1.0);
-  gl_Position = p;
+  gl_Position = p; //vec4(Position, 1.0, 1.0);
   OutTexture = Texture;
 }

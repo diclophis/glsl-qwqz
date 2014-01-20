@@ -1,5 +1,5 @@
 #ifdef GL_ES
-precision highp float;
+precision mediump float;
 #endif
 
 uniform float iGlobalTime;
@@ -9,7 +9,9 @@ uniform sampler2D texture1;
 varying vec2 OutTexture;
 
 void main() {
-  vec2 aPos = (gl_FragCoord.xy / iResolution.xy) * 1.0;
+  //vec2 aPos = (gl_FragCoord.xy);
+  //vec2 aPos = (gl_FragCoord.xy-iResolution.xy)/iResolution.y;
+  vec2 aPos = (gl_FragCoord.xy) / iResolution.xy;
 
   vec4 t1 = texture2D(texture1, aPos);
   vec4 t2 = texture2D(texture1, OutTexture);

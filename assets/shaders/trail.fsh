@@ -1,10 +1,10 @@
+#ifdef GL_ES
+precision mediump float;
+#endif
 
 // bars - thygate@gmail.com
 // rotation and color mix modifications by malc (mlashley@gmail.com)
 // modified by @hintz 2013-04-30
-#ifdef GL_ES
-precision mediump float;
-#endif
 
 uniform float iGlobalTime;
 uniform vec2 iResolution;
