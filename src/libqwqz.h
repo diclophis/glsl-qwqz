@@ -15,6 +15,7 @@ struct qwqz_batch_t {
   int m_numSprites;
   int m_numInterleavedBuffers;
   int m_numIndexBuffers;
+  int m_NeedsAttribs;
   struct qwqz_sprite_t *m_Sprites;
   GLuint *m_InterleavedBuffers;
   GLuint *m_IndexBuffers;
@@ -40,6 +41,7 @@ struct qwqz_handle_t {
   GLuint depthrenderbuffer;
   int m_RenderTextureWidth;
 
+  GLuint g_lastFrameBuffer;
   GLuint g_lastTexture;
   GLuint g_lastElementBuffer;
   GLuint g_lastInterleavedBuffer;
@@ -80,7 +82,7 @@ int qwqz_resize(qwqz_handle e, int width, int height);
 int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count);
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv);
 void qwqz_batch_clear(qwqz_batch ff);
-void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff);
+void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll);
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff);
 
 int qwqz_linkage_init(GLuint program, qwqz_linkage e);
@@ -95,3 +97,4 @@ void translate(qwqz_linkage e, float *m, float x, float y, float z);
 int qwqz_linkage_resize(qwqz_linkage e);
 
 FILE *iosfopen(const char *filename, const char *mode);
+void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer);

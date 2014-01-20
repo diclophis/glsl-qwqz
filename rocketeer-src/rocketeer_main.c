@@ -138,44 +138,42 @@ int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
   // not needed explicitly given that doShaderBg draws the to the entire screen
-  glBindFramebuffer(GL_FRAMEBUFFER, b);
+  qwqz_bind_frame_buffer(qwqz_engine, b);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+  //glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+
+  if (1) {
+  
   if (doShaderBg) {
-    glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
-    glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+    qwqz_bind_frame_buffer(qwqz_engine, qwqz_engine->FramebufferName);
+    //glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
+    
+    //glBindFramebuffer(GL_FRAMEBUFFER, b); //
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
     glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-    //translate(&qwqz_engine->m_Linkages[1], NULL, 0, 0, 0);
-
-    //TODO: abstract render passes
-    {
-      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1]);
-      size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-      glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-      glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_PositionAttribute);
-      glVertexAttribPointer(qwqz_engine->m_Linkages[1].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-      glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_TextureAttribute);
+    if (1) {
+      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1]);
+      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
     }
-
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
-
-    // Render to the screen
-    glBindFramebuffer(GL_FRAMEBUFFER, b);
-    glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-
-    glUseProgram(qwqz_engine->m_Linkages[2].m_Program);
-    glUniform1f(qwqz_engine->m_Linkages[2].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-    //translate(&qwqz_engine->m_Linkages[2], NULL, 0, 0, 0);
-
-    qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
+    
+    if (1) {
+      qwqz_bind_frame_buffer(qwqz_engine, b);
+      glUseProgram(qwqz_engine->m_Linkages[2].m_Program);
+      glUniform1f(qwqz_engine->m_Linkages[2].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2]);
+      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
+    }
   }
 
-  glBindFramebuffer(GL_FRAMEBUFFER, b);
-  glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+  }
+  
+  if (1) {
+  
+  qwqz_bind_frame_buffer(qwqz_engine, b);
 
   if (doSpine) {
     if (1) {
@@ -207,25 +205,14 @@ int impl_draw(int b) {
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
       }
-
-      glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-      glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-
-      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
-
-      translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
-
-      //TODO: abstract render passes
-      {
-        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
-        size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
-        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+      
+      if (1) {
+        glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+        glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+        glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
+        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
+        qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
       }
-
-      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
 
     if (1) {
@@ -285,43 +272,38 @@ int impl_draw(int b) {
         }
       }
 
-      glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-      glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-
-      glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
-
-      translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
-
-      //TODO: abstract render passes
-      {
-        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
-        size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
-        glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-        glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+      if (1) {
+        glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+        glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+        glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
+        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
+        qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
       }
-
-      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
     }
   }
+    
+  }
+
+  if (1) {
 
   if (doPhysics) {
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
 
+    /*
     // Draw the renderer contents and reset it back to the last tick's state.
     ChipmunkDebugDrawClearRenderer();
     //ChipmunkDebugDrawPushRenderer();
 
-    glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    ChipmunkDebugDrawPushRenderer();
+    
 
     ChipmunkDemoDefaultDrawImpl(space);
 
     ChipmunkDebugDrawFlushRenderer();
     ChipmunkDebugDrawPopRenderer();
+    */
   }
 
-  if (1) {
   }
 
   return 0;
@@ -332,7 +314,7 @@ int impl_resize(int width, int height) {
 
   int resized = qwqz_resize(qwqz_engine, width, height);
 
-  ChipmunkDebugDrawResizeRenderer(width, height);
+  //ChipmunkDebugDrawResizeRenderer(width, height);
 
     qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
     qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
@@ -364,15 +346,58 @@ uvBuffer[7] = 0.0;
     qwqz_batch_add(&qwqz_engine->m_Batches[2], 0, verticeBuffer, NULL, uvBuffer);
 
     for (int i=0; i<4; i++) {
-      glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
-      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-      qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
+      if (qwqz_engine->m_Linkages[i].g_ResolutionUniform) {
+        glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
+        glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+        qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
+      }
     }
+  
+  glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
+  glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
+  qwqz_linkage_resize(&qwqz_engine->m_Linkages[1]);
+  
+  glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+
 
     //glUniform2f(qwqz_engine->m_Linkages[2].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     //glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     //glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
+  //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
+
+  /*
+  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+
+  translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
+  
+  //TODO: abstract render passes
+  {
+    qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+    glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+    glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+    glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+  }
+  */
+  
+  /*
+  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+
+  translate(&qwqz_engine->m_Linkages[0], NULL, 0, 0, 0);
+  
+  //TODO: abstract render passes
+  {
+    qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0]);
+    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+    glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_PositionAttribute);
+    glVertexAttribPointer(qwqz_engine->m_Linkages[0].g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+    glEnableVertexAttribArray(qwqz_engine->m_Linkages[0].g_TextureAttribute);
+  }
+  */
+  
   return resized;
 }
 
@@ -518,7 +543,7 @@ int impl_main(int argc, char** argv) {
 
 
   if (doShaderBg) {
-    qwqz_engine->m_RenderTextureWidth = 512;
+    qwqz_engine->m_RenderTextureWidth = 256;
 
     GLuint v = 0;
     GLuint f = 0;
@@ -530,7 +555,7 @@ int impl_main(int argc, char** argv) {
     qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
     v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
-    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/thunder_and_lightning.fsh");
+    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/flower.fsh");
     f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rocketeer_background.fsh");
 
     if (v && f && f2) {

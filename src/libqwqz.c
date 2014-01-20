@@ -36,6 +36,7 @@ qwqz_handle qwqz_create(void) {
   e->m_IsScreenResized = 0;
   e->m_Batches = 0;
 
+  e->g_lastFrameBuffer = -1;
   e->g_lastElementBuffer = -1;
   e->g_lastInterleavedBuffer = -1;
   e->m_NeedsBlendEnabled = 1;
@@ -154,7 +155,7 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
   e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
   glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
 
@@ -181,6 +182,10 @@ int qwqz_linkage_resize(qwqz_linkage e) {
 
 int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
 
+  glUseProgram(e->m_Program);
+
+  ff->m_NeedsAttribs = 1;
+  
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
   ff->m_Stride = size_of_sprite;
 
@@ -193,6 +198,10 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   ff->m_numSprites = count; // TODO: bone count!!!!
   int max_frame_count = ff->m_numSprites;
   ff->m_Sprites = (struct qwqz_sprite_t *)malloc(sizeof(struct qwqz_sprite_t) * ff->m_numSprites * 4);
+  //int i=0;
+  //for (i=0; i<ff->m_numSprites * 4; i++) {
+  //  ff->m_Sprites[i] = (qwqz_sprite *)0;
+  //}
   GLushort *indices = (GLushort *)malloc(max_frame_count * 6 * sizeof(GLushort));
 
   unsigned int i;
@@ -212,13 +221,24 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
 
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
-  glBufferData(GL_ARRAY_BUFFER, max_frame_count * 4 * ff->m_Stride, NULL, GL_DYNAMIC_DRAW);
 
+  /*
+  if (0) {
+    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+    glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    glEnableVertexAttribArray(ll->g_PositionAttribute);
+    glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+    glEnableVertexAttribArray(ll->g_TextureAttribute);
+  }
+   */
+  
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
 
   glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
   glEnableVertexAttribArray(e->g_TextureAttribute);
+  
+  glBufferData(GL_ARRAY_BUFFER, max_frame_count * 4 * ff->m_Stride, ff->m_Sprites, GL_DYNAMIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -231,22 +251,33 @@ void qwqz_batch_clear(qwqz_batch ff) {
 }
 
 
-void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff) {
-  if (ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
+void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
+  //translate(ll, NULL, 0, 0, 0);
+
+  if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
   }
 
-  if (ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
+  if (1 || ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
     e->g_lastInterleavedBuffer = ff->m_InterleavedBuffers[0];
     glBindBuffer(GL_ARRAY_BUFFER, e->g_lastInterleavedBuffer);
   }
 
-  if (e->m_NeedsBlendEnabled) {
+  if (1 || e->m_NeedsBlendEnabled) {
     e->m_NeedsBlendEnabled = 0;
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  }
+  
+  if (1 || ff->m_NeedsAttribs) {
+    ff->m_NeedsAttribs = 0;
+    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+    glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    glEnableVertexAttribArray(ll->g_PositionAttribute);
+    glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+    glEnableVertexAttribArray(ll->g_TextureAttribute);
   }
 }
 
@@ -254,7 +285,7 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   assert(ff->m_numSpritesBatched > 0);
 
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
-  glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, NULL, GL_DYNAMIC_DRAW);
+  //glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
   // 1st [mode] parameter is what kind of primitive to render.
@@ -264,11 +295,10 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   // 4th [indices] parameter is a pointer to where the indices are stored.
 
   glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-  //LOGV("%d\n", (ff->m_numSpritesBatched));
 }
 
 
-void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv) {
+void qwqz_batch_add(qwqz_batch ff, int _renderObject, float *vertices, float *color, float *uv) {
   int i=0;
   for (i=0; i<4; i++) {
     int batched_times_four = (ff->m_numSpritesBatched * 4) + i;
@@ -346,8 +376,9 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   glActiveTexture(unit);
   glBindTexture(GL_TEXTURE_2D, textureHandle);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   
   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -359,7 +390,7 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.width, tex.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
   }
   
-  int generateMipMap = 1;
+  int generateMipMap = 0;
   if (generateMipMap) {
     glGenerateMipmap(GL_TEXTURE_2D);
   }
@@ -383,8 +414,19 @@ int qwqz_buffer_texture_init(GLuint t) {
   glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
   int m_RenderTextureWidth = 512;
+  
+  unsigned char* data;
+  
+
+
+  data = (unsigned char*)malloc(m_RenderTextureWidth * m_RenderTextureWidth * 8);
+  int i=0;
+  for(i=0; i < m_RenderTextureWidth * m_RenderTextureWidth * 8; ++i) {
+    data[i] = 0;
+  }
+  
   // Give an empty image to OpenGL ( the last "0" )
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_RenderTextureWidth, m_RenderTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_RenderTextureWidth, m_RenderTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
   // Poor filtering. Needed !
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -432,4 +474,11 @@ void qwqz_tick_timer(qwqz_timer timer) {
   timer->t1 = timer->t2;
   timer->m_SimulationTime += step;
   timer->step = step;
+}
+
+void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer) {
+  if (e->g_lastFrameBuffer != buffer) {
+    e->g_lastFrameBuffer = buffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, buffer);
+  }
 }

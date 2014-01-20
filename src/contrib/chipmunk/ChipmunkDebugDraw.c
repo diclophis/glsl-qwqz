@@ -111,7 +111,7 @@ ChipmunkDebugDrawInit(void)
 	// Setup the AA shader.
 	GLint vshader = CompileShader(GL_VERTEX_SHADER, GLSL(
 #if defined(GL_ES) || defined(EMSCRIPTEN) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-precision lowp float;
+precision mediump float;
 #endif
 		attribute vec2 vertex;
 		attribute vec2 aa_coord;
@@ -145,7 +145,7 @@ precision lowp float;
 	
 	GLint fshader = CompileShader(GL_FRAGMENT_SHADER, GLSL(
 #if defined(GL_ES) || defined(EMSCRIPTEN) || TARGET_OS_IPHONE || TARGET_OS_SIMULATOR
-precision lowp float;
+precision mediump float;
 #endif
 		uniform float u_outline_coef;
 		
@@ -185,7 +185,7 @@ precision lowp float;
 	));
 	
 	program = LinkProgram(vshader, fshader);
-	CHECK_GL_ERRORS();
+	//CHECK_GL_ERRORS();
 	
 	// Setu VBO and VAO.
 	//glGenVertexArraysOES(1, &vao);
@@ -194,17 +194,21 @@ precision lowp float;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	
-	SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
-	SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
-	SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
-	SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+  glUseProgram(program);
+  
+  glUniform1f(glGetUniformLocation(program, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
+
+  SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
+  SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
+  SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
+  SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
 
   ChipmunkDebugDrawResizeRenderer(128.0, 128.0);
 
   ModelViewProjectionMatrix_location2 = glGetUniformLocation(program, "ModelViewProjectionMatrix");
   resolutionHackLocation = glGetUniformLocation(program, "iResolution");
 
-	
+  /*
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	//glBindVertexArrayOES(0);
 
@@ -212,8 +216,9 @@ precision lowp float;
 	UNSET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
 	UNSET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
 	UNSET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+  */
 	
-	CHECK_GL_ERRORS();
+	//CHECK_GL_ERRORS();
 }
 
 #undef MAX // Defined on some systems
@@ -387,24 +392,25 @@ void
 ChipmunkDebugDrawFlushRenderer(void)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, triangle_buffer, GL_STREAM_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, triangle_buffer, GL_DYNAMIC_DRAW);
 
-	SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
-	SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
-	SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
-	SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
-  /*
-  */
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, NULL, GL_DYNAMIC_DRAW);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Triangle)*triangle_count, triangle_buffer);
+  
+  SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
+  SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
+  SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
+  SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
 	
 	//glBindVertexArrayOES(vao);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glDrawArrays(GL_TRIANGLES, 0, triangle_count*3);
 	//glBindVertexArrayOES(0);
 		
-	UNSET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
-	UNSET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
-	UNSET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
-	UNSET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+//	UNSET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
+//	UNSET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
+//	UNSET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
+//	UNSET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
 
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -425,7 +431,6 @@ ChipmunkDebugDrawPushRenderer(void)
 
 	glUseProgram(program);
   glUniformMatrix4fv(ModelViewProjectionMatrix_location2, 1, GL_FALSE, ProjectionMatrix2);
-	glUniform1f(glGetUniformLocation(program, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
 
   return resolutionHackLocation;
 }
