@@ -1,8 +1,10 @@
 //
 
+
 #include "opengles_bridge.h"
 #include "libqwqz.h"
 #include "pnglite.h"
+
 
 static GLfloat ProjectionMatrix[16];
 
@@ -11,7 +13,7 @@ void qwqz_checkgl(const char *s) {
   const int lastGlError = glGetError();
   if (lastGlError == GL_NO_ERROR) return;
   
-  LOGV("\n%s caused %04x %04x\n", s, lastGlError,  GL_INVALID_FRAMEBUFFER_OPERATION_EXT);
+  LOGV("\n%s caused %04x %04x\n", s, lastGlError,  GL_INVALID_FRAMEBUFFER_OPERATION);
   switch (lastGlError)
   {
     case GL_INVALID_ENUM:      LOGV("GL_INVALID_ENUM\n\n");      break;
@@ -27,7 +29,7 @@ void qwqz_checkgl(const char *s) {
 }
 
 
-qwqz_handle qwqz_create() {
+qwqz_handle qwqz_create(void) {
   qwqz_handle e = malloc(sizeof(struct qwqz_handle_t));
   e->m_SpriteCount = 0;
   e->m_IsSceneBuilt = 0;
@@ -42,7 +44,7 @@ qwqz_handle qwqz_create() {
 }
 
 char *qwqz_load(const char *path) {
-  FILE *fd = fopen(path, "rb");
+  FILE *fd = iosfopen(path, "rb");
   if (fd) {
     fseek(fd, 0, SEEK_END);
     unsigned int len = ftell(fd);
@@ -306,7 +308,7 @@ int qwqz_compile(GLuint type, const char *vsh) {
 int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   png_t tex;
   //char* data = qwqz_load("assets/textures/0.png");
-  FILE *fp = fopen(path, "rb");
+  FILE *fp = iosfopen(path, "rb");
   unsigned char* data;
   GLuint textureHandle;
 
@@ -367,6 +369,8 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
 }
 
 
+
+
 int qwqz_buffer_texture_init(GLuint t) {
   // The texture we're going to render to
   GLuint renderedTexture = 0;
@@ -394,7 +398,7 @@ int qwqz_buffer_target_init(GLuint renderedTexture) {
   glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
   // Set "renderedTexture" as our colour attachement #0
-  glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTexture, 0);
 
   // Always check that our framebuffer is ok
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {

@@ -1,5 +1,9 @@
 // 
 
+int impl_draw(int b);
+int impl_resize(int width, int height);
+int impl_main(int argc, char** argv);
+
 struct qwqz_sprite_t {
   GLshort vertex[2];
   GLfloat texture[2];
@@ -65,8 +69,11 @@ struct qwqz_linkage_t {
 };
 typedef struct qwqz_linkage_t * qwqz_linkage;
 
+void identity(GLfloat *m);
+void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ);
+
 void qwqz_checkgl(const char *s);
-qwqz_handle qwqz_create();
+qwqz_handle qwqz_create(void);
 char *qwqz_load(const char *path);
 int qwqz_draw(qwqz_handle e);
 int qwqz_resize(qwqz_handle e, int width, int height);
@@ -86,3 +93,5 @@ void qwqz_tick_timer(qwqz_timer t);
 void translate(qwqz_linkage e, float *m, float x, float y, float z);
 
 int qwqz_linkage_resize(qwqz_linkage e);
+
+FILE *iosfopen(const char *filename, const char *mode);

@@ -12,6 +12,10 @@
 #include "libqwqz.h"
 #include "impl_main.h"
 
+FILE *iosfopen(const char *filename, const char *mode) {
+  return fopen(filename, mode);
+}
+
 static int kWindowWidth = 512;
 static int kWindowHeight = 512;
 static bool left_down = false;
@@ -21,7 +25,7 @@ static bool debug_down = false;
 
 
 void draw(void) {
-  impl_draw();
+  impl_draw(0);
   glutSwapBuffers();
   glutPostRedisplay();
 }

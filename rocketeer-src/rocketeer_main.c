@@ -133,13 +133,13 @@ static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 static int jumped = 0;
 
-int impl_draw() {
+int impl_draw(int b) {
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
   // not needed explicitly given that doShaderBg draws the to the entire screen
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glBindFramebuffer(GL_FRAMEBUFFER, b);
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   if (doShaderBg) {
     glBindFramebuffer(GL_FRAMEBUFFER, qwqz_engine->FramebufferName);
@@ -160,11 +160,11 @@ int impl_draw() {
       glEnableVertexAttribArray(qwqz_engine->m_Linkages[1].g_TextureAttribute);
     }
 
-    //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
 
     // Render to the screen
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, b);
     glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
     glUseProgram(qwqz_engine->m_Linkages[2].m_Program);
@@ -174,7 +174,7 @@ int impl_draw() {
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
   }
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, b);
   glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
   if (doSpine) {
@@ -390,6 +390,8 @@ int impl_main(int argc, char** argv) {
 
     space = cpSpaceNew();
     cpSpaceSetGravity(space, cpv(0, -200));
+    cpSpaceSetIterations(space, 1);
+    cpSpaceSetCollisionSlop(space, 1.0);
 
     cpShape *shape;
     cpBody *body;
@@ -440,6 +442,7 @@ int impl_main(int argc, char** argv) {
       spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
       spSkeletonJson* json = spSkeletonJson_create(atlas);
       spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
+      assert(skeletonData);
       skeleton = spSkeleton_create(skeletonData);
       stateData = spAnimationStateData_create(skeletonData);
       spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
@@ -515,7 +518,7 @@ int impl_main(int argc, char** argv) {
 
 
   if (doShaderBg) {
-    qwqz_engine->m_RenderTextureWidth = 512;
+    qwqz_engine->m_RenderTextureWidth = 128;
 
     GLuint v = 0;
     GLuint f = 0;
