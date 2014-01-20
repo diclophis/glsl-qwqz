@@ -38,3 +38,11 @@ emscripten-test:
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make install
 
 clean: rocketeer-clean test-clean
+
+
+android:
+	#rm assets/.DS_Store
+	#rm -Rf platforms/android/build
+	#rm -Rf platforms/android/obj
+	#rm -Rf platforms/android/libs
+	cd platforms/android && make
