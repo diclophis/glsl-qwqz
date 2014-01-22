@@ -41,8 +41,7 @@ clean: rocketeer-clean test-clean
 
 
 android:
-	#rm assets/.DS_Store
-	#rm -Rf platforms/android/build
-	#rm -Rf platforms/android/obj
-	#rm -Rf platforms/android/libs
 	cd platforms/android && make
+
+android-clean:
+	cd platforms/android && make clean
