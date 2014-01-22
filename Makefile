@@ -42,6 +42,10 @@ clean: rocketeer-clean test-clean
 
 android:
 	cd platforms/android && make
+	cd platforms/android && make install
+
+android-install:
+	cd platforms/android && make install
 
 android-clean:
 	cd platforms/android && make clean

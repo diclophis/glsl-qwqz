@@ -7,3 +7,5 @@ platforms/emscripten/build
 project.xcworkspace
 xcuserdata
 *.pbxuser
+
+platforms/android/local.properties
