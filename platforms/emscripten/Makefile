@@ -1,11 +1,11 @@
 # OSX Makefile, needs to know where the main src root is
 
-TOTAL_ALLOWED_RAM=65536
+TOTAL_ALLOWED_RAM=2097152
 
 build=build
 impl=$(IMPL)
 
-OPTL=O0
+OPTL=O3
 
 CXXFLAGS=\
 -$(OPTL) \
@@ -29,7 +29,7 @@ hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
 raptor_island: $(build) $(objects)
 	$(CXX) -$(OPTL) $(objects) -o $(build)/raptor_island.bc
-	$(CXX) -$(OPTL) -s ASM_JS=0 -s VERBOSE=0 -s GL_DEBUG=0 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js --js-library library_window.js
+	$(CXX) -$(OPTL) -s ASM_JS=1 -s VERBOSE=0 -s GL_DEBUG=0 -s PRECISE_I64_MATH=1 -s TOTAL_MEMORY=$(TOTAL_ALLOWED_RAM) -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s FAST_MEMORY=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js --js-library library_window.js
 
 $(build)/%.bc: %.c
 	$(CC) $(CXXFLAGS) -c $< -o $@
