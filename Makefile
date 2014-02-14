@@ -52,8 +52,6 @@ emscripten-test:
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make install
 
-clean: sidescroll-clean rocketeer-clean test-clean
-
 android:
 	cd platforms/android && make
 	cd platforms/android && make install
@@ -63,3 +61,5 @@ android-install:
 
 android-clean:
 	cd platforms/android && make clean
+
+clean: sidescroll-clean rocketeer-clean test-clean android-clean
