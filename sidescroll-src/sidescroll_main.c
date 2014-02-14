@@ -160,7 +160,7 @@ int impl_draw(int b) {
         float source_bg_scale = 6.0;
         for (int a=0; a<2; a++) {
           float spd_m = 1.0 + (float)(a / 3);
-          float spd_x = 1000.0;
+          float spd_x = 500.0;
           float total_w = source_bg_width * source_bg_scale;
 
           bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step * spd_m;
