@@ -344,8 +344,8 @@ int impl_main(int argc, char** argv) {
 
     space = cpSpaceNew();
     cpSpaceSetGravity(space, cpv(0, -200));
-    cpSpaceSetIterations(space, 1);
-    cpSpaceSetCollisionSlop(space, 1.0);
+    //cpSpaceSetIterations(space, 1);
+    //cpSpaceSetCollisionSlop(space, 1.0);
 
     cpShape *shape;
     cpBody *body;
