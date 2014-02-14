@@ -156,22 +156,24 @@ int impl_draw(int b) {
 
         int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
 
-        for (int a=0; a<9; a++) {
+        float source_bg_width = 320.0;
+        float source_bg_scale = 6.0;
+        for (int a=0; a<2; a++) {
           float spd_m = 1.0 + (float)(a / 3);
-          float spd_x = 200.0;
-          float total_w = 1024.0;
+          float spd_x = 1000.0;
+          float total_w = source_bg_width * source_bg_scale;
 
           bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step * spd_m;
 
           if (bgsScroll[a] < -(total_w)) {
-            bgsScroll[a] = total_w * 2;
+            bgsScroll[a] = total_w;
           }
 
           int c = a;
           spSlot *s = bgsSkeleton->drawOrder[c];
           spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
           if (s->attachment->type == ATTACHMENT_REGION) {
-            spRegionAttachment_computeWorldVertices(ra, bgsScroll[a], 0.0, s->bone, verticeBuffer);
+            spRegionAttachment_computeWorldVertices(ra, bgsScroll[a] - (a * total_w), 0.0, s->bone, verticeBuffer);
             qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
           }
         }
@@ -186,6 +188,7 @@ int impl_draw(int b) {
       }
 
       if (1) {
+      /*
         qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
         skeleton->root->scaleX = 1.0;
@@ -249,6 +252,7 @@ int impl_draw(int b) {
           qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
           qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
         }
+      */
       }
     }
   }
@@ -353,7 +357,7 @@ int impl_main(int argc, char** argv) {
     cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
 
     // Add lots of boxes.
-    for(int i=0; i<30; i++) {
+    for(int i=0; i<5; i++) {
       for(int j=0; j<=i; j++) {
         float m = 99999.0;
         body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, 30.0f, 30.0f)));
@@ -388,6 +392,7 @@ int impl_main(int argc, char** argv) {
 
   if (doSpine) {
     {
+      /*
       spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
       spSkeletonJson* json = spSkeletonJson_create(atlas);
       spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
@@ -398,10 +403,11 @@ int impl_main(int argc, char** argv) {
       spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
       state = spAnimationState_create(stateData);
       spAnimationState_setAnimationByName(state, 0, "walk_alt", 1);
+      */
 
-      spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/bgs.atlas");
+      spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/background.atlas");
       spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
-      spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
+      spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/background.json");
       bgsSkeleton = spSkeleton_create(skeletonData2);
       bgsStateData = spAnimationStateData_create(skeletonData2);
       bgsState = spAnimationState_create(bgsStateData);
@@ -418,12 +424,13 @@ int impl_main(int argc, char** argv) {
       qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
     }
 
-    qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
+    qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3)); //+ skeleton->slotCount
 
-    for (int i=0; i<9; i++) {
-      bgsScroll[i] = (2 - (i % 3)) * 1024.0;
+    for (int i=0; i<2; i++) {
+      bgsScroll[i] = i * 320.0 * 6.0;
     }
 
+    /*
     skeleton->root->scaleX = 1.0;
     skeleton->root->scaleY = 1.0;
 
@@ -460,6 +467,7 @@ int impl_main(int argc, char** argv) {
         shape->filter.group = spineGroup;
       }
     }
+     */
   }
 
   return 0;
