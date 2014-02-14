@@ -316,42 +316,42 @@ int impl_resize(int width, int height) {
 
   //ChipmunkDebugDrawResizeRenderer(width, height);
 
-    qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
-    qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
+  qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
+  qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
 
 //LOGV("wha!! %f %f\n", qwqz_engine->m_ScreenHalfWidth, qwqz_engine->m_ScreenHalfHeight);
 
-verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
-verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
 
-verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
-verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
 
-verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
-verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
 
-verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
-verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
+  verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
 
-uvBuffer[0] = 0.0;
-uvBuffer[1] = 0.0;
-uvBuffer[2] = 0.0;
-uvBuffer[3] = 0.0;
-uvBuffer[4] = 0.0;
-uvBuffer[5] = 0.0;
-uvBuffer[6] = 0.0;
-uvBuffer[7] = 0.0;
+  uvBuffer[0] = 0.0;
+  uvBuffer[1] = 0.0;
+  uvBuffer[2] = 0.0;
+  uvBuffer[3] = 0.0;
+  uvBuffer[4] = 0.0;
+  uvBuffer[5] = 0.0;
+  uvBuffer[6] = 0.0;
+  uvBuffer[7] = 0.0;
 
-    qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
-    qwqz_batch_add(&qwqz_engine->m_Batches[2], 0, verticeBuffer, NULL, uvBuffer);
+  qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
+  qwqz_batch_add(&qwqz_engine->m_Batches[2], 0, verticeBuffer, NULL, uvBuffer);
 
-    for (int i=0; i<4; i++) {
-      if (qwqz_engine->m_Linkages[i].g_ResolutionUniform) {
-        glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
-        glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-        qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
-      }
+  for (int i=0; i<4; i++) {
+    if (qwqz_engine->m_Linkages[i].g_ResolutionUniform) {
+      glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
+      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+      qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
     }
+  }
   
   glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
   glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
@@ -359,11 +359,9 @@ uvBuffer[7] = 0.0;
   
   glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
-
-    //glUniform2f(qwqz_engine->m_Linkages[2].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-    //glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-    //glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-
+  //glUniform2f(qwqz_engine->m_Linkages[2].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+  //glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+  //glUniform2f(qwqz_engine->m_Linkages[0].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
   //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
 
   /*
