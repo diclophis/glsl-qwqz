@@ -951,7 +951,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
-				HEADER_SEARCH_PATHS = "/Users/jbardin/glsl-qwqz-1.0/src/contrib";
+				HEADER_SEARCH_PATHS = "../../src/contrib";
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
@@ -986,7 +986,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				GCC_VERSION = "";
 				GCC_WARN_SHADOW = NO;
-				HEADER_SEARCH_PATHS = "/Users/jbardin/glsl-qwqz-1.0/src/contrib";
+				HEADER_SEARCH_PATHS = "../../src/contrib";
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNDEBUG";
@@ -1071,7 +1071,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_PARAMETER = NO;
 				GCC_WARN_UNUSED_VALUE = YES;
-				HEADER_SEARCH_PATHS = "/Users/jbardin/glsl-qwqz-1.0/src/contrib";
+				HEADER_SEARCH_PATHS = /Users/cody/Documents/Dev/flappyBird/src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1106,7 +1106,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				GCC_VERSION = "";
 				GCC_WARN_SHADOW = NO;
-				HEADER_SEARCH_PATHS = "/Users/jbardin/glsl-qwqz-1.0/src/contrib";
+				HEADER_SEARCH_PATHS = /Users/cody/Documents/Dev/flappyBird/src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNDEBUG";
@@ -1141,7 +1141,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				GCC_VERSION = "";
 				GCC_WARN_SHADOW = NO;
-				HEADER_SEARCH_PATHS = "/Users/jbardin/glsl-qwqz-1.0/src/contrib";
+				HEADER_SEARCH_PATHS = /Users/cody/Documents/Dev/flappyBird/src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNDEBUG";
@@ -1191,7 +1191,7 @@
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
 				GCC_VERSION = "";
 				GCC_WARN_SHADOW = NO;
-				HEADER_SEARCH_PATHS = "/Users/jbardin/glsl-qwqz-1.0/src/contrib";
+				HEADER_SEARCH_PATHS = "../../src/contrib";
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNDEBUG";
