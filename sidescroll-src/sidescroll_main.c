@@ -132,6 +132,7 @@ static float verticeBuffer[8];
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 static int jumped = 0;
+static int num_bg = 3;
 
 int impl_draw(int b) {
 
@@ -158,7 +159,7 @@ int impl_draw(int b) {
 
         float source_bg_width = 320.0;
         float source_bg_scale = 6.0;
-        for (int a=0; a<2; a++) {
+        for (int a=0; a<num_bg; a++) {
           float spd_m = 1.0 + (float)(a / 3);
           float spd_x = 1000.0;
           float total_w = source_bg_width * source_bg_scale;
@@ -426,7 +427,7 @@ int impl_main(int argc, char** argv) {
 
     qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3)); //+ skeleton->slotCount
 
-    for (int i=0; i<2; i++) {
+    for (int i=0; i<num_bg; i++) {
       bgsScroll[i] = i * 320.0 * 6.0;
     }
 
