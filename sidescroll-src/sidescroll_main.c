@@ -189,26 +189,25 @@ int impl_draw(int b) {
       }
 
       if (1) {
-      /*
         qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
         skeleton->root->scaleX = 1.0;
         skeleton->root->scaleY = 1.0;
 
-        spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 13.0); //3.125
-        spAnimationState_apply(state, skeleton);
-        spSkeleton_updateWorldTransform(skeleton);
+        //spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 13.0); //3.125
+        //spAnimationState_apply(state, skeleton);
+        //spSkeleton_updateWorldTransform(skeleton);
 
-        if (0 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 3.0) {
-          jumped = 1;
-          spAnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
-          spAnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
-        }
+        //if (0 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 3.0) {
+        //  jumped = 1;
+        //  spAnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
+        //  spAnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
+        //}
 
-        if (qwqz_engine->m_Timers[0].m_SimulationTime > 6.0) {
-          jumped = 0;
-          qwqz_engine->m_Timers[0].m_SimulationTime = 0;
-        }
+        //if (qwqz_engine->m_Timers[0].m_SimulationTime > 6.0) {
+        //  jumped = 0;
+        //  qwqz_engine->m_Timers[0].m_SimulationTime = 0;
+        //}
 
         int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
         //LOGV("wtf %d\n", roboRegionRenderObject);
@@ -253,7 +252,6 @@ int impl_draw(int b) {
           qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
           qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
         }
-      */
       }
     }
   }
@@ -393,18 +391,16 @@ int impl_main(int argc, char** argv) {
 
   if (doSpine) {
     {
-      /*
-      spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
+      spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/player.atlas");
       spSkeletonJson* json = spSkeletonJson_create(atlas);
-      spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
+      spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/player.json");
       assert(skeletonData);
       skeleton = spSkeleton_create(skeletonData);
       stateData = spAnimationStateData_create(skeletonData);
-      spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
-      spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
+      //spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
+      //spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
       state = spAnimationState_create(stateData);
-      spAnimationState_setAnimationByName(state, 0, "walk_alt", 1);
-      */
+      spAnimationState_setAnimationByName(state, 0, "default", 1);
 
       spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/background.atlas");
       spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
@@ -431,7 +427,6 @@ int impl_main(int argc, char** argv) {
       bgsScroll[i] = i * 320.0 * 6.0;
     }
 
-    /*
     skeleton->root->scaleX = 1.0;
     skeleton->root->scaleY = 1.0;
 
@@ -461,14 +456,13 @@ int impl_main(int argc, char** argv) {
         cpBodySetAngle(body, r);
         cpBodySetPosition(body, cpv(x, y));
 
-        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * 0.3, ra->height * 0.3, 20.0f));
+        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * ra->scaleX * 0.7, ra->height * ra->scaleY * 0.6, 20.0f));
         cpShapeSetElasticity(shape, 0.0f);
         cpShapeSetFriction(shape, 1.0f);
         cpGroup spineGroup = 2;
         shape->filter.group = spineGroup;
       }
     }
-     */
   }
 
   return 0;
