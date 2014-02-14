@@ -1,6 +1,9 @@
 platforms/osx/build
 platforms/emscripten/build
 .DS_Store
+*.iml
+.idea/
+
 
 *.pbxuser
 *.perspectivev3
