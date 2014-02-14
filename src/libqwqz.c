@@ -285,7 +285,7 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   assert(ff->m_numSpritesBatched > 0);
 
   size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
-  //glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
   // 1st [mode] parameter is what kind of primitive to render.

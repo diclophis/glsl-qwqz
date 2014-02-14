@@ -159,7 +159,7 @@ static GLuint g_LastRenderBuffer = -1;
 		for (UITouch *touch in touches) {			
 			location = [touch locationInView:self];
 			location.y = location.y;
-      //Engine::CurrentGameHit(location.x, location.y, 0);
+      impl_hit(location.x, location.y, 0);
 		}
 	}
 }
@@ -173,7 +173,7 @@ static GLuint g_LastRenderBuffer = -1;
 		for (UITouch *touch in touches) {			
 			location = [touch locationInView:self];
 			location.y = location.y;
-      //Engine::CurrentGameHit(location.x, location.y, 1);
+      impl_hit(location.x, location.y, 1);
 		}
 	}
 }
@@ -187,7 +187,7 @@ static GLuint g_LastRenderBuffer = -1;
 		for (UITouch *touch in touches) {			
 			location = [touch locationInView:self];
 			location.y = location.y;
-      //Engine::CurrentGameHit(location.x, location.y, 2);
+      impl_hit(location.x, location.y, 2);
 		}
 	}
 }
@@ -203,7 +203,7 @@ static GLuint g_LastRenderBuffer = -1;
 		CGPoint location;
 		location = [touch locationInView:self];
 		location.y = location.y;
-    //Engine::CurrentGameHit(location.x, location.y, -1);
+    impl_hit(location.x, location.y, -1);
 	}
 }
 

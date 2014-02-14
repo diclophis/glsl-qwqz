@@ -119,6 +119,7 @@ static qwqz_handle qwqz_engine = NULL;
 static cpSpace *space;
 static int doPhysics = 1;
 static int doSpine = 1;
+static int setup = 0;
 
 
 static spSkeleton* bgsSkeleton;
@@ -133,6 +134,15 @@ static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 static int jumped = 0;
 static int num_bg = 3;
+
+int impl_hit(int x, int y, int s) {
+  
+  if (s == 0) {
+    cpBody *body = bodies[0];
+    cpVect jump = cpv(0.0, 200.0);
+    cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
+  }
+}
 
 int impl_draw(int b) {
 
@@ -175,9 +185,13 @@ int impl_draw(int b) {
       qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
     }
   }
-  
-  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+
+  if (1 || !setup) {
+    setup = 1;
+    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+    glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+  }
+
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
   qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
@@ -203,48 +217,31 @@ int impl_draw(int b) {
 
       cpBody *body = bodies[i];
 
-      //cpVect newPos = cpv(x + ox, y);
-      //cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
-
-      //float velocity_limit = 150;
-      //float velocity_mag = cpvlength(newVel);
-      //if (velocity_mag > velocity_limit) {
-      //  float velocity_scale = velocity_limit / velocity_mag;
-      //  newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
-      //}
-
       cpVect bodyOff = cpBodyGetPosition(body);
 
-      //ra->regionOffsetX = (bodyOff.x / (ra->scaleX));
-      //s->bone->worldY = y; //(bodyOff.y / (ra->scaleY)) - y;
-
-      //spRegionAttachment_updateOffset(ra);
-
-      spRegionAttachment_computeWorldVertices(ra, (bodyOff.x), (bodyOff.y), s->bone, verticeBuffer);
+      spRegionAttachment_computeWorldVertices(ra, (bodyOff.x) - x, (bodyOff.y) - y, s->bone, verticeBuffer);
       qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
-
-      //cpBodySetVelocity(body, newVel);
-      //cpBodySetPosition(body, newPos);
-      //cpBodySetAngle(body, r);
     }
   }
 
-  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+  //glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
   qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
-  // Draw the renderer contents and reset it back to the last tick's state.
-  ChipmunkDebugDrawClearRenderer();
-  //ChipmunkDebugDrawPushRenderer();
+  if (1) {
+    // Draw the renderer contents and reset it back to the last tick's state.
+    ChipmunkDebugDrawClearRenderer();
+    //ChipmunkDebugDrawPushRenderer();
 
-  ChipmunkDebugDrawPushRenderer();
+    ChipmunkDebugDrawPushRenderer();
 
-  ChipmunkDemoDefaultDrawImpl(space);
+    ChipmunkDemoDefaultDrawImpl(space);
 
-  ChipmunkDebugDrawFlushRenderer();
-  ChipmunkDebugDrawPopRenderer();
+    ChipmunkDebugDrawFlushRenderer();
+    ChipmunkDebugDrawPopRenderer();
+  }
 
   return 0;
 }
@@ -259,7 +256,7 @@ int impl_resize(int width, int height) {
   qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
   qwqz_batch_clear(&qwqz_engine->m_Batches[2]);
 
-  for (int i=0; i<4; i++) {
+  for (int i=0; i<1; i++) {
     if (qwqz_engine->m_Linkages[i].g_ResolutionUniform) {
       glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
       glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -267,9 +264,9 @@ int impl_resize(int width, int height) {
     }
   }
   
-  glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
-  glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
-  qwqz_linkage_resize(&qwqz_engine->m_Linkages[1]);
+  //glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
+  //glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
+  //qwqz_linkage_resize(&qwqz_engine->m_Linkages[1]);
   
   glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
@@ -288,7 +285,7 @@ int impl_main(int argc, char** argv) {
   ChipmunkDebugDrawInit();
 
   space = cpSpaceNew();
-  cpSpaceSetGravity(space, cpv(0, -200));
+  cpSpaceSetGravity(space, cpv(0, -500));
 
   cpBody *body;
   cpBody *staticBody = cpSpaceGetStaticBody(space);
@@ -301,9 +298,9 @@ int impl_main(int argc, char** argv) {
   cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
 
   // Add lots of boxes.
-  for(int i=0; i<5; i++) {
+  for(int i=0; i<0; i++) {
     for(int j=0; j<=i; j++) {
-      float m = 1000.0;
+      float m = 1.0;
       body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, 30.0f, 30.0f)));
 
       cpBodySetPosition(body, cpv(j*43 - i*16, 600 + i*64));
@@ -395,7 +392,7 @@ int impl_main(int argc, char** argv) {
       //cpGroup spineGroup = 2;
       //shape->filter.group = spineGroup;
       */
-      float m = 1000;
+      float m = 1.0;
       body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, ra->width * ra->scaleX * 0.7, ra->height * ra->scaleY * 0.6)));
       bodies[i] = body;
 
