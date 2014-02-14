@@ -137,6 +137,7 @@ static int num_bg = 3;
 int impl_draw(int b) {
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
+  cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
 
   // not needed explicitly given that doShaderBg draws the to the entire screen
   qwqz_bind_frame_buffer(qwqz_engine, b);
@@ -258,7 +259,6 @@ int impl_draw(int b) {
 
   if (1) {
     if (doPhysics) {
-      cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
 
       // Draw the renderer contents and reset it back to the last tick's state.
       ChipmunkDebugDrawClearRenderer();
