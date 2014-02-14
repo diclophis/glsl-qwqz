@@ -1,0 +1,12 @@
+
+player-1.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+player
+  rotate: false
+  xy: 2, 2
+  size: 74, 21
+  orig: 74, 21
+  offset: 0, 0
+  index: -1
