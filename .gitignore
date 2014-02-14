@@ -9,3 +9,8 @@ xcuserdata
 *.pbxuser
 
 platforms/android/local.properties
+
+platforms/android/build/
+platforms/android/gen/
+platforms/android/libs/
+platforms/android/obj/
