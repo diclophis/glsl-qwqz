@@ -47,10 +47,7 @@ import java.io.UnsupportedEncodingException;
 
 
 class DemoRenderer implements GLSurfaceView.Renderer {
-
-
   Context mContext;
-
 
   public DemoRenderer(Context context) {
     mContext = context;
@@ -58,42 +55,7 @@ class DemoRenderer implements GLSurfaceView.Renderer {
 
 
   public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-    /*
-    try {
-      AssetManager am = mContext.getAssets();
-      String path = "textures";
-      String[] texture_file_names = am.list(path);
-      int[] textures = new int[texture_file_names.length];
-      int[] tmp_tex = new int[texture_file_names.length];
-      gl.glGenTextures(texture_file_names.length, tmp_tex, 0);
-      int glError;
-      if ((glError = gl.glGetError()) != 0) {
-        Log.v(this.toString(), "unable to glGenTextures");
-      }
-
-      textures = tmp_tex; 
-      for (int i=0; i<texture_file_names.length; i++) {
-        InputStream stream = am.open(path + "/" + texture_file_names[i]);
-        Bitmap bitmap = BitmapFactory.decodeStream(stream);
-        int t = textures[i];
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, t);
-        //gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-        //gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_NEAREST);
-        gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_NEAREST);
-        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-        if ((glError = gl.glGetError()) != 0) {
-          Log.v(this.toString(), "unable to GLUtils.texImage2D");
-        }
-        gl.glBindTexture(GL10.GL_TEXTURE_2D, 0);
-      }
-      //Log.v(this.toString(), "DOES THIS HAPPEN TWICE??");
-      nativeOnSurfaceCreated(texture_file_names.length, textures);
-    } catch(IOException e) {
-      Log.v(this.toString(), e.toString());
-    }
-    */
-    nativeOnSurfaceCreated(); //texture_file_names.length, textures);
+    nativeOnSurfaceCreated();
   }
 
 
@@ -107,9 +69,7 @@ class DemoRenderer implements GLSurfaceView.Renderer {
   }
 
 
-  private native void nativeOnSurfaceCreated(); //int count, int[] textures);
+  private native void nativeOnSurfaceCreated();
   private static native void nativeResize(int w, int h);
   private static native void nativeRender();
-
-
 }

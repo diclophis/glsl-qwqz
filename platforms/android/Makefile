@@ -5,8 +5,8 @@ debug:
 	ant debug
 
 install:
+	ant uninstall
 	ant installd
-	#ant uninstall
 
 clean:
 	$(CRYSTAX)/ndk-build clean

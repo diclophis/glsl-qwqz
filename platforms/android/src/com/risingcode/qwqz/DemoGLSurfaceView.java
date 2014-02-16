@@ -55,8 +55,7 @@ class DemoGLSurfaceView extends GLSurfaceView {
   public DemoGLSurfaceView(Context context) {
     super(context);
     setEGLContextClientVersion(2);
-    setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
-    //Log.v(this.toString(), "DemoGLSurfaceView::onSurfaceCreated");
+    //setDebugFlags(DEBUG_CHECK_GL_ERROR | DEBUG_LOG_GL_CALLS);
     mRenderer = new DemoRenderer(context);
     setRenderer(mRenderer);
   }
@@ -64,10 +63,8 @@ class DemoGLSurfaceView extends GLSurfaceView {
 
   @Override
   public boolean onTouchEvent(final MotionEvent event) {
-    //Log.v(this.toString(), "onTouchEvent!!!!!!!!!!!!!!!!");
-    //int index = event.getActionIndex();
     int index = event.getActionMasked();
-    int pointerId = event.getActionIndex(); //event.getAction() >> MotionEvent.ACTION_POINTER_INDEX_SHIFT; //event.getPointerId(index);
+    int pointerId = event.getActionIndex();
     float x = 0;
     float y = 0;
     x = event.getX(pointerId);
@@ -81,31 +78,6 @@ class DemoGLSurfaceView extends GLSurfaceView {
       nativeTouch(x, y, 0);
     }
 
-    /*
-    int type = -1;
-    for (int i = 0; i < event.getPointerCount(); i++) {
-      switch (event.getAction() & MotionEvent.ACTION_MASK) {
-        case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_POINTER_DOWN:
-          x = event.getX(i);
-          y = event.getY(i);
-          nativeTouch(x, y, 0);
-          break;
-        case MotionEvent.ACTION_MOVE:
-          x = event.getX(i);
-          y = event.getY(i);
-          nativeTouch(x, y, 1);
-          break;
-        case MotionEvent.ACTION_UP:
-        case MotionEvent.ACTION_CANCEL:
-        case MotionEvent.ACTION_POINTER_UP:
-          x = event.getX(i);
-          y = event.getY(i);
-          nativeTouch(x, y, 2);
-          break;  
-      }
-    }
-    */
     return true;
   }
 
@@ -129,6 +101,4 @@ class DemoGLSurfaceView extends GLSurfaceView {
   private static native void nativePause();
   private static native void nativeResume();
   private static native void nativeTouch(float x, float y, int hitState);
-  //private static native void nativeStartGame(int i);
-
 }
