@@ -22,7 +22,7 @@ void _spAtlasPage_createTexture (spAtlasPage* self, const char* path) {
   self->width = outW;
   self->height = outH;
 
-  LOGV("_AtlasPage_createTexture: %s %d => %d (%d %d)\n", path, unit, t0, outW, outH);
+  //LOGV("_AtlasPage_createTexture: %s %d => %d (%d %d)\n", path, unit, t0, outW, outH);
 }
 
 

@@ -117,8 +117,8 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 static qwqz_handle qwqz_engine = NULL;
 static cpSpace *space;
-static int doPhysics = 1;
-static int doSpine = 1;
+//static int doPhysics = 1;
+//static int doSpine = 1;
 static int setup = 0;
 
 
@@ -132,16 +132,18 @@ static float verticeBuffer[8];
 //static float uvBuffer[8];
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
-static int jumped = 0;
+//static int jumped = 0;
 static int num_bg = 3;
 
 int impl_hit(int x, int y, int s) {
   
   if (s == 0) {
     cpBody *body = bodies[0];
-    cpVect jump = cpv(0.0, 200.0);
+    cpVect jump = cpv(0.0, 1200.0);
     cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
   }
+  
+  return 0;
 }
 
 int impl_draw(int b) {
@@ -207,15 +209,25 @@ int impl_draw(int b) {
     spSlot *s = skeleton->drawOrder[i];
     spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
     if (s->attachment->type == ATTACHMENT_REGION) {
-      float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
+      //float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
 
       float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
-      float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
+      //float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
 
       float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
       float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
 
       cpBody *body = bodies[i];
+
+      cpVect newVel = cpBodyGetVelocity(body);
+      float velocity_limit = 1000;
+      float velocity_mag = cpvlength(newVel);
+      if (velocity_mag > velocity_limit) {
+        float velocity_scale = velocity_limit / velocity_mag;
+        newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+      }
+
+      cpBodySetVelocity(body, newVel);
 
       cpVect bodyOff = cpBodyGetPosition(body);
 
@@ -230,7 +242,7 @@ int impl_draw(int b) {
   qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
-  if (1) {
+  if (0) {
     // Draw the renderer contents and reset it back to the last tick's state.
     ChipmunkDebugDrawClearRenderer();
     //ChipmunkDebugDrawPushRenderer();
@@ -285,7 +297,7 @@ int impl_main(int argc, char** argv) {
   ChipmunkDebugDrawInit();
 
   space = cpSpaceNew();
-  cpSpaceSetGravity(space, cpv(0, -500));
+  cpSpaceSetGravity(space, cpv(0, -2400));
 
   cpBody *body;
   cpBody *staticBody = cpSpaceGetStaticBody(space);
@@ -371,7 +383,7 @@ int impl_main(int argc, char** argv) {
       float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
 
       float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-      float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
+      float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y)) + 200.0;
 
       cpBody *body;
       //cpShape *shape;
