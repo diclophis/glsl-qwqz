@@ -53,6 +53,7 @@
 -(void)drawView:(id)sender;
 -(void)startGame:(id)i;
 -(BOOL)wasActive;
+-(void)resize:(int)w :(int)h;
 
 
 @end
