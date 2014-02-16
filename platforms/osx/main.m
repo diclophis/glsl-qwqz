@@ -56,7 +56,7 @@ void processMouseMotion(int x, int y) {
 
 
 void processNormalKeys(unsigned char key, int x, int y) {
-  LOGV("key: %d %c\n", key, key);
+  ///LOGV("key: %d %c\n", key, key);
   if (key == 32) {
     if (debug_down) {
       impl_hit(0, 0, 2);
