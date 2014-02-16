@@ -1,11 +1,11 @@
 # OSX Makefile, needs to know where the main src root is
 
-TOTAL_ALLOWED_RAM=2097152
+TOTAL_ALLOWED_RAM=3355443
 
 build=build
 impl=$(IMPL)
 
-OPTL=O3
+OPTL=O2
 
 CXXFLAGS=\
 -$(OPTL) \
@@ -55,7 +55,7 @@ $(hash_dir):
 
 install: $(hash_dir) build/raptor_island.js
 	ln -nsf $(hash_dir) ~/emscripten.risingcode.com/public/latest-qwqz
-	ruby cache_manifest.rb ../../assets > ~/emscripten.risingcode.com/public/latest-qwqz/index.appcache
+	ruby cache_manifest.rb ../../assets/spine ../../assets/shaders > ~/emscripten.risingcode.com/public/latest-qwqz/index.appcache
 	cp -R ../../assets ~/emscripten.risingcode.com/public/latest-qwqz
 	touch ~/emscripten.risingcode.com/public/latest-qwqz/favicon.ico
 	install -C index.html ~/emscripten.risingcode.com/public/latest-qwqz

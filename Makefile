@@ -40,11 +40,18 @@ test:
 test-clean:
 	cd platforms/osx && IMPL=test make clean
 
+emscripten-sidescroll:
+	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make
+	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make install
+
+emscripten-sidescroll-clean:
+	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make clean
+
 emscripten-rocketeer-clean:
 	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make clean
 
 emscripten-rocketeer:
-	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make
+	#cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make
 	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make install
 
 emscripten-test:
