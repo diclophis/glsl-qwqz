@@ -79,7 +79,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
   msg = (char *)malloc(sizeof(char) * l);
   glGetProgramInfoLog(e->m_Program, l, NULL, msg);
-  LOGV("program info: %s\n", msg);
+  //LOGV("program info: %s\n", msg);
 
   glUseProgram(e->m_Program);
 
@@ -254,24 +254,24 @@ void qwqz_batch_clear(qwqz_batch ff) {
 void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
   //translate(ll, NULL, 0, 0, 0);
 
-  if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
+  if (0 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
   }
 
-  if (1 || ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
+  if (0 || ff->m_InterleavedBuffers[0] != e->g_lastInterleavedBuffer) {
     e->g_lastInterleavedBuffer = ff->m_InterleavedBuffers[0];
     glBindBuffer(GL_ARRAY_BUFFER, e->g_lastInterleavedBuffer);
   }
 
-  if (1 || e->m_NeedsBlendEnabled) {
+  if (0 || e->m_NeedsBlendEnabled) {
     e->m_NeedsBlendEnabled = 0;
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
   
-  if (1 || ff->m_NeedsAttribs) {
+  if (0 || ff->m_NeedsAttribs) {
     ff->m_NeedsAttribs = 0;
     size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
     glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
@@ -327,7 +327,7 @@ int qwqz_compile(GLuint type, const char *vsh) {
     glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
     msg = (char *)malloc(sizeof(char) * l);
     glGetShaderInfoLog(v, l, NULL, msg);
-    LOGV("shader info: %s %s\n", vsh, msg);
+    //LOGV("shader info: %s %s\n", vsh, msg);
 
     free(b);
     free(msg);
@@ -398,7 +398,7 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   free(data);
   free(tempData);
 
-  LOGV("created opengles texture: %d\n", textureHandle);
+  //LOGV("created opengles texture: %d\n", textureHandle);
   return textureHandle;
 }
 

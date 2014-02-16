@@ -2,26 +2,23 @@
 
 
 #import "EAGLView.h"
-//#import "GlSlQwqz.h"
+
 
 extern "C" {
   #include "libqwqz.h"
 }
 
+
 FILE *iosfopen(const char *filename, const char *mode) {
-  
-  //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  //NSString *documentsDirectory = [paths objectAtIndex:0];
   NSString *fileString = [NSString stringWithCString:filename encoding:NSASCIIStringEncoding];
   NSString *documentsDirectory = [[NSBundle mainBundle] bundlePath];
   NSString *path = [documentsDirectory stringByAppendingPathComponent:fileString];
-
-  //NSString *path = [[NSBundle mainBundle] pathForResource:fileString ofType:nil];
   
   const char *filePath = [path cStringUsingEncoding:NSASCIIStringEncoding];
   
   return fopen(filePath, mode);
 }
+
 
 static GLuint g_LastFrameBuffer = -1;
 static GLuint g_LastRenderBuffer = -1;
@@ -103,49 +100,6 @@ static GLuint g_LastRenderBuffer = -1;
       NSLog(@"display link required");
       return nil;
     }
-/*
-    NSArray *model_names = [[[NSBundle mainBundle] pathsForResourcesOfType:nil inDirectory:@"assets/models"] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    for (NSString *path in model_names) {
-      const char *cPath1 = [path cStringUsingEncoding:[NSString defaultCStringEncoding]];
-      FILE *fd = fopen(cPath1, "rb");
-      fseek(fd, 0, SEEK_END);
-      unsigned int len = ftell(fd);
-      rewind(fd);
-      //Engine::PushBackFileHandle(MODELS, fd, 0, len, cPath1);
-    }
-    
-    NSArray *level_names = [[[NSBundle mainBundle] pathsForResourcesOfType:nil inDirectory:@"assets/levels"] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    for (NSString *path in level_names) {        
-      const char *cPath1 = [path cStringUsingEncoding:[NSString defaultCStringEncoding]];
-      FILE *fd = fopen(cPath1, "rb");
-      fseek(fd, 0, SEEK_END);
-      unsigned int len = ftell(fd);
-      rewind(fd);
-      //Engine::PushBackFileHandle(LEVELS, fd, 0, len, cPath1);
-    }
-
-    
-    NSArray *texture_names = [[[NSBundle mainBundle] pathsForResourcesOfType:nil inDirectory:@"assets/textures"] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    for (NSString *path in texture_names) {
-      const char *cPath1 = [path cStringUsingEncoding:[NSString defaultCStringEncoding]];
-      FILE *fd = fopen(cPath1, "rb");
-      fseek(fd, 0, SEEK_END);
-      unsigned int len = ftell(fd);
-      rewind(fd);
-      //Engine::PushBackFileHandle(TEXTURES, fd, 0, len, cPath1);
-    }
-    
-    
-    NSArray *sound_names = [[[NSBundle mainBundle] pathsForResourcesOfType:nil inDirectory:@"assets/sounds"] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    for (NSString *path in sound_names) {
-      const char *cPath1 = [path cStringUsingEncoding:[NSString defaultCStringEncoding]];
-      FILE *fd = fopen(cPath1, "rb");
-      fseek(fd, 0, SEEK_END);
-      unsigned int len = ftell(fd);
-      rewind(fd);
-      //Engine::PushBackFileHandle(SOUNDS, fd, 0, len, cPath1);
-    }
- */
   }
   return self;
 }
@@ -159,7 +113,7 @@ static GLuint g_LastRenderBuffer = -1;
 		for (UITouch *touch in touches) {			
 			location = [touch locationInView:self];
 			location.y = location.y;
-      //Engine::CurrentGameHit(location.x, location.y, 0);
+      impl_hit(location.x, location.y, 0);
 		}
 	}
 }
@@ -173,7 +127,7 @@ static GLuint g_LastRenderBuffer = -1;
 		for (UITouch *touch in touches) {			
 			location = [touch locationInView:self];
 			location.y = location.y;
-      //Engine::CurrentGameHit(location.x, location.y, 1);
+      impl_hit(location.x, location.y, 1);
 		}
 	}
 }
@@ -187,7 +141,7 @@ static GLuint g_LastRenderBuffer = -1;
 		for (UITouch *touch in touches) {			
 			location = [touch locationInView:self];
 			location.y = location.y;
-      //Engine::CurrentGameHit(location.x, location.y, 2);
+      impl_hit(location.x, location.y, 2);
 		}
 	}
 }
@@ -203,7 +157,7 @@ static GLuint g_LastRenderBuffer = -1;
 		CGPoint location;
 		location = [touch locationInView:self];
 		location.y = location.y;
-    //Engine::CurrentGameHit(location.x, location.y, -1);
+    impl_hit(location.x, location.y, -1);
 	}
 }
 
@@ -214,8 +168,8 @@ static GLuint g_LastRenderBuffer = -1;
 
     impl_draw(defaultFramebuffer);
     
-    //const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
-    //glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
+    const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
+    glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
     
     if (g_LastRenderBuffer != colorRenderbuffer) {
       g_LastRenderBuffer = colorRenderbuffer;
@@ -276,6 +230,11 @@ static GLuint g_LastRenderBuffer = -1;
   impl_resize(self.layer.frame.size.width, self.layer.frame.size.height);
   
   //initAudio2();
+}
+
+-(void)resize:(int)w :(int)h {
+  NSLog(@"going to set to -- %f %f", self.layer.frame.size.width, self.layer.frame.size.height);
+  impl_resize(w, h);
 }
 
 

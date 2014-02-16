@@ -235,7 +235,7 @@ void Java_com_risingcode_qwqz_DemoGLSurfaceView_nativeResume( JNIEnv*  env ) {
 
 
 void Java_com_risingcode_qwqz_DemoGLSurfaceView_nativeTouch(JNIEnv* env, jobject thiz, jfloat x, jfloat y, jint hitState) {
-  //Engine::CurrentGameHit(x, y, (int)hitState);
+  impl_hit(x, y, (int)hitState);
 }
 
 

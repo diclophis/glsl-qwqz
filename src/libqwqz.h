@@ -3,6 +3,7 @@
 int impl_draw(int b);
 int impl_resize(int width, int height);
 int impl_main(int argc, char** argv);
+int impl_hit(int x, int y, int s);
 
 struct qwqz_sprite_t {
   GLshort vertex[2];
