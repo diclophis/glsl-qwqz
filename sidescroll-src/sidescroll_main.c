@@ -176,7 +176,7 @@ int impl_draw(int b) {
   float source_bg_width = 320.0;
   float source_bg_scale = bg_scale;
   float total_w = source_bg_width * source_bg_scale;
-  float spd_x = 2000.0;
+  float spd_x = 700.0;
 
   for (int a=0; a<bg_range; a++) {
     bgsScroll[a] += floorf((-spd_x * qwqz_engine->m_Timers[0].step));
@@ -258,11 +258,10 @@ int impl_draw(int b) {
   }
   
   for (int a=0; a<bg_range; a++) {
-
     if (bgsScroll[a] <= -(total_w * 2)) {
       int b = (a + (bg_range - 1)) % bg_range;
       //LOGV("setting %d to %d + %f\n", a, b, total_w);
-      bgsScroll[a] = bgsScroll[b] + (total_w);
+      bgsScroll[a] = bgsScroll[b] + (total_w * 0.9);
     }
   }
 
