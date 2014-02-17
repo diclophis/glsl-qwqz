@@ -1,1 +1,1 @@
-{"bones":[{"name":"root","y":100},{"name":"a","parent":"root"}],"slots":[{"name":"a","bone":"a","attachment":"player"}],"skins":{"default":{"a":{"player":{"scaleX":3.138,"scaleY":3.942,"width":74,"height":21}}}},"animations":{"default":{}}}
+{"bones":[{"name":"root","y":100},{"name":"a","parent":"root"}],"slots":[{"name":"a","bone":"a","attachment":"player"}],"skins":{"default":{"a":{"player":{"scaleX":2,"scaleY":2,"width":74,"height":21}}}},"animations":{"default":{}}}

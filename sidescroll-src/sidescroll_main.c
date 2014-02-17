@@ -132,7 +132,7 @@ static float uvBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 //static int jumped = 0;
-static int num_bg = 3;
+static int num_bg = 4;
 
 int impl_hit(int x, int y, int s) {
   
@@ -176,11 +176,9 @@ int impl_draw(int b) {
   float total_w = source_bg_width * source_bg_scale;
 
   for (int a=0; a<num_bg; a++) {
-    float spd_x = 1000.0;
+    float spd_x = 600.0;
 
     bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step;
-
-
 
     int c = a;
     spSlot *s = bgsSkeleton->drawOrder[c];
@@ -261,10 +259,10 @@ int impl_draw(int b) {
   
   for (int a=0; a<num_bg; a++) {
 
-    if (bgsScroll[a] <= -(total_w)) {
+    if (bgsScroll[a] <= -(total_w * 2)) {
       int b = (a + (num_bg - 1)) % num_bg;
       //LOGV("setting %d to %d + %f\n", a, b, total_w);
-      bgsScroll[a] = bgsScroll[b] + (total_w - 4.0);
+      bgsScroll[a] = bgsScroll[b] + (total_w - 10.0);
     }
   }
 
@@ -366,7 +364,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount));
 
   for (int i=0; i<num_bg; i++) {
-    float f = ((i) * (320.0 * 6.0) - 4.0);
+    float f = ((i - 1) * (320.0 * 6.0) - 10.0);
     bgsScroll[i] = f;
     //LOGV("setting %d to %f\n", i, f);
   }
@@ -388,17 +386,17 @@ int impl_main(int argc, char** argv, GLuint b) {
       float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
 
       float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-      float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y)) + 200.0;
+      float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y)) + 300.0;
 
       cpBody *body;
       float m = 1.0;
-      body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, ra->width * ra->scaleX * 0.7, ra->height * ra->scaleY * 0.6)));
+      body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, ra->width * ra->scaleX * 1.0, ra->height * ra->scaleY * 1.0)));
       bodies[i] = body;
 
       cpBodySetAngle(body, r);
       cpBodySetPosition(body, cpv(x, y));
 
-      shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * ra->scaleX * 0.7, ra->height * ra->scaleY * 0.6, 0.0f));
+      shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * ra->scaleX * 1.0, ra->height * ra->scaleY * 1.0, 0.0f));
       cpShapeSetElasticity(shape, 0.0f);
       cpShapeSetFriction(shape, 1.0f);
     }
