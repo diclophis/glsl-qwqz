@@ -1,6 +1,6 @@
 # OSX Makefile, needs to know where the main src root is
 
-TOTAL_ALLOWED_RAM=3355443
+TOTAL_ALLOWED_RAM=236870912
 
 build=build
 impl=$(IMPL)
