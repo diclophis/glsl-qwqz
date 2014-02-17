@@ -10,7 +10,8 @@ puts "CACHE:"
 puts "index.html"
 puts "sink.js"
 puts "raptor_island.js"
-Find.find(ARGV[0]) do |path|
+ARGV.each do |a|
+Find.find(a) do |path|
   if FileTest.directory?(path) # dont output it into the cache
     if File.basename(path)[0] == ?.
       Find.prune # Don't look any further into this directory.
@@ -18,7 +19,7 @@ Find.find(ARGV[0]) do |path|
       next
     end
   else
-    puts File.realpath(path).gsub(dir_prefix + "/", "")
+    puts "assets/" + File.realpath(path).gsub(dir_prefix + "/", "")
   end
 end
-
+end

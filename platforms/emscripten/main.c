@@ -11,6 +11,11 @@
 #include "impl_main.h"
 
 
+FILE *iosfopen(const char *filename, const char *mode) {
+  return fopen(filename, mode);
+}
+
+
 // Adds the given callback function to listen to the changes in browser window size.
 void set_window_resize_handler(void *userData, void (*handlerFunc)(int newWidth, int newHeight, void *userData));
 
@@ -25,7 +30,7 @@ int kWindowHeight = 0;
 
 
 void draw(void) {
-  impl_draw();
+  impl_draw(0);
   glutPostRedisplay();
 }
 
