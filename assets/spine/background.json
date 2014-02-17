@@ -3,10 +3,14 @@
 	{ "name": "root" },
 	{ "name": "a", "parent": "root" },
 	{ "name": "b", "parent": "root" },
-	{ "name": "b2", "parent": "root", "x": -640 }
+	{ "name": "b2", "parent": "root", "x": -640 },
+	{ "name": "c", "parent": "root" }
 ],
 "slots": [
 	{ "name": "a", "bone": "a", "attachment": "background" },
+	{ "name": "c", "bone": "c", "attachment": "palmtree" },
+	{ "name": "c2", "bone": "c", "attachment": "palmtree" },
+	{ "name": "c22", "bone": "c", "attachment": "palmtree" },
 	{ "name": "a2", "bone": "b", "attachment": "block" },
 	{ "name": "a23", "bone": "b2", "attachment": "block" },
 	{ "name": "a22", "bone": "b", "attachment": "block" },
@@ -68,6 +72,15 @@
 		},
 		"a23": {
 			"block": { "x": 141.8, "width": 96, "height": 96 }
+		},
+		"c": {
+			"palmtree": { "x": 342.36, "y": 139.83, "scaleX": 1.313, "scaleY": 2.422, "width": 64, "height": 96 }
+		},
+		"c2": {
+			"palmtree": { "x": -467.73, "y": 156.71, "scaleX": 1.409, "scaleY": 2.808, "width": 64, "height": 96 }
+		},
+		"c22": {
+			"palmtree": { "x": -45.8, "y": 113.31, "scaleX": 1.313, "scaleY": 1.867, "width": 64, "height": 96 }
 		}
 	}
 },

@@ -17,3 +17,10 @@ block
   orig: 96, 96
   offset: 0, 0
   index: -1
+palmtree
+  rotate: true
+  xy: 422, 130
+  size: 58, 88
+  orig: 64, 96
+  offset: 0, 3
+  index: -1
