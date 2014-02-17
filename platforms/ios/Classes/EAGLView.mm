@@ -226,7 +226,7 @@ static GLuint g_LastRenderBuffer = -1;
 -(void)startGame:(id)i {
   //Engine::Start([i intValue], self.layer.frame.size.width, self.layer.frame.size.height);
   
-  impl_main(0, NULL);
+  impl_main(0, NULL, defaultFramebuffer);
   impl_resize(self.layer.frame.size.width, self.layer.frame.size.height);
   
   //initAudio2();

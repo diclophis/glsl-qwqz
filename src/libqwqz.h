@@ -2,7 +2,7 @@
 
 int impl_draw(int b);
 int impl_resize(int width, int height);
-int impl_main(int argc, char** argv);
+int impl_main(int argc, char** argv, GLuint b);
 int impl_hit(int x, int y, int s);
 
 struct qwqz_sprite_t {
@@ -18,6 +18,7 @@ struct qwqz_batch_t {
   int m_numIndexBuffers;
   int m_NeedsAttribs;
   struct qwqz_sprite_t *m_Sprites;
+  GLushort *indices;
   GLuint *m_InterleavedBuffers;
   GLuint *m_IndexBuffers;
   size_t m_Stride;
