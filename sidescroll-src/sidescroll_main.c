@@ -117,8 +117,6 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 static qwqz_handle qwqz_engine = NULL;
 static cpSpace *space;
-//static int doPhysics = 1;
-//static int doSpine = 1;
 static int setup = 0;
 
 
@@ -128,6 +126,7 @@ static spAnimationState* bgsState;
 static spSkeleton* skeleton;
 static spAnimationStateData* stateData;
 static spAnimationState* state;
+static float verticeBuffer1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float verticeBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float uvBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -154,7 +153,7 @@ int impl_draw(int b) {
   qwqz_bind_frame_buffer(qwqz_engine, b);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
   bgsSkeleton->root->scaleX = 1.0;
   bgsSkeleton->root->scaleY = 1.0;
@@ -163,36 +162,37 @@ int impl_draw(int b) {
 
   int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
 
+  if (!setup) {
+    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+  }
+  
+  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
+  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+  
+  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
+  
   float source_bg_width = 320.0;
   float source_bg_scale = 6.0;
+  float total_w = source_bg_width * source_bg_scale;
+
   for (int a=0; a<num_bg; a++) {
-    float spd_m = 1.0 + (float)(a / 3);
     float spd_x = 1000.0;
-    float total_w = source_bg_width * source_bg_scale;
 
-    bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step * spd_m;
+    bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step;
 
-    if (bgsScroll[a] < -(total_w)) {
-      bgsScroll[a] = total_w;
-    }
+
 
     int c = a;
     spSlot *s = bgsSkeleton->drawOrder[c];
     spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
     if (s->attachment->type == ATTACHMENT_REGION) {
-      spRegionAttachment_computeWorldVertices(ra, bgsScroll[a] - (a * total_w), 0.0, s->bone, verticeBuffer);
-      qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+      float offX = bgsScroll[a];
+      spRegionAttachment_computeWorldVertices(ra, offX, 0.0, s->bone, verticeBuffer1);
+      qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer1, NULL, ra->uvs);
     }
   }
 
-  if (!setup) {
-    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-  }
 
-  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
-  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-
-  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
   skeleton->root->scaleX = 1.0;
@@ -200,8 +200,15 @@ int impl_draw(int b) {
 
   int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
 
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
 
+  if (!setup) {
+    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+  }
+  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
+  
+  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0]);
+  
   for (int i=0; i<skeleton->slotCount; i++) {
     spSlot *s = skeleton->drawOrder[i];
     spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
@@ -229,18 +236,11 @@ int impl_draw(int b) {
       cpVect bodyOff = cpBodyGetPosition(body);
 
       spRegionAttachment_computeWorldVertices(ra, (bodyOff.x) - x, (bodyOff.y) - y, s->bone, verticeBuffer);
-      qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+      qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, ra->uvs);
     }
   }
 
-  if (!setup) {
-    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-  }
-  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
-
-  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
-  qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+  qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
   
   if (0) {
     // Draw the renderer contents and reset it back to the last tick's state.
@@ -258,6 +258,15 @@ int impl_draw(int b) {
   if (!setup) {
     setup = 1;
   }
+  
+  for (int a=0; a<num_bg; a++) {
+
+    if (bgsScroll[a] <= -(total_w)) {
+      int b = (a + (num_bg - 1)) % num_bg;
+      //LOGV("setting %d to %d + %f\n", a, b, total_w);
+      bgsScroll[a] = bgsScroll[b] + (total_w - 4.0);
+    }
+  }
 
   return 0;
 }
@@ -269,15 +278,13 @@ int impl_resize(int width, int height) {
 
   //ChipmunkDebugDrawResizeRenderer(width, height);
 
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
 
   for (int i=0; i<1; i++) {
-    //if (qwqz_engine->m_Linkages[i].g_ResolutionUniform) {
-      glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
-      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-      qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
-    //}
+    glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
+    glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
   }
   
   //glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
@@ -320,8 +327,6 @@ int impl_main(int argc, char** argv, GLuint b) {
       shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.0f));
       cpShapeSetElasticity(shape, 0.0f);
       cpShapeSetFriction(shape, 1.0f);
-      //cpGroup boxGroup = 1;
-      //shape->filter.group = boxGroup;
     }
   }
 
@@ -329,7 +334,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
-  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
+  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 2);
 
   spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/player.atlas");
   spSkeletonJson* json = spSkeletonJson_create(atlas);
@@ -337,8 +342,6 @@ int impl_main(int argc, char** argv, GLuint b) {
   assert(skeletonData);
   skeleton = spSkeleton_create(skeletonData);
   stateData = spAnimationStateData_create(skeletonData);
-  //spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
-  //spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
   state = spAnimationState_create(stateData);
   spAnimationState_setAnimationByName(state, 0, "default", 1);
 
@@ -348,7 +351,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   bgsSkeleton = spSkeleton_create(skeletonData2);
   bgsStateData = spAnimationStateData_create(skeletonData2);
   bgsState = spAnimationState_create(bgsStateData);
-  spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
+  //spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
 
   v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh");
   f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
@@ -358,17 +361,14 @@ int impl_main(int argc, char** argv, GLuint b) {
     glAttachShader(program, v);
     glAttachShader(program, f2);
     qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
-    
-//    program = glCreateProgram();
-//    glAttachShader(program, v);
-//    glAttachShader(program, f2);
-//    qwqz_linkage_init(program, &qwqz_engine->m_Linkages[1]);
   }
 
-  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3)); //+ skeleton->slotCount
+  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount));
 
   for (int i=0; i<num_bg; i++) {
-    bgsScroll[i] = i * 320.0 * 6.0;
+    float f = ((i) * (320.0 * 6.0) - 4.0);
+    bgsScroll[i] = f;
+    //LOGV("setting %d to %f\n", i, f);
   }
 
   skeleton->root->scaleX = 1.0;
@@ -391,24 +391,6 @@ int impl_main(int argc, char** argv, GLuint b) {
       float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y)) + 200.0;
 
       cpBody *body;
-      //cpShape *shape;
-      /*
-      cpBody *body;
-      cpShape *shape;
-
-      body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
-      body->userData = (void *)1;
-      bodies[i] = body;
-
-      cpBodySetAngle(body, r);
-      cpBodySetPosition(body, cpv(x, y));
-
-      shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * ra->scaleX * 0.7, ra->height * ra->scaleY * 0.6, 20.0f));
-      cpShapeSetElasticity(shape, 0.0f);
-      cpShapeSetFriction(shape, 1.0f);
-      //cpGroup spineGroup = 2;
-      //shape->filter.group = spineGroup;
-      */
       float m = 1.0;
       body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, ra->width * ra->scaleX * 0.7, ra->height * ra->scaleY * 0.6)));
       bodies[i] = body;
@@ -422,16 +404,9 @@ int impl_main(int argc, char** argv, GLuint b) {
     }
   }
   
-  //qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], (skeleton->slotCount)); //+ skeleton->slotCount
+  qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0], (skeleton->slotCount)); //+ skeleton->slotCount
   
   qwqz_engine->g_lastFrameBuffer = b;
-
-  //impl_draw(1);
-  //impl_draw(1);
-  //impl_draw(1);
-  //impl_draw(1);
-
-  setup = 0;
   
   return 0;
 }

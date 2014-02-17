@@ -256,6 +256,8 @@ void qwqz_batch_clear(qwqz_batch ff) {
 void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
   //translate(ll, NULL, 0, 0, 0);
 
+  qwqz_batch_clear(ff);
+
   if (0 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
     e->g_lastElementBuffer = ff->m_IndexBuffers[0];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e->g_lastElementBuffer);
@@ -273,13 +275,14 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
   
+  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+  glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+
   if (0 || ff->m_NeedsAttribs) {
     ff->m_NeedsAttribs = 0;
-    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-    //glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-    //glEnableVertexAttribArray(ll->g_PositionAttribute);
-    //glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-    //glEnableVertexAttribArray(ll->g_TextureAttribute);
+    glEnableVertexAttribArray(ll->g_PositionAttribute);
+    glEnableVertexAttribArray(ll->g_TextureAttribute);
   }
 }
 
@@ -288,9 +291,10 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
 
   if (ff->m_numSpritesBatched > 0) {
     size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
-    //glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
     glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
 
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices, GL_DYNAMIC_DRAW);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices);
 
     // 1st [mode] parameter is what kind of primitive to render.
@@ -300,7 +304,7 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
     // 4th [indices] parameter is a pointer to where the indices are stored.
     
     glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-    //glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, ff->m_Sprites);
+    //glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, ff->indices);
   }
 }
 
@@ -411,8 +415,6 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   //LOGV("created opengles texture: %d\n", textureHandle);
   return textureHandle;
 }
-
-
 
 
 int qwqz_buffer_texture_init(GLuint t) {

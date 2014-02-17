@@ -16,8 +16,8 @@ FILE *iosfopen(const char *filename, const char *mode) {
   return fopen(filename, mode);
 }
 
-static int kWindowWidth = 512;
-static int kWindowHeight = 512;
+static int kWindowWidth = 1024;
+static int kWindowHeight = 256;
 static bool left_down = false;
 static bool right_down = false;
 static bool reset_down = false;
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
   CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval);
 #endif
 
-  if (0 == impl_main(argc, argv)) {
+  if (0 == impl_main(argc, argv, 0)) {
     glutMainLoop();
   }
 
