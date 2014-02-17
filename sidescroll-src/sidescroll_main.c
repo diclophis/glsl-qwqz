@@ -132,7 +132,9 @@ static float uvBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 //static int jumped = 0;
-static int num_bg = 4;
+static int num_bg = 0;
+static float bg_scale = 4.0;
+static int bg_range = 5;
 
 int impl_hit(int x, int y, int s) {
   
@@ -160,7 +162,7 @@ int impl_draw(int b) {
 
   spSkeleton_updateWorldTransform(bgsSkeleton);
 
-  int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
+  int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[1]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
 
   if (!setup) {
     glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
@@ -172,24 +174,22 @@ int impl_draw(int b) {
   qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
   
   float source_bg_width = 320.0;
-  float source_bg_scale = 6.0;
+  float source_bg_scale = bg_scale;
   float total_w = source_bg_width * source_bg_scale;
+  float spd_x = 2000.0;
 
-  for (int a=0; a<num_bg; a++) {
-    float spd_x = 600.0;
-
-    bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step;
-
-    int c = a;
-    spSlot *s = bgsSkeleton->drawOrder[c];
-    spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-    if (s->attachment->type == ATTACHMENT_REGION) {
-      float offX = bgsScroll[a];
-      spRegionAttachment_computeWorldVertices(ra, offX, 0.0, s->bone, verticeBuffer1);
-      qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer1, NULL, ra->uvs);
+  for (int a=0; a<bg_range; a++) {
+    bgsScroll[a] += floorf((-spd_x * qwqz_engine->m_Timers[0].step));
+    for (int c=0; c<num_bg; c++) {
+      spSlot *s = bgsSkeleton->drawOrder[c];
+      spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
+      if (s->attachment && s->attachment->type == ATTACHMENT_REGION) {
+        short offX = (bgsScroll[a]);
+        spRegionAttachment_computeWorldVertices(ra, offX, 0.0, s->bone, verticeBuffer1);
+        qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer1, NULL, ra->uvs);
+      }
     }
   }
-
 
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
@@ -222,7 +222,7 @@ int impl_draw(int b) {
       cpBody *body = bodies[i];
 
       cpVect newVel = cpBodyGetVelocity(body);
-      float velocity_limit = 1000;
+      float velocity_limit = 1200;
       float velocity_mag = cpvlength(newVel);
       if (velocity_mag > velocity_limit) {
         float velocity_scale = velocity_limit / velocity_mag;
@@ -257,12 +257,12 @@ int impl_draw(int b) {
     setup = 1;
   }
   
-  for (int a=0; a<num_bg; a++) {
+  for (int a=0; a<bg_range; a++) {
 
     if (bgsScroll[a] <= -(total_w * 2)) {
-      int b = (a + (num_bg - 1)) % num_bg;
+      int b = (a + (bg_range - 1)) % bg_range;
       //LOGV("setting %d to %d + %f\n", a, b, total_w);
-      bgsScroll[a] = bgsScroll[b] + (total_w - 10.0);
+      bgsScroll[a] = bgsScroll[b] + (total_w);
     }
   }
 
@@ -309,9 +309,9 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   //foor
   cpShape *shape;
-  shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 0), cpv(1000, 0), 0.0f));
+  shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 48), cpv(1000, 48), 0.0f));
   cpShapeSetElasticity(shape, 0.0f);
-  cpShapeSetFriction(shape, 1.0f);
+  cpShapeSetFriction(shape, 0.0f);
   cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
 
   // Add lots of boxes.
@@ -324,7 +324,7 @@ int impl_main(int argc, char** argv, GLuint b) {
         
       shape = cpSpaceAddShape(space, cpBoxShapeNew(body, 30.0f, 30.0f, 0.0f));
       cpShapeSetElasticity(shape, 0.0f);
-      cpShapeSetFriction(shape, 1.0f);
+      cpShapeSetFriction(shape, 0.0f);
     }
   }
 
@@ -361,10 +361,12 @@ int impl_main(int argc, char** argv, GLuint b) {
     qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
   }
 
-  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount));
+  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * bg_range));
 
-  for (int i=0; i<num_bg; i++) {
-    float f = ((i - 1) * (320.0 * 6.0) - 10.0);
+  num_bg = bgsSkeleton->slotCount;
+  
+  for (int i=0; i<bg_range; i++) {
+    float f = ((i - 1) * (320.0 * bg_scale));
     bgsScroll[i] = f;
     //LOGV("setting %d to %f\n", i, f);
   }
@@ -398,7 +400,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
       shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * ra->scaleX * 1.0, ra->height * ra->scaleY * 1.0, 0.0f));
       cpShapeSetElasticity(shape, 0.0f);
-      cpShapeSetFriction(shape, 1.0f);
+      cpShapeSetFriction(shape, 0.0f);
     }
   }
   

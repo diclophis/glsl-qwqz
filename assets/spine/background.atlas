@@ -10,3 +10,10 @@ background
   orig: 320, 186
   offset: 0, 0
   index: -1
+block
+  rotate: false
+  xy: 324, 92
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
