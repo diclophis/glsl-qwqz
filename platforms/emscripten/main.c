@@ -62,7 +62,14 @@ void processMouseMotion(int x, int y) {
 
 void processNormalKeys(unsigned char key, int x, int y) {
   LOGV("key: %d %c\n", key, key);
-  if (key == 49) {
+  if (key == 32) {
+    if (debug_down) {
+      impl_hit(0, 0, 2);
+    } else {
+      impl_hit(0, 0, 0);
+    }
+    debug_down = !debug_down;
+  } else if (key == 49) {
     if (debug_down) {
       //Engine::CurrentGameHit(0, 0, 2);
     } else {
@@ -115,7 +122,7 @@ int main(int argc, char** argv) {
   glutDisplayFunc(draw);
   set_window_resize_handler(0, resize);
 
-  if (0 == impl_main(argc, argv)) {
+  if (0 == impl_main(argc, argv, 0)) {
     resize(kWindowWidth, kWindowHeight, 0);
     glutMainLoop();
   }
