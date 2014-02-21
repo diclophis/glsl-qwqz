@@ -150,11 +150,11 @@ void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
 
 int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenWidth = width;
-  e->m_ScreenHeight = height;
+  e->m_ScreenHeight = height * 0.5;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
   e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
-  glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
+  glViewport(0, 0 + (e->m_ScreenHalfHeight), e->m_ScreenWidth, e->m_ScreenHeight);
   //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
