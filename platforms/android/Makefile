@@ -1,13 +1,13 @@
 CRYSTAX=~/android-ndk-r8-crystax-1
 
 debug:
-	$(CRYSTAX)/ndk-build
-	ant debug
+	IMPL=$(IMPL) $(CRYSTAX)/ndk-build
+	IMPL=$(IMPL) ant debug
 
 install:
 	ant uninstall
 	ant installd
 
 clean:
-	$(CRYSTAX)/ndk-build clean
+	IMPL=$(IMPL) $(CRYSTAX)/ndk-build clean
 	ant clean

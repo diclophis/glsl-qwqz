@@ -32,10 +32,7 @@ rocketeer-clean:
 
 test:
 	cd platforms/osx && IMPL=test make
-	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/flower.fsh
-	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/trail.fsh
-	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/metaballs.fsh
-	platforms/osx/build/raptor_island assets/shaders/basic.vsh assets/shaders/thunder_and_lightning.fsh
+	platforms/osx/build/raptor_island
 
 test-clean:
 	cd platforms/osx && IMPL=test make clean
@@ -60,13 +57,13 @@ emscripten-test:
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make install
 
 android:
-	cd platforms/android && make
-	cd platforms/android && make install
+	cd platforms/android && IMPL=test make
+	cd platforms/android && IMPL=test make install
 
 android-install:
-	cd platforms/android && make install
+	cd platforms/android && IMPL=test make install
 
 android-clean:
-	cd platforms/android && make clean
+	cd platforms/android && IMPL=test make clean
 
 clean: sidescroll-clean rocketeer-clean test-clean android-clean

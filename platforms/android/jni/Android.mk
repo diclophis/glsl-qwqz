@@ -12,7 +12,7 @@ LOCAL_CFLAGS := -g -Wall -std=c99 -DDEBUGBUILD -I../../src -I../../src/contrib -
 
 CG_SUBDIRS := \
 . \
-../../../sidescroll-src \
+../../../$(IMPL)-src \
 ../../../src \
 ../../../src/contrib/chipmunk \
 ../../../src/contrib/spine \

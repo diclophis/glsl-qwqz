@@ -79,10 +79,13 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
   msg = (char *)malloc(sizeof(char) * l);
   glGetProgramInfoLog(e->m_Program, l, NULL, msg);
-  //LOGV("program info: %s\n", msg);
+  LOGV("program info: %s\n", msg);
 
-  //glUseProgram(e->m_Program);
-
+  glUseProgram(e->m_Program);
+  e->g_PositionAttribute = 0;
+  e->g_TextureAttribute = 0;
+  e->g_ResolutionUniform = 0;
+  
   e->g_PositionAttribute = glGetAttribLocation(e->m_Program, "Position");
   e->g_TextureAttribute = glGetAttribLocation(e->m_Program, "Texture");
   e->g_ResolutionUniform = glGetUniformLocation(e->m_Program, "iResolution");
@@ -96,6 +99,8 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
   e->g_TextureUniform3 = glGetUniformLocation(e->m_Program, "texture3");
 
+  qwqz_checkgl("wtf");
+  
   free(msg);
 
   return 0;
@@ -223,6 +228,8 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
 
+  qwqz_checkgl("main\n");
+
   /*
   if (0) {
     size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
@@ -235,14 +242,18 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
+  qwqz_checkgl("main\n");
 
   glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
   glEnableVertexAttribArray(e->g_TextureAttribute);
-  
+  qwqz_checkgl("main\n");
+
   glBufferData(GL_ARRAY_BUFFER, max_frame_count * 4 * ff->m_Stride, ff->m_Sprites, GL_DYNAMIC_DRAW);
+  qwqz_checkgl("main\n");
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  qwqz_checkgl("main\n");
 
   return 0;
 }
