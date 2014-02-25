@@ -52,27 +52,28 @@ int impl_hit(int x, int y, int s) {
 
 int impl_resize(int width, int height) {
 
+  LOGV("resizing to %d %d\n", width, height);
   int resized = qwqz_resize(qwqz_engine, width, height);
 
-  for (int i=0; i<2; i++) {
+  for (int i=0; i<1; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
     glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
   }
 
-/*
-  verticeBuffer[0] = -1;
-  verticeBuffer[1] = -1;
-  
-  verticeBuffer[2] = -1;
-  verticeBuffer[3] = 1;
-  
-  verticeBuffer[4] = 1;
-  verticeBuffer[5] = 1;
-  
-  verticeBuffer[6] = 1;
-  verticeBuffer[7] = -1;
-*/
+//
+//  verticeBuffer[0] = -1;
+//  verticeBuffer[1] = -1;
+//  
+//  verticeBuffer[2] = -1;
+//  verticeBuffer[3] = 1;
+//  
+//  verticeBuffer[4] = 1;
+//  verticeBuffer[5] = 1;
+//  
+//  verticeBuffer[6] = 1;
+//  verticeBuffer[7] = -1;
+
 
 //
 //  verticeBuffer[8] = 1;
@@ -82,50 +83,50 @@ int impl_resize(int width, int height) {
 //  verticeBuffer[11] = 1;
 //  
 //  
-//  uvBuffer[0] = -1;
-//  uvBuffer[1] = -0.5;
-//  
-//  uvBuffer[2] = 1;
-//  uvBuffer[3] = -0.5;
-//  
-//  uvBuffer[4] = -1;
-//  uvBuffer[5] = 0.5;
-//  
-//  uvBuffer[6] = 1;
-//  uvBuffer[7] = -0.5;
-//  
-//  uvBuffer[8] = 1;
-//  uvBuffer[9] = 0.5;
-//  
-//  uvBuffer[10] = -1;
-//  uvBuffer[11] = 0.5;
+  uvBuffer[0] = -1;
+  uvBuffer[1] = -0.5;
   
-  verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
+  uvBuffer[2] = 1;
+  uvBuffer[3] = -0.5;
   
-  verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
+  uvBuffer[4] = -1;
+  uvBuffer[5] = 0.5;
   
-  verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
+  uvBuffer[6] = 1;
+  uvBuffer[7] = -0.5;
   
-  verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
+  uvBuffer[8] = 1;
+  uvBuffer[9] = 0.5;
+  
+  uvBuffer[10] = -1;
+  uvBuffer[11] = 0.5;
+  
+  verticeBuffer[0] = -qwqz_engine->m_ScreenWidth;
+  verticeBuffer[1] = -qwqz_engine->m_ScreenHeight;
+  
+  verticeBuffer[2] = -qwqz_engine->m_ScreenWidth;
+  verticeBuffer[3] = qwqz_engine->m_ScreenHeight;
+  
+  verticeBuffer[4] = qwqz_engine->m_ScreenWidth;
+  verticeBuffer[5] = qwqz_engine->m_ScreenHeight;
+  
+  verticeBuffer[6] = qwqz_engine->m_ScreenWidth;
+  verticeBuffer[7] = -qwqz_engine->m_ScreenHeight;
  
-  uvBuffer[0] = 0.0;
-  uvBuffer[1] = 0.0;
-  uvBuffer[2] = 0.0;
-  uvBuffer[3] = 0.0;
-  uvBuffer[4] = 0.0;
-  uvBuffer[5] = 0.0;
-  uvBuffer[6] = 0.0;
-  uvBuffer[7] = 0.0;
+//  uvBuffer[0] = 0.0;
+//  uvBuffer[1] = 0.0;
+//  uvBuffer[2] = 0.0;
+//  uvBuffer[3] = 0.0;
+//  uvBuffer[4] = 0.0;
+//  uvBuffer[5] = 0.0;
+//  uvBuffer[6] = 0.0;
+//  uvBuffer[7] = 0.0;
   
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
   
   qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
-  qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
+  //qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
   
   return resized;
 }
@@ -153,7 +154,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
-  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/wtf.fsh");
+  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/wtf3.fsh");
 
   if (v1 && f1) {
     // Create and link the shader program
@@ -167,25 +168,25 @@ int impl_main(int argc, char** argv, GLuint b) {
     qwqz_checkgl("link init\n");
   }
 
-  v2 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_second_pass.vsh");
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/wtf.fsh");
-
-  if (v2 && f2) {
-    // Create and link the shader program
-    program = glCreateProgram();
-    glAttachShader(program, v2);
-    qwqz_checkgl("attachC\n");
-    glAttachShader(program, f2);
-    qwqz_checkgl("attachD\n");
-
-    qwqz_linkage_init(program, &qwqz_engine->m_Linkages[1]);
-    qwqz_checkgl("link init 2\n");
-  }
+//  v2 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_second_pass.vsh");
+//  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/wtf.fsh");
+//
+//  if (v2 && f2) {
+//    // Create and link the shader program
+//    program = glCreateProgram();
+//    glAttachShader(program, v2);
+//    qwqz_checkgl("attachC\n");
+//    glAttachShader(program, f2);
+//    qwqz_checkgl("attachD\n");
+//
+//    qwqz_linkage_init(program, &qwqz_engine->m_Linkages[1]);
+//    qwqz_checkgl("link init 2\n");
+//  }
 
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 2);
 
   qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
+  //qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
   qwqz_checkgl("batch init\n");
 
   qwqz_checkgl("main\n");

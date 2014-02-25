@@ -126,7 +126,7 @@ void translate(qwqz_linkage e, GLfloat *m, float tx, float ty, float tz) {
     ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
     ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
     ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
-    //glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+    glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 }
 
 void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
@@ -155,11 +155,11 @@ void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
 
 int qwqz_resize(qwqz_handle e, int width, int height) {
   e->m_ScreenWidth = width;
-  e->m_ScreenHeight = height * 0.5;
+  e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
-  e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
   e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
-  glViewport(0, 0 + (e->m_ScreenHalfHeight), e->m_ScreenWidth, e->m_ScreenHeight);
+  e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
+  glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
   //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
@@ -167,21 +167,24 @@ int qwqz_resize(qwqz_handle e, int width, int height) {
   //LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
 
   float m_Zoom2 = 1.0;
-  float a = (-e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
-  float b = (e->m_ScreenHalfHeight * e->m_ScreenAspect) * m_Zoom2;
-  float c = (-e->m_ScreenHalfHeight) * m_Zoom2;
-  float d = e->m_ScreenHalfHeight * m_Zoom2;
+  float a = (-e->m_ScreenWidth) * m_Zoom2;
+  float b = (e->m_ScreenWidth) * m_Zoom2;
+  float c = (-e->m_ScreenHeight) * m_Zoom2;
+  float d = (e->m_ScreenHeight) * m_Zoom2;
   float ee = 10.0;
   float ff = -10.0;
 
   identity(ProjectionMatrix);
   ortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
 
+
   return 0;
 }
 
 int qwqz_linkage_resize(qwqz_linkage e) {
+  translate(e, NULL, 0, 0, 0);
   glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+
   return 0;
 }
 

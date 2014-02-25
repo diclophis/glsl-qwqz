@@ -399,8 +399,11 @@ int impl_resize(int width, int height) {
   return resized;
 }
 
+int impl_hit(int x, int y, int s) {
+  return 0;
+}
 
-int impl_main(int argc, char** argv) {
+int impl_main(int argc, char** argv, GLuint b) {
 
   qwqz_engine = qwqz_create();
 
