@@ -9,12 +9,9 @@
 /* Begin PBXBuildFile section */
 		C21B2B9E1659E618005EEE4E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */; };
 		C24BB04C18B7431300DD1FFE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FC1417661285413100166578 /* Default.png */; };
-		C24BB04D18B7431300DD1FFE /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FC1417681285413100166578 /* MainWindow.xib */; };
 		C24BB04E18B7431300DD1FFE /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = FCF8913213E8AA3900AFEB8E /* Entitlements.plist */; };
 		C24BB04F18B7431300DD1FFE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */; };
-		C24BB05018B7431300DD1FFE /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */; };
 		C24BB05118B7431300DD1FFE /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C2A83676188B42D7008021D5 /* assets */; };
-		C24BB05318B7431300DD1FFE /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417631285413100166578 /* EAGLView.mm */; };
 		C24BB05418B7431300DD1FFE /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
 		C24BB05518B7431300DD1FFE /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417671285413100166578 /* main.mm */; };
 		C24BB05618B7431300DD1FFE /* chipmunk.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83579188B2EB5008021D5 /* chipmunk.c */; };
@@ -90,7 +87,6 @@
 		C24BB09E18B7431300DD1FFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		C24BB09F18B7431300DD1FFE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
 		C24BB0AD18B743AE00DD1FFE /* test_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C24BB0AB18B743AE00DD1FFE /* test_main.c */; };
-		C256A04B165B7AEB00D00554 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */; };
 		C2A83607188B2EB5008021D5 /* rocketeer_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83574188B2EB5008021D5 /* rocketeer_main.c */; };
 		C2A83608188B2EB5008021D5 /* chipmunk.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83579188B2EB5008021D5 /* chipmunk.c */; };
 		C2A83609188B2EB5008021D5 /* ChipmunkDebugDraw.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A8357F188B2EB5008021D5 /* ChipmunkDebugDraw.c */; };
@@ -160,12 +156,9 @@
 		C2A8364C188B2EB5008021D5 /* spine_bridge.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83605188B2EB5008021D5 /* spine_bridge.c */; };
 		C2A83677188B42D7008021D5 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C2A83676188B42D7008021D5 /* assets */; };
 		C2B47B5618ADE4C900176881 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FC1417661285413100166578 /* Default.png */; };
-		C2B47B5718ADE4C900176881 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FC1417681285413100166578 /* MainWindow.xib */; };
 		C2B47B5818ADE4C900176881 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = FCF8913213E8AA3900AFEB8E /* Entitlements.plist */; };
 		C2B47B5918ADE4C900176881 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */; };
-		C2B47B5A18ADE4C900176881 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */; };
 		C2B47B5B18ADE4C900176881 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C2A83676188B42D7008021D5 /* assets */; };
-		C2B47B5D18ADE4C900176881 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417631285413100166578 /* EAGLView.mm */; };
 		C2B47B5E18ADE4C900176881 /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
 		C2B47B5F18ADE4C900176881 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417671285413100166578 /* main.mm */; };
 		C2B47B6118ADE4C900176881 /* chipmunk.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83579188B2EB5008021D5 /* chipmunk.c */; };
@@ -241,12 +234,22 @@
 		C2B47BA818ADE4C900176881 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		C2B47BA918ADE4C900176881 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
 		C2B47BB618ADE54400176881 /* sidescroll_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C2B47BB418ADE54400176881 /* sidescroll_main.c */; };
+		C2E9D02718BDB49C00D10B4D /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2E9D02518BDB49C00D10B4D /* Main_iPhone.storyboard */; };
+		C2E9D02818BDB49C00D10B4D /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2E9D02518BDB49C00D10B4D /* Main_iPhone.storyboard */; };
+		C2E9D02918BDB49C00D10B4D /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2E9D02518BDB49C00D10B4D /* Main_iPhone.storyboard */; };
+		C2E9D02A18BDB49C00D10B4D /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2E9D02618BDB49C00D10B4D /* Main_iPad.storyboard */; };
+		C2E9D02B18BDB49C00D10B4D /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2E9D02618BDB49C00D10B4D /* Main_iPad.storyboard */; };
+		C2E9D02C18BDB49C00D10B4D /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C2E9D02618BDB49C00D10B4D /* Main_iPad.storyboard */; };
+		C2E9D02F18BDB62800D10B4D /* GlSlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E9D02E18BDB62800D10B4D /* GlSlViewController.m */; };
+		C2E9D03018BDB62800D10B4D /* GlSlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E9D02E18BDB62800D10B4D /* GlSlViewController.m */; };
+		C2E9D03118BDB62800D10B4D /* GlSlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E9D02E18BDB62800D10B4D /* GlSlViewController.m */; };
+		C2E9D03318BDB71B00D10B4D /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E9D03218BDB71B00D10B4D /* GLKit.framework */; };
+		C2E9D03418BDB72400D10B4D /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E9D03218BDB71B00D10B4D /* GLKit.framework */; };
+		C2E9D03518BDB72B00D10B4D /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E9D03218BDB71B00D10B4D /* GLKit.framework */; };
 		FC03727E13E7E4E600250EB2 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */; };
-		FC14176B1285413100166578 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417631285413100166578 /* EAGLView.mm */; };
 		FC14176C1285413100166578 /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
 		FC14176D1285413100166578 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FC1417661285413100166578 /* Default.png */; };
 		FC14176E1285413100166578 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417671285413100166578 /* main.mm */; };
-		FC14176F1285413100166578 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FC1417681285413100166578 /* MainWindow.xib */; };
 		FCA06F0811EDD6BB00FE4BFA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0711EDD6BB00FE4BFA /* UIKit.framework */; };
 		FCA06F0C11EDD6D100FE4BFA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		FCDE095112D92F17004CE9B7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
@@ -261,7 +264,6 @@
 		C24BB0A618B7431300DD1FFE /* test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "test-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/test-Info.plist"; sourceTree = "<absolute>"; };
 		C24BB0AB18B743AE00DD1FFE /* test_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_main.c; sourceTree = "<group>"; };
 		C24BB0AC18B743AE00DD1FFE /* test_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test_main.h; sourceTree = "<group>"; };
-		C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		C2A83574188B2EB5008021D5 /* rocketeer_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rocketeer_main.c; sourceTree = "<group>"; };
 		C2A83575188B2EB5008021D5 /* rocketeer_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rocketeer_main.h; sourceTree = "<group>"; };
 		C2A83579188B2EB5008021D5 /* chipmunk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = chipmunk.c; sourceTree = "<group>"; };
@@ -409,6 +411,11 @@
 		C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "sidescroll-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/sidescroll-Info.plist"; sourceTree = "<absolute>"; };
 		C2B47BB418ADE54400176881 /* sidescroll_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sidescroll_main.c; sourceTree = "<group>"; };
 		C2B47BB518ADE54400176881 /* sidescroll_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sidescroll_main.h; sourceTree = "<group>"; };
+		C2E9D02518BDB49C00D10B4D /* Main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPhone.storyboard; sourceTree = "<group>"; };
+		C2E9D02618BDB49C00D10B4D /* Main_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
+		C2E9D02D18BDB62800D10B4D /* GlSlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlSlViewController.h; sourceTree = "<group>"; };
+		C2E9D02E18BDB62800D10B4D /* GlSlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlSlViewController.m; sourceTree = "<group>"; };
+		C2E9D03218BDB71B00D10B4D /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		FC1417621285413100166578 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
 		FC1417631285413100166578 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
@@ -416,7 +423,6 @@
 		FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlSlQwqzAppDelegate.m; sourceTree = "<group>"; };
 		FC1417661285413100166578 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		FC1417671285413100166578 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
-		FC1417681285413100166578 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		FC14176A1285413100166578 /* rocketeer-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "rocketeer-Info.plist"; sourceTree = "<group>"; };
 		FCA06F0711EDD6BB00FE4BFA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -431,10 +437,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2E9D03318BDB71B00D10B4D /* GLKit.framework in Frameworks */,
 				FC03727E13E7E4E600250EB2 /* MediaPlayer.framework in Frameworks */,
+				FCA06F0811EDD6BB00FE4BFA /* UIKit.framework in Frameworks */,
 				FCFECB6411EC0D2000BBBE2A /* OpenGLES.framework in Frameworks */,
 				FCFECB6C11EC0D5200BBBE2A /* QuartzCore.framework in Frameworks */,
-				FCA06F0811EDD6BB00FE4BFA /* UIKit.framework in Frameworks */,
 				FCA06F0C11EDD6D100FE4BFA /* Foundation.framework in Frameworks */,
 				FCDE095112D92F17004CE9B7 /* AudioToolbox.framework in Frameworks */,
 			);
@@ -444,6 +451,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2E9D03518BDB72B00D10B4D /* GLKit.framework in Frameworks */,
 				C24BB09A18B7431300DD1FFE /* MediaPlayer.framework in Frameworks */,
 				C24BB09B18B7431300DD1FFE /* OpenGLES.framework in Frameworks */,
 				C24BB09C18B7431300DD1FFE /* QuartzCore.framework in Frameworks */,
@@ -457,6 +465,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2E9D03418BDB72400D10B4D /* GLKit.framework in Frameworks */,
 				C2B47BA418ADE4C900176881 /* MediaPlayer.framework in Frameworks */,
 				C2B47BA518ADE4C900176881 /* OpenGLES.framework in Frameworks */,
 				C2B47BA618ADE4C900176881 /* QuartzCore.framework in Frameworks */,
@@ -472,6 +481,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				C2E9D02518BDB49C00D10B4D /* Main_iPhone.storyboard */,
+				C2E9D02618BDB49C00D10B4D /* Main_iPad.storyboard */,
 				C2A83676188B42D7008021D5 /* assets */,
 				C24BB0AA18B743AE00DD1FFE /* test-src */,
 				C2B47BB318ADE54400176881 /* sidescroll-src */,
@@ -480,8 +491,6 @@
 				FC1417611285413100166578 /* Classes */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				FC1417671285413100166578 /* main.mm */,
-				FC1417681285413100166578 /* MainWindow.xib */,
-				C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */,
 				FC14176A1285413100166578 /* rocketeer-Info.plist */,
 				C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */,
 				FC1417661285413100166578 /* Default.png */,
@@ -496,6 +505,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2E9D03218BDB71B00D10B4D /* GLKit.framework */,
 				FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */,
 				FCFECB6311EC0D2000BBBE2A /* OpenGLES.framework */,
 				FCFECB6B11EC0D5200BBBE2A /* QuartzCore.framework */,
@@ -740,6 +750,8 @@
 				FC1417631285413100166578 /* EAGLView.mm */,
 				FC1417641285413100166578 /* GlSlQwqzAppDelegate.h */,
 				FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */,
+				C2E9D02D18BDB62800D10B4D /* GlSlViewController.h */,
+				C2E9D02E18BDB62800D10B4D /* GlSlViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -837,10 +849,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC14176D1285413100166578 /* Default.png in Resources */,
-				FC14176F1285413100166578 /* MainWindow.xib in Resources */,
 				FCF8913313E8AA3900AFEB8E /* Entitlements.plist in Resources */,
+				C2E9D02718BDB49C00D10B4D /* Main_iPhone.storyboard in Resources */,
+				C2E9D02A18BDB49C00D10B4D /* Main_iPad.storyboard in Resources */,
 				C21B2B9E1659E618005EEE4E /* Default-568h@2x.png in Resources */,
-				C256A04B165B7AEB00D00554 /* MainWindow-iPad.xib in Resources */,
 				C2A83677188B42D7008021D5 /* assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -850,10 +862,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C24BB04C18B7431300DD1FFE /* Default.png in Resources */,
-				C24BB04D18B7431300DD1FFE /* MainWindow.xib in Resources */,
 				C24BB04E18B7431300DD1FFE /* Entitlements.plist in Resources */,
+				C2E9D02918BDB49C00D10B4D /* Main_iPhone.storyboard in Resources */,
+				C2E9D02C18BDB49C00D10B4D /* Main_iPad.storyboard in Resources */,
 				C24BB04F18B7431300DD1FFE /* Default-568h@2x.png in Resources */,
-				C24BB05018B7431300DD1FFE /* MainWindow-iPad.xib in Resources */,
 				C24BB05118B7431300DD1FFE /* assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -863,10 +875,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2B47B5618ADE4C900176881 /* Default.png in Resources */,
-				C2B47B5718ADE4C900176881 /* MainWindow.xib in Resources */,
 				C2B47B5818ADE4C900176881 /* Entitlements.plist in Resources */,
+				C2E9D02818BDB49C00D10B4D /* Main_iPhone.storyboard in Resources */,
+				C2E9D02B18BDB49C00D10B4D /* Main_iPad.storyboard in Resources */,
 				C2B47B5918ADE4C900176881 /* Default-568h@2x.png in Resources */,
-				C2B47B5A18ADE4C900176881 /* MainWindow-iPad.xib in Resources */,
 				C2B47B5B18ADE4C900176881 /* assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -920,7 +932,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC14176B1285413100166578 /* EAGLView.mm in Sources */,
 				FC14176C1285413100166578 /* GlSlQwqzAppDelegate.m in Sources */,
 				FC14176E1285413100166578 /* main.mm in Sources */,
 				C2A83607188B2EB5008021D5 /* rocketeer_main.c in Sources */,
@@ -970,6 +981,7 @@
 				C2A83634188B2EB5008021D5 /* Json.c in Sources */,
 				C2A83635188B2EB5008021D5 /* RegionAttachment.c in Sources */,
 				C2A83636188B2EB5008021D5 /* Skeleton.c in Sources */,
+				C2E9D02F18BDB62800D10B4D /* GlSlViewController.m in Sources */,
 				C2A83637188B2EB5008021D5 /* SkeletonBounds.c in Sources */,
 				C2A83638188B2EB5008021D5 /* SkeletonData.c in Sources */,
 				C2A83639188B2EB5008021D5 /* SkeletonJson.c in Sources */,
@@ -997,7 +1009,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C24BB05318B7431300DD1FFE /* EAGLView.mm in Sources */,
 				C24BB05418B7431300DD1FFE /* GlSlQwqzAppDelegate.m in Sources */,
 				C24BB05518B7431300DD1FFE /* main.mm in Sources */,
 				C24BB05618B7431300DD1FFE /* chipmunk.c in Sources */,
@@ -1047,6 +1058,7 @@
 				C24BB08118B7431300DD1FFE /* Json.c in Sources */,
 				C24BB08218B7431300DD1FFE /* RegionAttachment.c in Sources */,
 				C24BB08318B7431300DD1FFE /* Skeleton.c in Sources */,
+				C2E9D03118BDB62800D10B4D /* GlSlViewController.m in Sources */,
 				C24BB08418B7431300DD1FFE /* SkeletonBounds.c in Sources */,
 				C24BB08518B7431300DD1FFE /* SkeletonData.c in Sources */,
 				C24BB08618B7431300DD1FFE /* SkeletonJson.c in Sources */,
@@ -1074,7 +1086,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2B47B5D18ADE4C900176881 /* EAGLView.mm in Sources */,
 				C2B47B5E18ADE4C900176881 /* GlSlQwqzAppDelegate.m in Sources */,
 				C2B47B5F18ADE4C900176881 /* main.mm in Sources */,
 				C2B47B6118ADE4C900176881 /* chipmunk.c in Sources */,
@@ -1124,6 +1135,7 @@
 				C2B47B8D18ADE4C900176881 /* RegionAttachment.c in Sources */,
 				C2B47B8E18ADE4C900176881 /* Skeleton.c in Sources */,
 				C2B47B8F18ADE4C900176881 /* SkeletonBounds.c in Sources */,
+				C2E9D03018BDB62800D10B4D /* GlSlViewController.m in Sources */,
 				C2B47B9018ADE4C900176881 /* SkeletonData.c in Sources */,
 				C2B47B9118ADE4C900176881 /* SkeletonJson.c in Sources */,
 				C2B47B9218ADE4C900176881 /* Skin.c in Sources */,
@@ -1187,7 +1199,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = RaptorIsland;
@@ -1222,7 +1234,7 @@
 				GCC_WARN_SHADOW = NO;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = RaptorIsland;
 				PROVISIONING_PROFILE = "";
@@ -1245,7 +1257,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_PROFILING_CODE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D0130CED-1079-4039-AE59-8B32C78B86A7";
@@ -1263,7 +1275,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D0130CED-1079-4039-AE59-8B32C78B86A7";
 				SDKROOT = iphoneos;
@@ -1307,7 +1319,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = test;
@@ -1342,7 +1354,7 @@
 				GCC_WARN_SHADOW = NO;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = test;
 				PROVISIONING_PROFILE = "";
@@ -1377,7 +1389,7 @@
 				GCC_WARN_SHADOW = NO;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = test;
 				PROVISIONING_PROFILE = "";
@@ -1425,7 +1437,7 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = sidescroll;
@@ -1460,7 +1472,7 @@
 				GCC_WARN_SHADOW = NO;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = sidescroll;
 				PROVISIONING_PROFILE = "";
@@ -1495,7 +1507,7 @@
 				GCC_WARN_SHADOW = NO;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = sidescroll;
 				PROVISIONING_PROFILE = "";
@@ -1514,7 +1526,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D0130CED-1079-4039-AE59-8B32C78B86A7";
 				SDKROOT = iphoneos;
@@ -1545,7 +1557,7 @@
 				GCC_WARN_SHADOW = NO;
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNDEBUG";
 				PRODUCT_NAME = RaptorIsland;
 				PROVISIONING_PROFILE = "";

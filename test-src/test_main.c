@@ -52,7 +52,7 @@ int impl_hit(int x, int y, int s) {
 
 int impl_resize(int width, int height) {
 
-  LOGV("resizing to %d %d\n", width, height);
+  //LOGV("resizing to %d %d\n", width, height);
   int resized = qwqz_resize(qwqz_engine, width, height);
 
   for (int i=0; i<1; i++) {

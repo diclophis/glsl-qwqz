@@ -9,17 +9,11 @@
 #import <UIKit/UIKit.h>
 
 
-@class EAGLView;
-
-
-@interface GlSlQwqzAppDelegate : NSObject <UIApplicationDelegate> {
-  UIWindow *window;
-  EAGLView *glView;
+@interface GlSlQwqzAppDelegate : UIResponder <UIApplicationDelegate> {
 }
 
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet EAGLView *glView;
+@property (strong, nonatomic) UIWindow *window;
 
 
 @end
