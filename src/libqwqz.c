@@ -236,10 +236,10 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   /*
   if (0) {
     size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-    glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-    glEnableVertexAttribArray(ll->g_PositionAttribute);
-    glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-    glEnableVertexAttribArray(ll->g_TextureAttribute);
+    //glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    //glEnableVertexAttribArray(ll->g_PositionAttribute);
+    //glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+    //glEnableVertexAttribArray(ll->g_TextureAttribute);
   }
    */
   
@@ -289,12 +289,12 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   }
   
-  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-  glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
 
   if (0 || ff->m_NeedsAttribs) {
     ff->m_NeedsAttribs = 0;
+  size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+  glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
     glEnableVertexAttribArray(ll->g_PositionAttribute);
     glEnableVertexAttribArray(ll->g_TextureAttribute);
   }

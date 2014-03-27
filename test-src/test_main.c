@@ -13,7 +13,7 @@ static qwqz_handle qwqz_engine = NULL;
 static float verticeBuffer[12];
 static float uvBuffer[12];
 static int renderBufferTexture = -1;
-
+static int booted = 0;
 
 int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
@@ -21,13 +21,18 @@ int impl_draw(int b) {
   // not needed explicitly given that doShaderBg draws the to the entire screen
   //glBindFramebuffer(GL_FRAMEBUFFER, b);
 
-  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
-  glActiveTexture(GL_TEXTURE0);
-  glBindFramebuffer(GL_FRAMEBUFFER, b);
+
+  if (0 == booted) {
+    booted = 1;
+    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+    qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
+    qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+    qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
+    glActiveTexture(GL_TEXTURE0);
+    glBindFramebuffer(GL_FRAMEBUFFER, b);
+  }
+
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
@@ -154,7 +159,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
-  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/graph.fsh");
+  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/balls.fsh");
 
   if (v1 && f1) {
     // Create and link the shader program
