@@ -153,36 +153,74 @@ void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
   memcpy(m, tmp, sizeof(tmp));
 }
 
-int qwqz_resize(qwqz_handle e, int width, int height) {
-  e->m_ScreenWidth = width;
-  e->m_ScreenHeight = height;
+int qwqz_resize(qwqz_handle e, int width, int height, int u) {
+  if (e == NULL) {
+    return 0;
+  }
+  
+  identity(ProjectionMatrix);
+
+  float m_Zoom2 = 1.0;
+
+  //float alt = 1.0;
+  
+  if (0 == u) {
+    e->m_ScreenWidth = width;
+    e->m_ScreenHeight = height;
+  } else {
+    e->m_ScreenWidth = width;
+    e->m_ScreenHeight = height; //(float)width * ((float)height / (float)width);
+    //alt = ((float)width / (float)height);
+  }
+  
+  float a = (-e->m_ScreenWidth) * (m_Zoom2);
+  float b = (e->m_ScreenWidth) * (m_Zoom2);
+  float c = (-e->m_ScreenHeight) * m_Zoom2;
+  float d = (e->m_ScreenHeight) * m_Zoom2;
+  float eee = 0.0;
+  float ff = -1.25;
+
+  if (0 == u) {
+    //e->m_ScreenWidth = width;
+    //e->m_ScreenHeight = height;
+  } else {
+    //float alt = ((float)height / (float)width);
+    //e->m_ScreenWidth = height * alt;
+    //e->m_ScreenHeight = width; //(float)width * ((float)height / (float)width);
+    //e->m_ScreenWidth *= 0.3;
+    //e->m_ScreenHeight = height;
+  }
+  
+  
+  //if (0 == u) {
+    ortho(ProjectionMatrix, (a), (b), (c), (d), (eee), (ff));
+
+  //} else {
+  //  ortho(ProjectionMatrix, -(a), -(b), -(c), -(d), (eee), (ff));
+    //ortho(ProjectionMatrix, (c), (d), (a), (b), (eee), (ff));
+  //}
+  
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
   e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
-  glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
+  
+  //glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
   //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
 
-  //LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
-
-  float m_Zoom2 = 1.0;
-  float a = (-e->m_ScreenWidth) * m_Zoom2;
-  float b = (e->m_ScreenWidth) * m_Zoom2;
-  float c = (-e->m_ScreenHeight) * m_Zoom2;
-  float d = (e->m_ScreenHeight) * m_Zoom2;
-  float ee = 10.0;
-  float ff = -10.0;
-
-  identity(ProjectionMatrix);
-  ortho(ProjectionMatrix, (a), (b), (c), (d), (ee), (ff));
+  LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
 
 
+  
+
+  
   return 0;
 }
 
-int qwqz_linkage_resize(qwqz_linkage e) {
+int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e) {
   translate(e, NULL, 0, 0, 0);
+
   glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 
   return 0;

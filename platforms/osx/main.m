@@ -16,8 +16,8 @@ FILE *iosfopen(const char *filename, const char *mode) {
   return fopen(filename, mode);
 }
 
-static int kWindowWidth = 320;
-static int kWindowHeight = 568;
+static int kWindowWidth = 568;
+static int kWindowHeight = 300;
 static bool left_down = false;
 static bool right_down = false;
 static bool reset_down = false;
@@ -34,7 +34,8 @@ void draw(void) {
 void resize(int width, int height) {
   kWindowWidth = width;
   kWindowHeight = height;
-  impl_resize((float)width, (float)height);
+  impl_resize((float)width, (float)height, 0);
+  glViewport(0, 0, width, height);
 }
 
 

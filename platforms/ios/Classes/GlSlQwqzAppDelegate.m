@@ -52,21 +52,18 @@
 - (void)handleDidChangeStatusBarOrientationNotification:(NSNotification *)notification;
 {
   // Do something interesting
-  //NSLog(@"The orientation is %f %f %d", [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height, [[notification.userInfo objectForKey: UIApplicationStatusBarOrientationUserInfoKey] intValue]);
+  NSLog(@"The orientation is %f %f %d", [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height, [[notification.userInfo objectForKey: UIApplicationStatusBarOrientationUserInfoKey] intValue]);
   //[glView setCenter:[UIScreen mainScreen].bounds.origin];
 
-  CGRect rotF;
-  //  CGRect newF = [glView frame];
-  if ([[notification.userInfo objectForKey: UIApplicationStatusBarOrientationUserInfoKey] intValue] == 1) {
-//    NSLog(@"%f--", newF.size.width);
-    rotF = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-    //[glView setFrame:rotF];
-  } else {
-    rotF = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-    //[glView setFrame:rotF];
+  CGSize screenSize;
+  if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait || [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown){
+    screenSize = CGSizeMake ([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height); //[UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height);
+  } else{
+    screenSize = CGSizeMake ([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width); //[UIScreen mainScreen].applicationFrame.size.height, [UIScreen mainScreen].applicationFrame.size.width);
   }
-  
-  //[glView resize:rotF.size.width :rotF.size.height];
+  NSLog(@"WIDTH = %f, HEIGHT = %f", screenSize.width, screenSize.height);
+
+  [glView resize:screenSize.width :screenSize.height];
 }
 
 

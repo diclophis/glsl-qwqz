@@ -40,6 +40,8 @@
   // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
   // OpenGL renderbuffers are simple interfaces for drawing to destinations other than the buffers provided to the GL by the window-system.
   GLuint defaultFramebuffer, colorRenderbuffer, depthRenderbuffer;
+  
+  BOOL rotated;
 
 }
 

@@ -751,10 +751,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "rocketeer" */;
 			buildPhases = (
+				FCF14A7D129D4A2900E6178C /* ShellScript */,
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
-				FCF14A7D129D4A2900E6178C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -769,10 +769,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C24BB0A118B7431300DD1FFE /* Build configuration list for PBXNativeTarget "test" */;
 			buildPhases = (
+				C24BB0A018B7431300DD1FFE /* ShellScript */,
 				C24BB04B18B7431300DD1FFE /* Resources */,
 				C24BB05218B7431300DD1FFE /* Sources */,
 				C24BB09918B7431300DD1FFE /* Frameworks */,
-				C24BB0A018B7431300DD1FFE /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -787,10 +787,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C2B47BAB18ADE4C900176881 /* Build configuration list for PBXNativeTarget "sidescroll" */;
 			buildPhases = (
+				C2B47BAA18ADE4C900176881 /* ShellScript */,
 				C2B47B5518ADE4C900176881 /* Resources */,
 				C2B47B5C18ADE4C900176881 /* Sources */,
 				C2B47BA318ADE4C900176881 /* Frameworks */,
-				C2B47BAA18ADE4C900176881 /* ShellScript */,
 			);
 			buildRules = (
 			);

@@ -310,9 +310,9 @@ int impl_draw(int b) {
 }
 
 
-int impl_resize(int width, int height) {
+int impl_resize(int width, int height, int u) {
 
-  int resized = qwqz_resize(qwqz_engine, width, height);
+  int resized = qwqz_resize(qwqz_engine, width, height, u);
 
   //ChipmunkDebugDrawResizeRenderer(width, height);
 
@@ -321,17 +321,17 @@ int impl_resize(int width, int height) {
 
 //LOGV("wha!! %f %f\n", qwqz_engine->m_ScreenHalfWidth, qwqz_engine->m_ScreenHalfHeight);
 
-  verticeBuffer[0] = -qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[1] = -qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[0] = -qwqz_engine->m_ScreenWidth;
+  verticeBuffer[1] = -qwqz_engine->m_ScreenHeight;
 
-  verticeBuffer[2] = -qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[3] = qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[2] = -qwqz_engine->m_ScreenWidth;
+  verticeBuffer[3] = qwqz_engine->m_ScreenHeight;
 
-  verticeBuffer[4] = qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[5] = qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[4] = qwqz_engine->m_ScreenWidth;
+  verticeBuffer[5] = qwqz_engine->m_ScreenHeight;
 
-  verticeBuffer[6] = qwqz_engine->m_ScreenHalfWidth;
-  verticeBuffer[7] = -qwqz_engine->m_ScreenHalfHeight;
+  verticeBuffer[6] = qwqz_engine->m_ScreenWidth;
+  verticeBuffer[7] = -qwqz_engine->m_ScreenHeight;
 
   uvBuffer[0] = 0.0;
   uvBuffer[1] = 0.0;

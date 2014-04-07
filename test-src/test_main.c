@@ -55,15 +55,22 @@ int impl_hit(int x, int y, int s) {
 }
 
 
-int impl_resize(int width, int height) {
-
+int impl_resize(int width, int height, int u) {
+  if (qwqz_engine == NULL) {
+    return 0;
+  }
+  
   LOGV("resizing to %d %d\n", width, height);
-  int resized = qwqz_resize(qwqz_engine, width, height);
+  int resized = qwqz_resize(qwqz_engine, width, height, u);
 
   for (int i=0; i<1; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
-    glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-    qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
+    if (u == 0) {
+      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    } else {
+      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    }
+    qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
 
 //
@@ -87,7 +94,8 @@ int impl_resize(int width, int height) {
 //  verticeBuffer[10] = -1;
 //  verticeBuffer[11] = 1;
 //  
-//  
+//
+  /*
   uvBuffer[0] = -1;
   uvBuffer[1] = -0.5;
   
@@ -104,19 +112,34 @@ int impl_resize(int width, int height) {
   uvBuffer[9] = 0.5;
   
   uvBuffer[10] = -1;
-  uvBuffer[11] = 0.5;
+  uvBuffer[11] = 0.25;
+   */
   
-  verticeBuffer[0] = -qwqz_engine->m_ScreenWidth;
-  verticeBuffer[1] = -qwqz_engine->m_ScreenHeight;
+  if (u == 0) {
+  verticeBuffer[0] = -width;
+  verticeBuffer[1] = -height;
   
-  verticeBuffer[2] = -qwqz_engine->m_ScreenWidth;
-  verticeBuffer[3] = qwqz_engine->m_ScreenHeight;
+  verticeBuffer[2] = -width;
+  verticeBuffer[3] = height;
   
-  verticeBuffer[4] = qwqz_engine->m_ScreenWidth;
-  verticeBuffer[5] = qwqz_engine->m_ScreenHeight;
+  verticeBuffer[4] = width;
+  verticeBuffer[5] = height;
   
-  verticeBuffer[6] = qwqz_engine->m_ScreenWidth;
-  verticeBuffer[7] = -qwqz_engine->m_ScreenHeight;
+  verticeBuffer[6] = width;
+  verticeBuffer[7] = -height;
+  } else {
+    verticeBuffer[0] = -height;
+    verticeBuffer[1] = -width;
+    
+    verticeBuffer[2] = -height;
+    verticeBuffer[3] = width;
+    
+    verticeBuffer[4] = height;
+    verticeBuffer[5] = width;
+    
+    verticeBuffer[6] = height;
+    verticeBuffer[7] = -width;
+  }
  
 //  uvBuffer[0] = 0.0;
 //  uvBuffer[1] = 0.0;
@@ -159,7 +182,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
-  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/balls.fsh");
+  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/graph.fsh");
 
   if (v1 && f1) {
     // Create and link the shader program

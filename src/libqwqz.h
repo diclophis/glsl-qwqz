@@ -1,7 +1,7 @@
 // 
 
 int impl_draw(int b);
-int impl_resize(int width, int height);
+int impl_resize(int width, int height, int u);
 int impl_main(int argc, char** argv, GLuint b);
 int impl_hit(int x, int y, int s);
 
@@ -80,7 +80,7 @@ void qwqz_checkgl(const char *s);
 qwqz_handle qwqz_create(void);
 char *qwqz_load(const char *path);
 int qwqz_draw(qwqz_handle e);
-int qwqz_resize(qwqz_handle e, int width, int height);
+int qwqz_resize(qwqz_handle e, int width, int height, int u);
 int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count);
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv);
 void qwqz_batch_clear(qwqz_batch ff);
@@ -96,7 +96,7 @@ int qwqz_timer_init(qwqz_timer t);
 void qwqz_tick_timer(qwqz_timer t);
 void translate(qwqz_linkage e, float *m, float x, float y, float z);
 
-int qwqz_linkage_resize(qwqz_linkage e);
+int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e);
 
 FILE *iosfopen(const char *filename, const char *mode);
 void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer);

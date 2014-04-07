@@ -269,9 +269,9 @@ int impl_draw(int b) {
 }
 
 
-int impl_resize(int width, int height) {
+int impl_resize(int width, int height, int u) {
 
-  int resized = qwqz_resize(qwqz_engine, width, height);
+  int resized = qwqz_resize(qwqz_engine, width, height, u);
 
   //ChipmunkDebugDrawResizeRenderer(width, height);
 
@@ -281,7 +281,7 @@ int impl_resize(int width, int height) {
   for (int i=0; i<1; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
     glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-    qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
+    qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
   
   //glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);

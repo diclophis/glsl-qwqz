@@ -41,6 +41,7 @@ static GLuint g_LastRenderBuffer = -1;
 -(id)initWithCoder:(NSCoder *)aDecoder {
   if ((self = [super initWithCoder:aDecoder])) {
 
+    rotated = FALSE;
     animating = FALSE;
     animationFrameInterval = 1;
     displayLink = nil;
@@ -227,14 +228,18 @@ static GLuint g_LastRenderBuffer = -1;
   //Engine::Start([i intValue], self.layer.frame.size.width, self.layer.frame.size.height);
   
   impl_main(0, NULL, defaultFramebuffer);
-  impl_resize(self.layer.frame.size.width, self.layer.frame.size.height);
+  impl_resize(self.layer.frame.size.width, self.layer.frame.size.height, 0);
+  
+  glViewport(0, 0, self.layer.frame.size.width, self.layer.frame.size.height);
   
   //initAudio2();
 }
 
+
 -(void)resize:(int)w :(int)h {
   NSLog(@"going to set to -- %f %f", self.layer.frame.size.width, self.layer.frame.size.height);
-  impl_resize(w, h);
+  impl_resize(w, h, (w > h));
+  rotated = !rotated;
 }
 
 
@@ -276,6 +281,23 @@ static GLuint g_LastRenderBuffer = -1;
    */
   return NO;
 }
+
+//- (void)layoutSubviews {
+//  NSLog(@"Wtf?");
+//
+//  if (rotated) {
+//    impl_resize(self.layer.frame.size.width, self.layer.frame.size.height);
+//    glViewport(0, 0, self.layer.frame.size.width, self.layer.frame.size.height);
+//
+//  } else {
+//    impl_resize(self.layer.frame.size.height, self.layer.frame.size.width);
+//    glViewport(0, 0, self.layer.frame.size.height, self.layer.frame.size.width);
+//  }
+//
+//
+//
+//  
+//}
 
 
 @end
