@@ -150,10 +150,10 @@ int impl_resize(int width, int height, int u) {
 //  uvBuffer[6] = 0.0;
 //  uvBuffer[7] = 0.0;
   
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-  qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
+  //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
   
-  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
+  //qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
   //qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
   
   return resized;
