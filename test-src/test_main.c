@@ -15,6 +15,7 @@ static float uvBuffer[12];
 static int renderBufferTexture = -1;
 static int booted = 0;
 
+
 int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
@@ -23,16 +24,17 @@ int impl_draw(int b) {
 
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-  if (0 == booted) {
-    booted = 1;
+  //if (0 == booted) {
+  //  booted = 1;
     glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-    qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
-    qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-    qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
     glActiveTexture(GL_TEXTURE0);
     glBindFramebuffer(GL_FRAMEBUFFER, b);
-  }
+  //}
 
+  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
+  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
+  
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
@@ -65,11 +67,8 @@ int impl_resize(int width, int height, int u) {
 
   for (int i=0; i<1; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
-    if (u == 0) {
-      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-    } else {
-      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-    }
+    glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
 
@@ -115,7 +114,6 @@ int impl_resize(int width, int height, int u) {
   uvBuffer[11] = 0.25;
    */
   
-  if (u == 0) {
   verticeBuffer[0] = -width;
   verticeBuffer[1] = -height;
   
@@ -127,19 +125,7 @@ int impl_resize(int width, int height, int u) {
   
   verticeBuffer[6] = width;
   verticeBuffer[7] = -height;
-  } else {
-    verticeBuffer[0] = -height;
-    verticeBuffer[1] = -width;
-    
-    verticeBuffer[2] = -height;
-    verticeBuffer[3] = width;
-    
-    verticeBuffer[4] = height;
-    verticeBuffer[5] = width;
-    
-    verticeBuffer[6] = height;
-    verticeBuffer[7] = -width;
-  }
+
  
 //  uvBuffer[0] = 0.0;
 //  uvBuffer[1] = 0.0;
@@ -149,12 +135,6 @@ int impl_resize(int width, int height, int u) {
 //  uvBuffer[5] = 0.0;
 //  uvBuffer[6] = 0.0;
 //  uvBuffer[7] = 0.0;
-  
-  //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-  //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
-  
-  //qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, uvBuffer);
-  //qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, uvBuffer);
   
   return resized;
 }

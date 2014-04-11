@@ -151,26 +151,41 @@ int impl_draw(int b) {
   float source_bg_width = 320.0;
   float source_bg_scale = bg_scale;
   float total_w = source_bg_width * source_bg_scale;
-  float spd_x = 1400.0;
+  float spd_x = 500.0;
+
+  bgsSkeleton->root->scaleX = 1.0;
+  bgsSkeleton->root->scaleY = 1.0;
+
+  skeleton->root->scaleX = 1.0;
+  skeleton->root->scaleY = 1.0;
   
-  qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
-  cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
+  spSkeleton_updateWorldTransform(bgsSkeleton);
+  
+  while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
+    float dx =  ((-spd_x * qwqz_engine->m_Timers[0].step));
+    cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
+    for (int a=0; a<bg_range; a++) {
+      bgsScroll[a] += dx;
+      if (bgsScroll[a] <= -(total_w * 3.0)) {
+        //int b = (a + (bg_range - 1)) % bg_range;
+        //LOGV("setting %d to %d + %f\n", a, b, total_w);
+        bgsScroll[a] = ((float)2.0) * source_bg_width * bg_scale;
+      }
+    }
+  }
 
   // not needed explicitly given that doShaderBg draws the to the entire screen
   //qwqz_bind_frame_buffer(qwqz_engine, b);
   //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-  bgsSkeleton->root->scaleX = 1.0;
-  bgsSkeleton->root->scaleY = 1.0;
-
-  spSkeleton_updateWorldTransform(bgsSkeleton);
-
-  if (!setup) {
+  //if (!setup) {
+  //  setup = 1;
     glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     glActiveTexture(GL_TEXTURE0);
     glBindFramebuffer(GL_FRAMEBUFFER, b);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-  }
+  //}
+  
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   
   int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[1]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
@@ -178,14 +193,13 @@ int impl_draw(int b) {
   
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
-  
+
   for (int a=0; a<bg_range; a++) {
-    bgsScroll[a] += floorf((-spd_x * qwqz_engine->m_Timers[0].step));
     for (int c=0; c<num_bg; c++) {
       spSlot *s = bgsSkeleton->drawOrder[c];
       spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
       if (s->attachment && s->attachment->type == ATTACHMENT_REGION) {
-        short offX = (bgsScroll[a]);
+        float offX = floor(bgsScroll[a]);
         spRegionAttachment_computeWorldVertices(ra, offX, 0.0, s->bone, verticeBuffer1);
         qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer1, NULL, ra->uvs);
       }
@@ -200,8 +214,6 @@ int impl_draw(int b) {
   //glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   //qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0]);
 
-  skeleton->root->scaleX = 1.0;
-  skeleton->root->scaleY = 1.0;
   
   int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
@@ -242,12 +254,12 @@ int impl_draw(int b) {
 
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
   
-  if (0) {
+  if (1) {
     // Draw the renderer contents and reset it back to the last tick's state.
-    ChipmunkDebugDrawClearRenderer();
-    //ChipmunkDebugDrawPushRenderer();
 
-    ChipmunkDebugDrawPushRenderer();
+    ChipmunkDebugDrawClearRenderer();
+
+    glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
     ChipmunkDemoDefaultDrawImpl(space);
 
@@ -255,17 +267,6 @@ int impl_draw(int b) {
     ChipmunkDebugDrawPopRenderer();
   }
   
-  if (!setup) {
-    setup = 1;
-  }
-  
-  for (int a=0; a<bg_range; a++) {
-    if (bgsScroll[a] <= -(total_w * 2)) {
-      int b = (a + (bg_range - 1)) % bg_range;
-      //LOGV("setting %d to %d + %f\n", a, b, total_w);
-      bgsScroll[a] = bgsScroll[b] + (total_w * 0.9);
-    }
-  }
   
   return 0;
 }
@@ -275,7 +276,6 @@ int impl_resize(int width, int height, int u) {
 
   int resized = qwqz_resize(qwqz_engine, width, height, u);
 
-  //ChipmunkDebugDrawResizeRenderer(width, height);
 
   //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
@@ -286,7 +286,7 @@ int impl_resize(int width, int height, int u) {
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
   
-  //glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+  ChipmunkDebugDrawResizeRenderer(width, height);
 
   return resized;
 }
@@ -300,7 +300,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   GLuint f2 = 0;
   GLuint program = 0;
 
-  //ChipmunkDebugDrawInit();
+  ChipmunkDebugDrawInit();
 
   space = cpSpaceNew();
   cpSpaceSetIterations(space, 20);
@@ -370,9 +370,8 @@ int impl_main(int argc, char** argv, GLuint b) {
   num_bg = bgsSkeleton->slotCount;
   
   for (int i=0; i<bg_range; i++) {
-    float f = ((i - 1) * (320.0 * bg_scale));
+    float f = ((float)(i - 1) * (320.0 * bg_scale));
     bgsScroll[i] = f;
-    //LOGV("setting %d to %f\n", i, f);
   }
 
   skeleton->root->scaleX = 1.0;

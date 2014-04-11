@@ -132,7 +132,7 @@ precision mediump float;
 			//gl_Position = p;
 
   //float zoom = (256.0 / 512.0);
-  float zoom = (iResolution.y / 1024.0);
+  float zoom = (iResolution.y / 512.0);
   vec4 p = ModelViewProjectionMatrix * vec4(vertex * zoom, 1.0, 1.0);
   p.y -= 1.0;
   gl_Position = p;
@@ -203,7 +203,7 @@ precision mediump float;
   SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
   SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
 
-  ChipmunkDebugDrawResizeRenderer(128.0, 128.0);
+  //ChipmunkDebugDrawResizeRenderer(128.0, 128.0);
 
   ModelViewProjectionMatrix_location2 = glGetUniformLocation(program, "ModelViewProjectionMatrix");
   resolutionHackLocation = glGetUniformLocation(program, "iResolution");
@@ -391,6 +391,8 @@ void ChipmunkDebugDrawBB(cpBB bb, cpSpaceDebugColor color)
 void
 ChipmunkDebugDrawFlushRenderer(void)
 {
+  //CHECK_GL_ERRORS();
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, triangle_buffer, GL_DYNAMIC_DRAW);
 
@@ -420,6 +422,8 @@ ChipmunkDebugDrawFlushRenderer(void)
 void
 ChipmunkDebugDrawClearRenderer(void)
 {
+  //CHECK_GL_ERRORS();
+
 	triangle_count = 0;
 }
 

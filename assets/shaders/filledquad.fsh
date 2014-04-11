@@ -1,5 +1,6 @@
 #ifdef GL_ES
-precision highp float;
+precision lowp float;
+precision lowp int;
 #endif
 
 uniform float iGlobalTime;

@@ -1,12 +1,12 @@
 //
 
-
 #include "opengles_bridge.h"
 #include "libqwqz.h"
 #include "pnglite.h"
 
 
 static GLfloat ProjectionMatrix[16];
+
 
 void qwqz_checkgl(const char *s) {
   // normally (when no error) just return
@@ -43,6 +43,7 @@ qwqz_handle qwqz_create(void) {
 
   return e;
 }
+
 
 char *qwqz_load(const char *path) {
   FILE *fd = iosfopen(path, "rb");
@@ -106,9 +107,11 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   return 0;
 }
 
+
 int qwqz_draw(qwqz_handle e) {
   return 0;
 }
+
 
 void identity(GLfloat *m) {
   GLfloat t[16] = {
@@ -121,6 +124,7 @@ void identity(GLfloat *m) {
   memcpy(m, t, sizeof(t));
 }
 
+
 void translate(qwqz_linkage e, GLfloat *m, float tx, float ty, float tz) {
     ProjectionMatrix[12] += (ProjectionMatrix[0] * tx + ProjectionMatrix[4] * ty + ProjectionMatrix[8] * tz);
     ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
@@ -128,6 +132,7 @@ void translate(qwqz_linkage e, GLfloat *m, float tx, float ty, float tz) {
     ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
     glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 }
+
 
 void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearZ, GLfloat farZ) {
   
@@ -153,52 +158,28 @@ void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
   memcpy(m, tmp, sizeof(tmp));
 }
 
+
 int qwqz_resize(qwqz_handle e, int width, int height, int u) {
   if (e == NULL) {
     return 0;
   }
-  
+
   identity(ProjectionMatrix);
 
   float m_Zoom2 = 1.0;
 
-  //float alt = 1.0;
-  
-  if (0 == u) {
-    e->m_ScreenWidth = width;
-    e->m_ScreenHeight = height;
-  } else {
-    e->m_ScreenWidth = width;
-    e->m_ScreenHeight = height; //(float)width * ((float)height / (float)width);
-    //alt = ((float)width / (float)height);
-  }
-  
+  e->m_ScreenWidth = width;
+  e->m_ScreenHeight = height;
+
+
   float a = (-e->m_ScreenWidth) * (m_Zoom2);
   float b = (e->m_ScreenWidth) * (m_Zoom2);
   float c = (-e->m_ScreenHeight) * m_Zoom2;
   float d = (e->m_ScreenHeight) * m_Zoom2;
   float eee = 0.0;
   float ff = -1.25;
-
-  if (0 == u) {
-    //e->m_ScreenWidth = width;
-    //e->m_ScreenHeight = height;
-  } else {
-    //float alt = ((float)height / (float)width);
-    //e->m_ScreenWidth = height * alt;
-    //e->m_ScreenHeight = width; //(float)width * ((float)height / (float)width);
-    //e->m_ScreenWidth *= 0.3;
-    //e->m_ScreenHeight = height;
-  }
   
-  
-  //if (0 == u) {
-    ortho(ProjectionMatrix, (a), (b), (c), (d), (eee), (ff));
-
-  //} else {
-  //  ortho(ProjectionMatrix, -(a), -(b), -(c), -(d), (eee), (ff));
-    //ortho(ProjectionMatrix, (c), (d), (a), (b), (eee), (ff));
-  //}
+  ortho(ProjectionMatrix, (a), (b), (c), (d), (eee), (ff));
   
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
@@ -211,12 +192,9 @@ int qwqz_resize(qwqz_handle e, int width, int height, int u) {
 
   LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
 
-
-  
-
-  
   return 0;
 }
+
 
 int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e) {
   translate(e, NULL, 0, 0, 0);
@@ -226,10 +204,8 @@ int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e) {
   return 0;
 }
 
+
 int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
-
-  //glUseProgram(e->m_Program);
-
   ff->m_NeedsAttribs = 1;
   
   size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
@@ -248,11 +224,6 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
 
   int i=0;
   
-  //for (i=0; i<ff->m_numSprites * 4; i++) {
-  //  //ff->m_Sprites[i] = (qwqz_sprite);
-  //}
-
-  //unsigned int i;
   for (i=0; i<max_frame_count; i++) {
     ff->indices[(i * 6) + 0] = (i * 4) + 1;
     ff->indices[(i * 6) + 1] = (i * 4) + 2;
@@ -270,22 +241,13 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
 
   qwqz_checkgl("main\n");
-
-  /*
-  if (0) {
-    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-    //glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-    //glEnableVertexAttribArray(ll->g_PositionAttribute);
-    //glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-    //glEnableVertexAttribArray(ll->g_TextureAttribute);
-  }
-   */
   
-  glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  //glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  glVertexAttribPointer(e->g_PositionAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
   qwqz_checkgl("main\n");
 
-  glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+  glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLfloat)));
   glEnableVertexAttribArray(e->g_TextureAttribute);
   qwqz_checkgl("main\n");
 
@@ -306,8 +268,6 @@ void qwqz_batch_clear(qwqz_batch ff) {
 
 
 void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
-  //translate(ll, NULL, 0, 0, 0);
-
   qwqz_batch_clear(ff);
 
   if (1 || ff->m_IndexBuffers[0] != e->g_lastElementBuffer) {
@@ -330,16 +290,16 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
   if (1 || ff->m_NeedsAttribs) {
     ff->m_NeedsAttribs = 0;
     size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
-    glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-    glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+    //glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+    glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLfloat)));
     glEnableVertexAttribArray(ll->g_PositionAttribute);
     glEnableVertexAttribArray(ll->g_TextureAttribute);
   }
 }
 
-void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
-  //assert(ff->m_numSpritesBatched > 0);
 
+void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   if (ff->m_numSpritesBatched > 0) {
     size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
     glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
@@ -445,8 +405,8 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
   int useSwizzledBits = 1;
   if (useSwizzledBits) {
@@ -517,6 +477,8 @@ int qwqz_buffer_target_init(GLuint renderedTexture) {
 
 
 int qwqz_timer_init(qwqz_timer timer) {
+  timer->step = 0.0;
+  timer->accum = 0.0;
   timer->m_SimulationTime = 0.0;
   timer->t1 = 0.0;
   timer->t2 = 0.0;
@@ -527,15 +489,29 @@ int qwqz_timer_init(qwqz_timer timer) {
 }
 
 
-void qwqz_tick_timer(qwqz_timer timer) {
-  struct timeval tim;
-  gettimeofday(&tim, NULL);
-  timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
-  float step = timer->t2 - timer->t1;
-  timer->t1 = timer->t2;
-  timer->m_SimulationTime += step;
-  timer->step = step;
+int qwqz_tick_timer(qwqz_timer timer) {
+  float inc = 0.01;
+  if (timer->accum > 0.0) {
+    timer->m_SimulationTime += inc;
+    timer->accum -= inc; 
+    if (timer->accum > 0.0) {
+      return 1;
+    } else {
+      return 0;
+    }
+  } else {
+    struct timeval tim;
+    gettimeofday(&tim, NULL);
+    timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+    float step = timer->t2 - timer->t1;
+    //LOGV("%f\n", step);
+    timer->t1 = timer->t2;
+    timer->step = inc;
+    timer->accum = step;
+    return 1;
+  }
 }
+
 
 void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer) {
   if (e->g_lastFrameBuffer != buffer) {

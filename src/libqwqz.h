@@ -6,7 +6,7 @@ int impl_main(int argc, char** argv, GLuint b);
 int impl_hit(int x, int y, int s);
 
 struct qwqz_sprite_t {
-  GLshort vertex[2];
+  GLfloat vertex[2];
   GLfloat texture[2];
 };
 typedef struct qwqz_sprite_t * qwqz_sprite;
@@ -57,6 +57,7 @@ struct qwqz_timer_t {
   double t2;
   float m_SimulationTime;
   float step;
+  float accum;
 };
 typedef struct qwqz_timer_t * qwqz_timer;
 
@@ -93,7 +94,7 @@ int qwqz_texture_init(GLuint u, const char *path, int *w, int *h);
 int qwqz_buffer_texture_init(GLuint t);
 int qwqz_buffer_target_init(GLuint texture);
 int qwqz_timer_init(qwqz_timer t);
-void qwqz_tick_timer(qwqz_timer t);
+int qwqz_tick_timer(qwqz_timer t);
 void translate(qwqz_linkage e, float *m, float x, float y, float z);
 
 int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e);
