@@ -17,24 +17,25 @@
                 <outlet property="window" destination="2" id="5"/>
             </connections>
         </customObject>
-        <window clearsContextBeforeDrawing="NO" contentMode="scaleToFill" visibleAtLaunch="YES" resizesToFullScreen="NO" id="2">
+        <window autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" visibleAtLaunch="YES" resizesToFullScreen="NO" id="2">
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask"/>
             <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <connections>
                 <outlet property="rootViewController" destination="21" id="22"/>
             </connections>
         </window>
         <viewController extendedLayoutIncludesOpaqueBars="YES" id="21">
-            <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="13" customClass="EAGLView">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <view key="view" autoresizesSubviews="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="13" customClass="EAGLView">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                 <accessibility key="accessibilityConfiguration">
                     <accessibilityTraits key="traits" none="YES" updatesFrequently="YES"/>
                 </accessibility>
             </view>
-            <nil key="simulatedStatusBarMetrics"/>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>

@@ -169,8 +169,8 @@ static GLuint g_LastRenderBuffer = -1;
 
     impl_draw(defaultFramebuffer);
     
-    const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
-    glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
+    //const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
+    //glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
     
     if (g_LastRenderBuffer != colorRenderbuffer) {
       g_LastRenderBuffer = colorRenderbuffer;

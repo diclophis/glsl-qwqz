@@ -19,7 +19,12 @@ void main( void ) {
   vec2 mouse = vec2(0, 0);
   vec2 resolution = iResolution;
   
-  vec2 PixelCoord = (gl_FragCoord.xy/resolution.xy);
+  //vec2 PixelCoord = (gl_FragCoord.xy/resolution.xy);
+  float width = 1.0 / iResolution.x; //1.0 / max(iResolution.x, iResolution.y);
+  vec2 control = vec2(0.0, 0.0); //iResolution.xy; //vec2(.0, 0.0); //mix( iResolution.xy * 0.5, iMouse.xy, 1.0 - step( iMouse.z, 0.0 ) );
+  
+  vec2 PixelCoord = ( gl_FragCoord.xy - control ) * width;
+  
   vec3 PixelColor = vec3(0.0, 0.0, 0.0);
   for (int i = 0; i < N; i++)
   {

@@ -50,16 +50,16 @@ float grid( vec2 p, float width ) {
 
 void main(void)
 {
-  float width = 1.0 / 320.0; //1.0 / max(iResolution.x, iResolution.y);
+  float width = 1.0 / iResolution.x; //1.0 / max(iResolution.x, iResolution.y);
   vec2 control = iResolution.xy * 0.5; //vec2(.0, 0.0); //mix( iResolution.xy * 0.5, iMouse.xy, 1.0 - step( iMouse.z, 0.0 ) );
   
   vec2 uv = ( gl_FragCoord.xy - control ) * width;
-  if (iResolution.x > iResolution.y) {
-    //uv.x *= (iResolution.x / iResolution.y) * 2.0; //1.0 + sin(iGlobalTime);
-    uv.y *= 1.0 + sin(iGlobalTime);
-  } else {
-    uv.x *= (iResolution.y / iResolution.x) * (iResolution.y / iResolution.x); //1.0 + sin(iGlobalTime);
-  }
+  //if (iResolution.x > iResolution.y) {
+    //uv.x *= (iResolution.x / iResolution.y); //1.0 + sin(iGlobalTime);
+    //uv.y *= 1.0 + sin(iGlobalTime);
+  //} else {
+    //uv.x *= (iResolution.y / iResolution.x) * (iResolution.y / iResolution.x); //1.0 + sin(iGlobalTime);
+  //}
   
   float k_grid = grid( uv, width );
   float k_func = value( uv * scale, width * scale );
