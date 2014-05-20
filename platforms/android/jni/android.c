@@ -218,7 +218,7 @@ void Java_com_risingcode_qwqz_DemoRenderer_nativeResize(JNIEnv* env, jobject thi
   */
 
   impl_main(0, NULL, 0);
-  impl_resize(width, height);
+  impl_resize(width, height, 0);
 
   LOGV("BOOM\n");
 }

@@ -169,8 +169,8 @@ static GLuint g_LastRenderBuffer = -1;
 
     impl_draw(defaultFramebuffer);
     
-    //const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
-    //glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
+    const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
+    glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
     
     if (g_LastRenderBuffer != colorRenderbuffer) {
       g_LastRenderBuffer = colorRenderbuffer;
@@ -228,7 +228,7 @@ static GLuint g_LastRenderBuffer = -1;
   //Engine::Start([i intValue], self.layer.frame.size.width, self.layer.frame.size.height);
   
   impl_main(0, NULL, defaultFramebuffer);
-  impl_resize(self.layer.frame.size.width, self.layer.frame.size.height, 0);
+  impl_resize(self.layer.frame.size.width, self.layer.frame.size.height, defaultFramebuffer);
   
   glViewport(0, 0, self.layer.frame.size.width, self.layer.frame.size.height);
   

@@ -18,8 +18,10 @@ static int renderBufferTexture = -1;
 int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindFramebuffer(GL_FRAMEBUFFER, b);
+  //glActiveTexture(GL_TEXTURE0);
+  //glBindFramebuffer(GL_FRAMEBUFFER, b);
+  qwqz_bind_frame_buffer(qwqz_engine, b);
+
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   for (int i=0; i<2; i++) {
@@ -45,6 +47,8 @@ int impl_resize(int width, int height, int u) {
   if (qwqz_engine == NULL) {
     return 0;
   }
+  
+  glActiveTexture(GL_TEXTURE0);
   
   LOGV("resizing to %d %d\n", width, height);
   int resized = qwqz_resize(qwqz_engine, width, height, u);
@@ -94,8 +98,8 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
-  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/dolphin.fsh");
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/graph.fsh");
+  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/starnest2.fsh");
+  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/dolphin.fsh");
 
   if (v1 && f1) {
     // Create and link the shader program
