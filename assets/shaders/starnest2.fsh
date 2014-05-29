@@ -13,13 +13,13 @@ varying vec2 OutTexture;
 
 // This content is under the MIT License.
 
-#define iterations 16
+#define iterations 14
 #define formuparam 0.43
 
-#define volsteps 16
+#define volsteps 1
 #define stepsize 0.21
 
-#define zoom   1.0
+#define zoom   5.0
 #define tile   01.50
 #define speed  5.0
 
