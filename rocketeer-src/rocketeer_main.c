@@ -349,13 +349,13 @@ int impl_resize(int width, int height, int u) {
     if (qwqz_engine->m_Linkages[i].g_ResolutionUniform) {
       glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
       glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-      qwqz_linkage_resize(&qwqz_engine->m_Linkages[i]);
+      qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[0]);
     }
   }
   
   glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
   glUniform2f(qwqz_engine->m_Linkages[1].g_ResolutionUniform, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
-  qwqz_linkage_resize(&qwqz_engine->m_Linkages[1]);
+  qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[1]);
   
   glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
 
