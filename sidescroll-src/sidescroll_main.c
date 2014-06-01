@@ -153,14 +153,7 @@ int impl_draw(int b) {
   float total_w = source_bg_width * source_bg_scale;
   float spd_x = 500.0;
 
-  bgsSkeleton->root->scaleX = 1.0;
-  bgsSkeleton->root->scaleY = 1.0;
-
-  skeleton->root->scaleX = 1.0;
-  skeleton->root->scaleY = 1.0;
-  
-  spSkeleton_updateWorldTransform(bgsSkeleton);
-  
+  //physics
   while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
     float dx =  ((-spd_x * qwqz_engine->m_Timers[0].step));
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
@@ -174,24 +167,35 @@ int impl_draw(int b) {
     }
   }
 
+  bgsSkeleton->root->scaleX = 1.0;
+  bgsSkeleton->root->scaleY = 1.0;
+
+  skeleton->root->scaleX = 1.0;
+  skeleton->root->scaleY = 1.0;
+
   // not needed explicitly given that doShaderBg draws the to the entire screen
   //qwqz_bind_frame_buffer(qwqz_engine, b);
   //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   //if (!setup) {
   //  setup = 1;
-    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     glActiveTexture(GL_TEXTURE0);
     glBindFramebuffer(GL_FRAMEBUFFER, b);
   //}
   
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+  if (1) {
+  
+  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+  spSkeleton_updateWorldTransform(bgsSkeleton);
   
   int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[1]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
   glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  qwqz_engine->m_Batches[0].m_NeedsAttribs = 1;
   qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
 
   for (int a=0; a<bg_range; a++) {
@@ -208,18 +212,24 @@ int impl_draw(int b) {
   
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
+  }
+
+
   //if (!setup) {
   //  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   //}
   //glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   //qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0]);
 
-  
+  if (1) { 
+  glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
+
   int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
-  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
+  glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
 
   qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
-  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0]);
+  qwqz_engine->m_Batches[1].m_NeedsAttribs = 1;
+  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1]);
 
   for (int i=0; i<skeleton->slotCount; i++) {
     spSlot *s = skeleton->drawOrder[i];
@@ -253,6 +263,8 @@ int impl_draw(int b) {
   }
 
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
+
+  }
   
   if (1) {
     // Draw the renderer contents and reset it back to the last tick's state.
@@ -267,7 +279,6 @@ int impl_draw(int b) {
     ChipmunkDebugDrawPopRenderer();
   }
   
-  
   return 0;
 }
 
@@ -280,7 +291,7 @@ int impl_resize(int width, int height, int u) {
   //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
 
-  for (int i=0; i<1; i++) {
+  for (int i=0; i<2; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
     glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
@@ -299,6 +310,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   GLuint v = 0;
   GLuint f2 = 0;
   GLuint program = 0;
+  GLuint program2 = 0;
 
   ChipmunkDebugDrawInit();
 
@@ -335,7 +347,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
 
-  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
+  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 2);
 
   spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/player.atlas");
@@ -363,6 +375,11 @@ int impl_main(int argc, char** argv, GLuint b) {
     glAttachShader(program, v);
     glAttachShader(program, f2);
     qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
+
+    program2 = glCreateProgram();
+    glAttachShader(program2, v);
+    glAttachShader(program2, f2);
+    qwqz_linkage_init(program2, &qwqz_engine->m_Linkages[1]);
   }
 
   qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * bg_range));
@@ -407,7 +424,7 @@ int impl_main(int argc, char** argv, GLuint b) {
     }
   }
   
-  qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0], (skeleton->slotCount)); //+ skeleton->slotCount
+  qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], (skeleton->slotCount));
   
   qwqz_engine->g_lastFrameBuffer = b;
   

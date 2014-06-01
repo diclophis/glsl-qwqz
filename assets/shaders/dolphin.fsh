@@ -9,7 +9,7 @@ uniform vec2 iResolution;
 uniform sampler2D texture1;
 varying vec2 OutTexture;
 
-#define N 10
+#define N 6
 #define NF float(N)
 #define PI 3.14
 #define HPI PI/2.0
