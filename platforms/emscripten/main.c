@@ -38,7 +38,7 @@ void draw(void) {
 void resize(int width, int height, void *userData) {
   kWindowWidth = width;
   kWindowHeight = height;
-  impl_resize(width, height);
+  impl_resize(width, height, 0);
   glutInitWindowSize(kWindowWidth, kWindowHeight);
 }
 
