@@ -285,6 +285,8 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
     glEnable(GL_BLEND);
     //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnableVertexAttribArray(ll->g_PositionAttribute);
+    glEnableVertexAttribArray(ll->g_TextureAttribute);
   }
   
   if (ff->m_NeedsAttribs) {
@@ -293,8 +295,6 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
     //glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
     glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
     glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(ll->g_PositionAttribute);
-    glEnableVertexAttribArray(ll->g_TextureAttribute);
   }
 }
 
