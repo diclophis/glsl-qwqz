@@ -167,7 +167,7 @@ protothread1(struct pt *pt)
   while(1) {
     /* Wait until the other protothread has set its flag. */
     PT_WAIT_UNTIL(pt, protothread2_flag != 0);
-    LOGV("Protothread 1 running\n");
+    //LOGV("Protothread 1 running\n");
 
     /* We then reset the other protothread's flag, and set our own
        flag so that the other protothread can run. */
@@ -197,7 +197,7 @@ protothread2(struct pt *pt)
 
     /* Wait until the other protothread has set its flag. */
     PT_WAIT_UNTIL(pt, protothread1_flag != 0);
-    LOGV("Protothread 2 running\n");
+    //LOGV("Protothread 2 running\n");
     
     /* We then reset the other protothread's flag. */
     protothread1_flag = 0;
@@ -232,7 +232,8 @@ int impl_hit(int x, int y, int s) {
 }
 
 int impl_draw(int b) {
-  LOGV("impl_draw\n");
+  //LOGV("impl_draw\n");
+
   protothread1(&pt1);
   protothread2(&pt2);
 
