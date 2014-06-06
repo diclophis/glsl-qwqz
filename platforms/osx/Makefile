@@ -19,10 +19,14 @@ CFLAGS=$(CXXFLAGS)
 LDFLAGS=-m64 -arch x86_64 -framework OpenGL -framework GLUT -framework Foundation -framework ApplicationServices -framework AppKit -framework AudioToolbox -framework AudioUnit -framework CoreAudio -framework Accelerate
 
 objects   = $(patsubst %,build/%, $(patsubst %.m,%.o, $(wildcard *.m)))
+
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/zlib/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/chipmunk/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/spine/*.c)))
+objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/pt/*.c)))
+
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/*.c)))
+
 objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../$(impl)-src/*.c)))
 
 raptor_island: $(build) $(objects)
