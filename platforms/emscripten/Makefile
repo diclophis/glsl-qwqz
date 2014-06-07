@@ -18,10 +18,14 @@ CXXFLAGS=\
 CFLAGS=$(CXXFLAGS)
 
 objects   = $(patsubst %,build/%, $(patsubst %.c,%.bc, $(wildcard *.c)))
+
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/zlib/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/chipmunk/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/spine/*.c)))
+objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/pt/*.c)))
+
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/*.c)))
+
 objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../$(impl)-src/*.c)))
 
 HASH=qwqz-$(shell md5sum build/raptor_island.js | cut -d" " -f 1)
