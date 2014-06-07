@@ -261,7 +261,7 @@ int impl_draw(int b) {
   }
 
   if (bgsScroll[bg_first] <= -(bgsSkeleton->data->bones[1]->length * 4.0)) {
-    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0); // * (float)(bg_range - 1); //((float)bg_range - 1) * source_bg_width;
+    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 1.0; // * (float)(bg_range - 1); //((float)bg_range - 1) * source_bg_width;
     bg_first++;
     bg_last++;
     if (bg_first > (bg_range - 1)) {
