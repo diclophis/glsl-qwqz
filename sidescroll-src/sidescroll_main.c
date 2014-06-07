@@ -135,9 +135,9 @@ static cpBody **bodies;
 //static int jumped = 0;
 static int num_bg = 0;
 static float bg_scale = 4.0;
-static int bg_range = 3;
+static int bg_range = 4;
 static int bg_first = 0;
-static int bg_last = 2;
+static int bg_last = 3;
 
 //protothreads
 static struct pt pt1, pt2;
@@ -242,7 +242,7 @@ int impl_draw(int b) {
   //float source_bg_width = 320.0;
   //float source_bg_scale = bg_scale;
   //float total_w = source_bg_width * (float)(bg_range - 1);
-  float spd_x = 100.0 + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 20.0);
+  float spd_x = 5.0 + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 20.0);
 
 
   //physics
@@ -260,8 +260,8 @@ int impl_draw(int b) {
     }
   }
 
-  if (bgsScroll[bg_first] <= -(bgsSkeleton->data->bones[1]->length * 4.0)) {
-    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 1.0; // * (float)(bg_range - 1); //((float)bg_range - 1) * source_bg_width;
+  if (bgsScroll[bg_first] <= -(2.0 * bgsSkeleton->data->bones[1]->length * 4.0)) {
+    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 50.0; // * (float)(bg_range - 1); //((float)bg_range - 1) * source_bg_width;
     bg_first++;
     bg_last++;
     if (bg_first > (bg_range - 1)) {
@@ -510,7 +510,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   num_bg = bgsSkeleton->slotCount;
   
   for (int i=0; i<bg_range; i++) {
-    float f = (float)(i) * (bgsSkeleton->data->bones[1]->length * 4.0); // * bg_scale));
+    float f = (float)(i - 2) * (bgsSkeleton->data->bones[1]->length * 4.0); // * bg_scale));
     bgsScroll[i] = f;
   }
 
