@@ -21,7 +21,7 @@ varying vec2 OutTexture;
 
 #define zoom   5.0
 #define tile   01.50
-#define speed  5.0
+#define speed  0.1
 
 #define brightness 0.00550
 #define darkmatter 1.00

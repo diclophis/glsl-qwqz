@@ -31,7 +31,7 @@ void main( void ) {
   {
     vec2 ParticlePos = vec2(0.5, 0.25);
     ParticlePos.x += 0.25 * (float(i) / NF); //0.25; //*sin(0.0 + float(i) / NF);
-    ParticlePos.y += 0.125 * cos((time * 10.0) + ((float(i) / NF) * 1.0));
+    ParticlePos.y += 0.125 * cos((time * 1.0) + ((float(i) / NF) * 1.0));
     float ParticleSize = 0.001 * float(i);
     PixelColor.r += ParticleSize * (0.5/length(ParticlePos-PixelCoord));
     PixelColor.g += ParticleSize * (1.0/length(ParticlePos-PixelCoord) * float(i)/NF);
