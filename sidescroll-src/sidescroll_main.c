@@ -129,12 +129,10 @@ static spAnimationStateData* stateData;
 static spAnimationState* state;
 static float verticeBuffer1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float verticeBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-static float uvBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-static float bgsScroll[3] = { 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static float bgsScroll[4] = { 0.0, 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 //static int jumped = 0;
 static int num_bg = 0;
-static float bg_scale = 4.0;
 static int bg_range = 4;
 static int bg_first = 0;
 static int bg_last = 3;
@@ -242,7 +240,7 @@ int impl_draw(int b) {
   //float source_bg_width = 320.0;
   //float source_bg_scale = bg_scale;
   //float total_w = source_bg_width * (float)(bg_range - 1);
-  float spd_x = 5.0 + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 20.0);
+  float spd_x = 100.0; // + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 00.0);
 
 
   //physics
