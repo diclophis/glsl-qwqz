@@ -226,7 +226,7 @@ int impl_hit(int x, int y, int s) {
   
   if (s == 0) {
     cpBody *body = bodies[0];
-    cpVect jump = cpv(0.0, 50.0);
+    cpVect jump = cpv(0.0, 100.0);
     cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
   }
   
@@ -354,15 +354,17 @@ int impl_draw(int b) {
 
         cpBody *body = bodies[i];
 
-        //cpVect newVel = cpBodyGetVelocity(body);
-        //float velocity_limit = 100;
-        //float velocity_mag = cpvlength(newVel);
-        //if (velocity_mag > velocity_limit) {
-        //  float velocity_scale = velocity_limit / velocity_mag;
-        //  newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
-        //}
+        if (1) {
+          cpVect newVel = cpBodyGetVelocity(body);
+          float velocity_limit = 100;
+          float velocity_mag = cpvlength(newVel);
+          if (velocity_mag > velocity_limit) {
+            float velocity_scale = velocity_limit / velocity_mag;
+            newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+          }
 
-        //cpBodySetVelocity(body, newVel);
+          cpBodySetVelocity(body, newVel);
+        }
 
         cpVect bodyOff = cpBodyGetPosition(body);
 
@@ -434,8 +436,8 @@ int impl_main(int argc, char** argv, GLuint b) {
   ChipmunkDebugDrawInit();
 
   space = cpSpaceNew();
-  cpSpaceSetIterations(space, 20);
-  cpSpaceSetGravity(space, cpv(0, -20));
+  cpSpaceSetIterations(space, 10);
+  cpSpaceSetGravity(space, cpv(0, -40));
   //cpSpaceSetDamping(space, 1.00);
   cpSpaceSetCollisionSlop(space, 0.01);
 
