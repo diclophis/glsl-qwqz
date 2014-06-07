@@ -241,6 +241,8 @@
 		C2B47BA818ADE4C900176881 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		C2B47BA918ADE4C900176881 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
 		C2B47BB618ADE54400176881 /* sidescroll_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C2B47BB418ADE54400176881 /* sidescroll_main.c */; };
+		C2E26B5A1942D168006382B3 /* MeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2E26B561942D168006382B3 /* MeshAttachment.c */; };
+		C2E26B5B1942D168006382B3 /* SkinnedMeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2E26B581942D168006382B3 /* SkinnedMeshAttachment.c */; };
 		FC03727E13E7E4E600250EB2 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */; };
 		FC14176B1285413100166578 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417631285413100166578 /* EAGLView.mm */; };
 		FC14176C1285413100166578 /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
@@ -409,6 +411,10 @@
 		C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "sidescroll-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/sidescroll-Info.plist"; sourceTree = "<absolute>"; };
 		C2B47BB418ADE54400176881 /* sidescroll_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sidescroll_main.c; sourceTree = "<group>"; };
 		C2B47BB518ADE54400176881 /* sidescroll_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sidescroll_main.h; sourceTree = "<group>"; };
+		C2E26B561942D168006382B3 /* MeshAttachment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MeshAttachment.c; sourceTree = "<group>"; };
+		C2E26B571942D168006382B3 /* MeshAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshAttachment.h; sourceTree = "<group>"; };
+		C2E26B581942D168006382B3 /* SkinnedMeshAttachment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SkinnedMeshAttachment.c; sourceTree = "<group>"; };
+		C2E26B591942D168006382B3 /* SkinnedMeshAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinnedMeshAttachment.h; sourceTree = "<group>"; };
 		FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		FC1417621285413100166578 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
 		FC1417631285413100166578 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
@@ -623,6 +629,10 @@
 		C2A835B4188B2EB5008021D5 /* spine */ = {
 			isa = PBXGroup;
 			children = (
+				C2E26B561942D168006382B3 /* MeshAttachment.c */,
+				C2E26B571942D168006382B3 /* MeshAttachment.h */,
+				C2E26B581942D168006382B3 /* SkinnedMeshAttachment.c */,
+				C2E26B591942D168006382B3 /* SkinnedMeshAttachment.h */,
 				C2A835B5188B2EB5008021D5 /* Animation.c */,
 				C2A835B6188B2EB5008021D5 /* Animation.h */,
 				C2A835B7188B2EB5008021D5 /* AnimationState.c */,
@@ -1114,6 +1124,7 @@
 				C2B47B8318ADE4C900176881 /* AtlasAttachmentLoader.c in Sources */,
 				C2B47B8418ADE4C900176881 /* Attachment.c in Sources */,
 				C2B47B8518ADE4C900176881 /* AttachmentLoader.c in Sources */,
+				C2E26B5A1942D168006382B3 /* MeshAttachment.c in Sources */,
 				C2B47B8618ADE4C900176881 /* Bone.c in Sources */,
 				C2B47B8718ADE4C900176881 /* BoneData.c in Sources */,
 				C2B47B8818ADE4C900176881 /* BoundingBoxAttachment.c in Sources */,
@@ -1131,6 +1142,7 @@
 				C2B47B9418ADE4C900176881 /* SlotData.c in Sources */,
 				C2B47B9518ADE4C900176881 /* ioapi.c in Sources */,
 				C2B47B9618ADE4C900176881 /* unzip.c in Sources */,
+				C2E26B5B1942D168006382B3 /* SkinnedMeshAttachment.c in Sources */,
 				C2B47B9718ADE4C900176881 /* adler32.c in Sources */,
 				C2B47B9818ADE4C900176881 /* compress.c in Sources */,
 				C2B47B9918ADE4C900176881 /* crc32.c in Sources */,
