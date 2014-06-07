@@ -235,28 +235,28 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
 
   glGenBuffers(ff->m_numIndexBuffers, ff->m_IndexBuffers);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ff->m_IndexBuffers[0]);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_frame_count * 6 * sizeof(GLshort), ff->indices, GL_DYNAMIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_frame_count * 6 * sizeof(GLshort), ff->indices, GL_STATIC_DRAW);
 
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
-
-  qwqz_checkgl("main\n");
+  //qwqz_checkgl("main\n");
   
   glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   //glVertexAttribPointer(e->g_PositionAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   glEnableVertexAttribArray(e->g_PositionAttribute);
-  qwqz_checkgl("main\n");
+  //qwqz_checkgl("main\n");
 
   glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
   glEnableVertexAttribArray(e->g_TextureAttribute);
-  qwqz_checkgl("main\n");
+  //qwqz_checkgl("main\n");
 
-  glBufferData(GL_ARRAY_BUFFER, max_frame_count * 4 * ff->m_Stride, ff->m_Sprites, GL_DYNAMIC_DRAW);
-  qwqz_checkgl("main\n");
+  //size_t interleaved_buffer_size = 0;// (ff->m_numSprites * ff->m_Stride * 12);
+  //glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_STREAM_DRAW);
+  //qwqz_checkgl("main\n");
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  qwqz_checkgl("main\n");
+  //qwqz_checkgl("main\n");
 
   return 0;
 }
@@ -301,12 +301,14 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
 
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   if (ff->m_numSpritesBatched > 0) {
-    size_t interleaved_buffer_size = (ff->m_numSpritesBatched * 4 * ff->m_Stride);
+    size_t interleaved_buffer_size = (ff->m_numSprites * ff->m_Stride * 4);
+    //size_t interleaved_buffer_size2 = (ff->m_numSpritesBatched * ff->m_Stride * 6);
+    //LOGV("%d %d\n", interleaved_buffer_size, interleaved_buffer_size2);
     glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
+    //glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size2, ff->m_Sprites);
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices, GL_DYNAMIC_DRAW);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices, GL_DYNAMIC_DRAW);
+    //glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices);
 
     // 1st [mode] parameter is what kind of primitive to render.
     // 2nd [count] parameter should be the number of elements to render. ie. the number of vertices
@@ -314,7 +316,11 @@ void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
     //  GL_UNSIGNED_BYTE or GL_UNSIGNED_SHORT or GL_UNSIGNED_INT
     // 4th [indices] parameter is a pointer to where the indices are stored.
     
-    glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+    GLint total_elements = (ff->m_numSpritesBatched * 6);
+    glDrawElements(GL_TRIANGLES, total_elements, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
+
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
     //glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, ff->indices);
   }
 }
@@ -401,8 +407,8 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   
   glBindTexture(GL_TEXTURE_2D, textureHandle);
 
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -415,7 +421,7 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.width, tex.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
   }
   
-  int generateMipMap = 0;
+  int generateMipMap = 1;
   if (generateMipMap) {
     glGenerateMipmap(GL_TEXTURE_2D);
   }

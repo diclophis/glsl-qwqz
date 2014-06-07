@@ -84,10 +84,10 @@ static GLuint g_LastRenderBuffer = -1;
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
     
-    glGenRenderbuffersOES(1, &depthRenderbuffer);
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
-    glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
-    glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
+    //glGenRenderbuffersOES(1, &depthRenderbuffer);
+    //glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
+    //glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
+    //glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
     
     if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES) {
       NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
@@ -169,8 +169,8 @@ static GLuint g_LastRenderBuffer = -1;
 
     impl_draw(defaultFramebuffer);
     
-    const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
-    glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
+    //const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
+    //glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
     
     if (g_LastRenderBuffer != colorRenderbuffer) {
       g_LastRenderBuffer = colorRenderbuffer;

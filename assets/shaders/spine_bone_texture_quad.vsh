@@ -1,6 +1,5 @@
 #ifdef GL_ES
-precision lowp float;
-precision lowp int;
+precision mediump float;
 #endif
 
 attribute vec2 Position;

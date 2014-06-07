@@ -130,7 +130,7 @@ static spAnimationState* state;
 static float verticeBuffer1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float verticeBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float uvBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-static float bgsScroll[9] = { 0.0, 0.0}; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static float bgsScroll[3] = { 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 //static int jumped = 0;
 static int num_bg = 0;
@@ -283,15 +283,14 @@ int impl_draw(int b) {
   //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   //if (!setup) {
-  //  setup = 1;
-    glBindFramebuffer(GL_FRAMEBUFFER, b);
+    //setup = 1;
+    //glBindFramebuffer(GL_FRAMEBUFFER, b);
   //}
   
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT);
 
   if (1) {
   
-    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     spSkeleton_updateWorldTransform(bgsSkeleton);
     
     //glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
@@ -312,6 +311,7 @@ int impl_draw(int b) {
       }
     }
     
+    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
   }
@@ -334,7 +334,6 @@ int impl_draw(int b) {
   //qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0]);
 
   if (1) { 
-    glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
 
     qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
     qwqz_engine->m_Batches[1].m_NeedsAttribs = 1;
@@ -373,6 +372,7 @@ int impl_draw(int b) {
       }
     }
 
+    glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
 
   }
@@ -433,7 +433,9 @@ int impl_main(int argc, char** argv, GLuint b) {
   GLuint program = 0;
   GLuint program2 = 0;
 
-  ChipmunkDebugDrawInit();
+  if (0) {
+    ChipmunkDebugDrawInit();
+  }
 
   space = cpSpaceNew();
   cpSpaceSetIterations(space, 10);
