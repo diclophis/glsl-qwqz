@@ -6,7 +6,7 @@ int impl_main(int argc, char** argv, GLuint b);
 int impl_hit(int x, int y, int s);
 
 struct qwqz_sprite_t {
-  GLfloat vertex[2];
+  GLshort vertex[2];
   GLfloat texture[2];
 };
 typedef struct qwqz_sprite_t * qwqz_sprite;
