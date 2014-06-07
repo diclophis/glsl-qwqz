@@ -39,7 +39,7 @@ void resize(int width, int height, void *userData) {
   kWindowWidth = width;
   kWindowHeight = height;
   impl_resize(width, height, 0);
-  glutInitWindowSize(kWindowWidth, kWindowHeight);
+  glViewport(0, 0, width, height);
 }
 
 
@@ -123,6 +123,7 @@ int main(int argc, char** argv) {
   set_window_resize_handler(0, resize);
 
   if (0 == impl_main(argc, argv, 0)) {
+    glutInitWindowSize(kWindowWidth, kWindowHeight);
     resize(kWindowWidth, kWindowHeight, 0);
     glutMainLoop();
   }
