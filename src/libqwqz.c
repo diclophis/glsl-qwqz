@@ -490,7 +490,7 @@ int qwqz_timer_init(qwqz_timer timer) {
 
 
 int qwqz_tick_timer(qwqz_timer timer) {
-  float inc = 0.01;
+  float inc = 0.1;
   if (timer->accum > 0.0) {
     timer->m_SimulationTime += inc;
     timer->accum -= inc; 
