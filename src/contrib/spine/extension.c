@@ -63,7 +63,7 @@ void _setFree (void (*free) (void* ptr)) {
 
 char* _readFile (const char* path, int* length) {
 	char *data;
-	FILE *file = fopen(path, "rb");
+	FILE *file = iosfopen(path, "rb");
 	if (!file) return 0;
 
 	fseek(file, 0, SEEK_END);
