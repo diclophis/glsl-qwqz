@@ -135,9 +135,9 @@ static cpBody **bodies;
 //static int jumped = 0;
 static int num_bg = 0;
 static float bg_scale = 4.0;
-static int bg_range = 2;
+static int bg_range = 3;
 static int bg_first = 0;
-static int bg_last = 1;
+static int bg_last = 2;
 
 //protothreads
 static struct pt pt1, pt2;
