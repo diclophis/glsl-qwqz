@@ -1,11 +1,12 @@
 
 player.png
+size: 76,76
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 player
   rotate: false
-  xy: 2, 2
+  xy: 2, 55
   size: 74, 21
   orig: 74, 21
   offset: 0, 0

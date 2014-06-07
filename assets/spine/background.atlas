@@ -1,25 +1,26 @@
 
 background.png
+size: 382,382
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 background
   rotate: false
-  xy: 2, 2
+  xy: 2, 196
   size: 320, 186
   orig: 320, 186
   offset: 0, 0
   index: -1
 block
   rotate: false
-  xy: 324, 92
+  xy: 2, 98
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 palmtree
-  rotate: true
-  xy: 422, 130
+  rotate: false
+  xy: 324, 294
   size: 58, 88
   orig: 64, 96
   offset: 0, 3
