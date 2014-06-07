@@ -15,23 +15,25 @@
  function.
 
  - Subclasses do not provide a dispose function, instead the base class' dispose function should be used, which will delegate to
- a dispose function.
+ a dispose function pointer.
 
- - Classes not designed for inheritance cannot be extended. They may use an internal subclass to hide private data and don't
+ - Classes not designed for inheritance cannot be extended because they may use an internal subclass to hide private data and don't
  expose function pointers.
 
- - The public API hides implementation details such init/deinit functions. An internal API is exposed in extension.h to allow
+ - The public API hides implementation details, such as init/deinit functions. An internal API is exposed by extension.h to allow
  classes to be extended. Internal functions begin with underscore (_).
 
- - OOP in C tends to lose type safety. Macros are provided in extension.h to give context for why a cast is being done.
+ - OOP in C tends to lose type safety. Macros for casting are provided in extension.h to give context for why a cast is being done.
+
+ - If SPINE_SHORT_NAMES is defined, the "sp" prefix for all class names is optional.
  */
 
 #ifndef SPINE_EXTENSION_H_
 #define SPINE_EXTENSION_H_
 
 /* All allocation uses these. */
-#define MALLOC(TYPE,COUNT) ((TYPE*)_malloc(sizeof(TYPE) * COUNT))
-#define CALLOC(TYPE,COUNT) ((TYPE*)_calloc(COUNT, sizeof(TYPE)))
+#define MALLOC(TYPE,COUNT) ((TYPE*)_malloc(sizeof(TYPE) * COUNT, __FILE__, __LINE__))
+#define CALLOC(TYPE,COUNT) ((TYPE*)_calloc(COUNT, sizeof(TYPE), __FILE__, __LINE__))
 #define NEW(TYPE) CALLOC(TYPE,1)
 
 /* Gets the direct super class. Type safe. */
@@ -53,7 +55,7 @@
 #define FREE(VALUE) _free((void*)VALUE)
 
 /* Allocates a new char[], assigns it to TO, and copies FROM to it. Can be used on const types. */
-#define MALLOC_STR(TO,FROM) strcpy(CONST_CAST(char*, TO) = (char*)malloc(strlen(FROM) + 1), FROM)
+#define MALLOC_STR(TO,FROM) strcpy(CONST_CAST(char*, TO) = (char*)MALLOC(char, strlen(FROM) + 1), FROM)
 
 #ifdef __STDC_VERSION__
 #define FMOD(A,B) fmodf(A, B)
@@ -62,15 +64,17 @@
 #endif
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <spine/Skeleton.h>
-#include <spine/RegionAttachment.h>
-#include <spine/BoundingBoxAttachment.h>
 #include <spine/Animation.h>
 #include <spine/Atlas.h>
 #include <spine/AttachmentLoader.h>
+#include <spine/RegionAttachment.h>
+#include <spine/MeshAttachment.h>
+#include <spine/SkinnedMeshAttachment.h>
+#include <spine/BoundingBoxAttachment.h>
+#include <spine/AnimationState.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,20 +98,35 @@ char* _spUtil_readFile (const char* path, int* length);
  * Internal API available for extension:
  */
 
-void* _malloc (size_t size);
-void* _calloc (size_t num, size_t size);
+void* _malloc (size_t size, const char* file, int line);
+void* _calloc (size_t num, size_t size, const char* file, int line);
 void _free (void* ptr);
 
 void _setMalloc (void* (*_malloc) (size_t size));
+void _setDebugMalloc (void* (*_malloc) (size_t size, const char* file, int line));
 void _setFree (void (*_free) (void* ptr));
 
 char* _readFile (const char* path, int* length);
 
 /**/
 
+typedef struct {
+	spAnimationState super;
+	spEvent** events;
+
+	spTrackEntry* (*createTrackEntry) (spAnimationState* self);
+	void (*disposeTrackEntry) (spTrackEntry* entry);
+} _spAnimationState;
+
+spTrackEntry* _spTrackEntry_create (spAnimationState* self);
+void _spTrackEntry_dispose (spTrackEntry* self);
+
+/**/
+
 void _spAttachmentLoader_init (spAttachmentLoader* self, /**/
 void (*dispose) (spAttachmentLoader* self), /**/
-spAttachment* (*newAttachment) (spAttachmentLoader* self, spSkin* skin, spAttachmentType type, const char* name));
+		spAttachment* (*newAttachment) (spAttachmentLoader* self, spSkin* skin, spAttachmentType type, const char* name,
+				const char* path));
 void _spAttachmentLoader_deinit (spAttachmentLoader* self);
 void _spAttachmentLoader_setError (spAttachmentLoader* self, const char* error1, const char* error2);
 void _spAttachmentLoader_setUnknownTypeError (spAttachmentLoader* self, spAttachmentType type);
@@ -156,9 +175,6 @@ void _spCurveTimeline_deinit (spCurveTimeline* self);
 #define _CurveTimeline_deinit(...) _spCurveTimeline_deinit(__VA_ARGS__)
 #endif
 
-  
-FILE *iosfopen(const char *filename, const char *mode);
-  
 #ifdef __cplusplus
 }
 #endif

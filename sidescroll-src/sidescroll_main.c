@@ -288,7 +288,7 @@ int impl_draw(int b) {
       for (int c=0; c<num_bg; c++) {
         spSlot *s = bgsSkeleton->drawOrder[c];
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-        if (s->attachment && s->attachment->type == ATTACHMENT_REGION) {
+        if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
           float offX = floor(bgsScroll[a]);
           spRegionAttachment_computeWorldVertices(ra, offX, 0.0, s->bone, verticeBuffer1);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer1, NULL, ra->uvs);
@@ -316,7 +316,7 @@ int impl_draw(int b) {
     for (int i=0; i<skeleton->slotCount; i++) {
       spSlot *s = skeleton->drawOrder[i];
       spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-      if (s->attachment->type == ATTACHMENT_REGION) {
+      if (s->attachment->type == SP_ATTACHMENT_REGION) {
         //float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
 
         float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
@@ -442,7 +442,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 2);
 
-  spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/player.atlas");
+  spAtlas* atlas = spAtlas_createFromFile("assets/spine/player.atlas", NULL);
   spSkeletonJson* json = spSkeletonJson_create(atlas);
   spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/player.json");
   assert(skeletonData);
@@ -451,7 +451,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   state = spAnimationState_create(stateData);
   spAnimationState_setAnimationByName(state, 0, "default", 1);
 
-  spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/background.atlas");
+  spAtlas *atlas2 = spAtlas_createFromFile("assets/spine/background.atlas", NULL);
   spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
   spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/background.json");
   bgsSkeleton = spSkeleton_create(skeletonData2);
@@ -492,7 +492,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   for (int i=0; i<skeleton->slotCount; i++) {
     spSlot *s = skeleton->drawOrder[i];
-    if (s->attachment->type == ATTACHMENT_REGION) {
+    if (s->attachment->type == SP_ATTACHMENT_REGION) {
 
       spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
 
