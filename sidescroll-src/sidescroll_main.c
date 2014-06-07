@@ -236,8 +236,8 @@ int impl_hit(int x, int y, int s) {
 int impl_draw(int b) {
   //LOGV("impl_draw\n");
 
-  protothread1(&pt1);
-  protothread2(&pt2);
+  //protothread1(&pt1);
+  //protothread2(&pt2);
 
   //float source_bg_width = 320.0;
   //float source_bg_scale = bg_scale;
