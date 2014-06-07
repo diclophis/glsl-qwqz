@@ -100,7 +100,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
   e->g_TextureUniform3 = glGetUniformLocation(e->m_Program, "texture3");
 
-  qwqz_checkgl("wtf");
+  //qwqz_checkgl("wtf");
   
   free(msg);
 
@@ -190,7 +190,7 @@ int qwqz_resize(qwqz_handle e, int width, int height, int u) {
 
   e->m_IsScreenResized = 1;
 
-  LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
+  //LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
 
   return 0;
 }
