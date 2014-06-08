@@ -126,11 +126,11 @@ void identity(GLfloat *m) {
 
 
 void translate(qwqz_linkage e, GLfloat *m, float tx, float ty, float tz) {
-    ProjectionMatrix[12] += (ProjectionMatrix[0] * tx + ProjectionMatrix[4] * ty + ProjectionMatrix[8] * tz);
-    ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
-    ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
-    ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
-    glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+  ProjectionMatrix[12] += (ProjectionMatrix[0] * tx + ProjectionMatrix[4] * ty + ProjectionMatrix[8] * tz);
+  ProjectionMatrix[13] += (ProjectionMatrix[1] * tx + ProjectionMatrix[5] * ty + ProjectionMatrix[9] * tz);
+  ProjectionMatrix[14] += (ProjectionMatrix[2] * tx + ProjectionMatrix[6] * ty + ProjectionMatrix[10] * tz);
+  ProjectionMatrix[15] += (ProjectionMatrix[3] * tx + ProjectionMatrix[7] * ty + ProjectionMatrix[11] * tz);
+  glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 }
 
 
@@ -171,7 +171,6 @@ int qwqz_resize(qwqz_handle e, int width, int height, int u) {
   e->m_ScreenWidth = width;
   e->m_ScreenHeight = height;
 
-
   float a = (-e->m_ScreenWidth) * (m_Zoom2);
   float b = (e->m_ScreenWidth) * (m_Zoom2);
   float c = (-e->m_ScreenHeight) * m_Zoom2;
@@ -199,7 +198,7 @@ int qwqz_resize(qwqz_handle e, int width, int height, int u) {
 int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e) {
   translate(e, NULL, 0, 0, 0);
 
-  glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
+  //glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
 
   return 0;
 }
@@ -241,13 +240,13 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
   //qwqz_checkgl("main\n");
   
-  glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
+  //glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
   //glVertexAttribPointer(e->g_PositionAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  glEnableVertexAttribArray(e->g_PositionAttribute);
+  //glEnableVertexAttribArray(e->g_PositionAttribute);
   //qwqz_checkgl("main\n");
 
-  glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-  glEnableVertexAttribArray(e->g_TextureAttribute);
+  //glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
+  //glEnableVertexAttribArray(e->g_TextureAttribute);
   //qwqz_checkgl("main\n");
 
   //size_t interleaved_buffer_size = 0;// (ff->m_numSprites * ff->m_Stride * 12);

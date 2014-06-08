@@ -118,7 +118,7 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 static qwqz_handle qwqz_engine = NULL;
 static cpSpace *space;
-static int setup = 0;
+//static int setup = 0;
 
 
 static spSkeleton* bgsSkeleton;
@@ -240,7 +240,7 @@ int impl_draw(int b) {
   //float source_bg_width = 320.0;
   //float source_bg_scale = bg_scale;
   //float total_w = source_bg_width * (float)(bg_range - 1);
-  float spd_x = 100.0; // + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 00.0);
+  float spd_x = 20.0; // + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 00.0);
 
 
   //physics
@@ -399,13 +399,6 @@ int impl_resize(int width, int height, int u) {
   //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
 
-  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-  int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[1]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
-  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
-
-  glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
-  int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
-  glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
 
   for (int i=0; i<2; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
@@ -416,7 +409,6 @@ int impl_resize(int width, int height, int u) {
   
   ChipmunkDebugDrawResizeRenderer(width, height);
 
-  glActiveTexture(GL_TEXTURE0);
 
   return resized;
 }
@@ -544,10 +536,20 @@ int impl_main(int argc, char** argv, GLuint b) {
       cpShapeSetFriction(shape, 0.0f);
     }
   }
+
+  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+  int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[1]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
+  glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
+
+  glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
+  int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
+  glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
   
   qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], (skeleton->slotCount));
   
   qwqz_engine->g_lastFrameBuffer = b;
+
+  glActiveTexture(GL_TEXTURE0);
 
   /* Initialize the protothread state variables with PT_INIT(). */
   PT_INIT(&pt1);
