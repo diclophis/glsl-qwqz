@@ -6,7 +6,7 @@ filter: Linear,Linear
 repeat: none
 player
   rotate: false
-  xy: 2, 55
+  xy: 1, 54
   size: 74, 21
   orig: 74, 21
   offset: 0, 0

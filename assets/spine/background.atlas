@@ -6,21 +6,21 @@ filter: Linear,Linear
 repeat: none
 background
   rotate: false
-  xy: 2, 196
+  xy: 1, 195
   size: 320, 186
   orig: 320, 186
   offset: 0, 0
   index: -1
 block
   rotate: false
-  xy: 2, 98
+  xy: 1, 97
   size: 96, 96
   orig: 96, 96
   offset: 0, 0
   index: -1
 palmtree
   rotate: false
-  xy: 324, 294
+  xy: 323, 293
   size: 58, 88
   orig: 64, 96
   offset: 0, 3
