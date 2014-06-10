@@ -1,7 +1,7 @@
 // 
 
 int impl_draw(int b);
-int impl_resize(int width, int height, int u);
+int impl_resize(int width, int height, int ew, int eh, int u);
 int impl_main(int argc, char** argv, GLuint b);
 int impl_hit(int x, int y, int s);
 
@@ -34,6 +34,7 @@ struct qwqz_handle_t {
   float m_ScreenAspect;
   float m_ScreenHalfHeight;
   float m_ScreenHalfWidth;
+  float m_Zoom2;
   struct qwqz_batch_t *m_Batches;
   struct qwqz_linkage_t *m_Linkages;
   struct qwqz_timer_t *m_Timers;
@@ -81,7 +82,7 @@ void qwqz_checkgl(const char *s);
 qwqz_handle qwqz_create(void);
 char *qwqz_load(const char *path);
 int qwqz_draw(qwqz_handle e);
-int qwqz_resize(qwqz_handle e, int width, int height, int u);
+int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u);
 int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count);
 void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *color, float *uv);
 void qwqz_batch_clear(qwqz_batch ff);

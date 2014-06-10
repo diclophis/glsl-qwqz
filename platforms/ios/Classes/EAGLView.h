@@ -42,6 +42,8 @@
   GLuint defaultFramebuffer, colorRenderbuffer, depthRenderbuffer;
   
   BOOL rotated;
+  
+  int implMainStatus;
 
 }
 
@@ -55,7 +57,7 @@
 -(void)drawView:(id)sender;
 -(void)startGame:(id)i;
 -(BOOL)wasActive;
--(void)resize:(int)w :(int)h;
+-(void)resize:(int)w :(int)h :(int)ew :(int)eh;
 
 
 @end

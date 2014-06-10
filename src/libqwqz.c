@@ -41,6 +41,8 @@ qwqz_handle qwqz_create(void) {
   e->g_lastInterleavedBuffer = -1;
   e->m_NeedsBlendEnabled = 1;
 
+  e->m_Zoom2 = 1.0;
+  
   return e;
 }
 
@@ -159,32 +161,42 @@ void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
 }
 
 
-int qwqz_resize(qwqz_handle e, int width, int height, int u) {
+int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
   if (e == NULL) {
     return 0;
   }
 
   identity(ProjectionMatrix);
 
-  float m_Zoom2 = 1.0;
-
   e->m_ScreenWidth = width;
   e->m_ScreenHeight = height;
+  
+  float a = -1.0 * e->m_Zoom2;
+  float b = 1.0 * e->m_Zoom2;
+  float c = -1.0 * e->m_Zoom2;
+  float d = 1.0 * e->m_Zoom2;
 
-  float a = (-e->m_ScreenWidth) * (m_Zoom2);
-  float b = (e->m_ScreenWidth) * (m_Zoom2);
-  float c = (-e->m_ScreenHeight) * m_Zoom2;
-  float d = (e->m_ScreenHeight) * m_Zoom2;
   float eee = 0.0;
   float ff = -1.25;
   
   ortho(ProjectionMatrix, (a), (b), (c), (d), (eee), (ff));
   
-  e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
-  e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
-  e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
+//  if (0) {
+//    e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
+//    e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
+//    e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
+//  } else {
+//    e->m_ScreenAspect = ew / eh;
+//    e->m_ScreenHalfWidth = ew * 0.5;
+//    e->m_ScreenHalfHeight = eh * 0.5;
+//  }
   
-  //glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
+  //if (1) {
+    glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
+  //} else {
+  //  glViewport(0, 0, ew, eh);
+  //}
+  
   //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
@@ -224,12 +236,19 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
   int i=0;
   
   for (i=0; i<max_frame_count; i++) {
-    ff->indices[(i * 6) + 0] = (i * 4) + 1;
-    ff->indices[(i * 6) + 1] = (i * 4) + 2;
-    ff->indices[(i * 6) + 2] = (i * 4) + 0;
-    ff->indices[(i * 6) + 3] = (i * 4) + 0;
-    ff->indices[(i * 6) + 4] = (i * 4) + 2;
-    ff->indices[(i * 6) + 5] = (i * 4) + 3;
+//    ff->indices[(i * 6) + 0] = (i * 4) + 1;
+//    ff->indices[(i * 6) + 1] = (i * 4) + 2;
+//    ff->indices[(i * 6) + 2] = (i * 4) + 0;
+//    ff->indices[(i * 6) + 3] = (i * 4) + 0;
+//    ff->indices[(i * 6) + 4] = (i * 4) + 2;
+//    ff->indices[(i * 6) + 5] = (i * 4) + 3;
+    
+    ff->indices[(i * 6) + 0] = (i * 4) + 0;
+    ff->indices[(i * 6) + 1] = (i * 4) + 1;
+    ff->indices[(i * 6) + 2] = (i * 4) + 2;
+    ff->indices[(i * 6) + 3] = (i * 4) + 2;
+    ff->indices[(i * 6) + 4] = (i * 4) + 3;
+    ff->indices[(i * 6) + 5] = (i * 4) + 0;
   }
 
   glGenBuffers(ff->m_numIndexBuffers, ff->m_IndexBuffers);

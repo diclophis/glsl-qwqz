@@ -50,7 +50,7 @@ float grid( vec2 p, float width ) {
 
 void main(void)
 {
-  float width = 1.0 / iResolution.x; //1.0 / max(iResolution.x, iResolution.y);
+  float width = 0.0075; //1.0 / iResolution.x; //1.0 / max(iResolution.x, iResolution.y);
   vec2 control = iResolution.xy * 0.5; //vec2(.0, 0.0); //mix( iResolution.xy * 0.5, iMouse.xy, 1.0 - step( iMouse.z, 0.0 ) );
   
   vec2 uv = ( gl_FragCoord.xy - control ) * width;

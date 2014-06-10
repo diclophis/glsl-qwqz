@@ -19,7 +19,7 @@
 
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    return YES;
+  return YES;
 }
 
 
@@ -56,14 +56,23 @@
   //[glView setCenter:[UIScreen mainScreen].bounds.origin];
 
   CGSize screenSize;
+  CGSize screenSize2;
+  
   if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait || [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortraitUpsideDown){
     screenSize = CGSizeMake ([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height); //[UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height);
-  } else{
-    screenSize = CGSizeMake ([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width); //[UIScreen mainScreen].applicationFrame.size.height, [UIScreen mainScreen].applicationFrame.size.width);
-  }
-  NSLog(@"WIDTH = %f, HEIGHT = %f", screenSize.width, screenSize.height);
+    screenSize2 = CGSizeMake ([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height); //[UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height);
 
-  [glView resize:screenSize.width :screenSize.height];
+    //screenSize = glView.layer.frame.size;
+  } else{
+    screenSize = CGSizeMake ([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height); //[UIScreen mainScreen].applicationFrame.size.width, [UIScreen mainScreen].applicationFrame.size.height);
+    screenSize2 = CGSizeMake ([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width); //[UIScreen mainScreen].applicationFrame.size.height, [UIScreen mainScreen].applicationFrame.size.width);
+    //CGSizeMake(20, 20);
+    //screenSize = CGSizeMake (glView.layer.frame.size.height, glView.layer.frame.size.width); //[UIScreen mainScreen].applicationFrame.size.height, [UIScreen mainScreen].applicationFrame.size.width);
+  }
+  NSLog(@"%f, %f, %f, %f", screenSize.width, screenSize.height, screenSize.width, screenSize.height);
+
+  [glView resize:screenSize.width :screenSize.height :screenSize2.width :screenSize2.height];
+  //glViewport(0, 0, screenSize.width, screenSize.height);
 }
 
 

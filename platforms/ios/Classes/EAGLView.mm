@@ -45,6 +45,7 @@ static GLuint g_LastRenderBuffer = -1;
     animating = FALSE;
     animationFrameInterval = 1;
     displayLink = nil;
+    implMainStatus = -1;
     
     // Get the layer
     CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
@@ -225,20 +226,17 @@ static GLuint g_LastRenderBuffer = -1;
 
 
 -(void)startGame:(id)i {
-  //Engine::Start([i intValue], self.layer.frame.size.width, self.layer.frame.size.height);
   
-  impl_main(0, NULL, defaultFramebuffer);
-  impl_resize(self.layer.frame.size.width, self.layer.frame.size.height, defaultFramebuffer);
-  
-  glViewport(0, 0, self.layer.frame.size.width, self.layer.frame.size.height);
+  implMainStatus = impl_main(0, NULL, defaultFramebuffer);
+  //impl_resize(self.layer.frame.size.width, self.layer.frame.size.height, self.layer.frame.size.width, self.layer.frame.size.height, defaultFramebuffer);
+  //glViewport(0, 0, self.layer.frame.size.width, self.layer.frame.size.height);
   
   //initAudio2();
 }
 
 
--(void)resize:(int)w :(int)h {
-  NSLog(@"going to set to -- %f %f", self.layer.frame.size.width, self.layer.frame.size.height);
-  impl_resize(w, h, (w > h));
+-(void)resize:(int)w :(int)h :(int)ew :(int)eh {
+  impl_resize(w, h, ew, eh, defaultFramebuffer);
   rotated = !rotated;
 }
 
@@ -271,33 +269,8 @@ static GLuint g_LastRenderBuffer = -1;
 
 
 -(BOOL)wasActive {
-  /*
-	if (Engine::CurrentGame()) {
-    Engine::CurrentGameStart();
-    return YES;
-  } else {
-    return NO;
-  }
-   */
-  return NO;
+  return (0 == implMainStatus);
 }
-
-//- (void)layoutSubviews {
-//  NSLog(@"Wtf?");
-//
-//  if (rotated) {
-//    impl_resize(self.layer.frame.size.width, self.layer.frame.size.height);
-//    glViewport(0, 0, self.layer.frame.size.width, self.layer.frame.size.height);
-//
-//  } else {
-//    impl_resize(self.layer.frame.size.height, self.layer.frame.size.width);
-//    glViewport(0, 0, self.layer.frame.size.height, self.layer.frame.size.width);
-//  }
-//
-//
-//
-//  
-//}
 
 
 @end

@@ -17,11 +17,17 @@ attribute vec2 surfacePosAttrib;
 varying vec2 surfacePosition;
 
 void main() {
-//  surfacePosition = vec2(0, 0); //surfacePosAttrib;
-//  gl_Position = vec4( Position, 1.0, 1.0 );
+////  surfacePosition = vec2(0, 0); //surfacePosAttrib;
+////  gl_Position = vec4( Position, 1.0, 1.0 );
+////  OutTexture = Texture;
+//  float zoom = (iResolution.y / 512.0);
+//  vec4 p = ModelViewProjectionMatrix * vec4(Position * zoom, 1.0 * zoom, 1.0);
+//  gl_Position = p; //vec4(Position, 1.0, 1.0);
 //  OutTexture = Texture;
-  float zoom = 1.0; //(iResolution.y / 512.0);
-  vec4 p = ModelViewProjectionMatrix * vec4(Position * zoom, 1.0 * zoom, 1.0);
-  gl_Position = p; //vec4(Position, 1.0, 1.0);
+  
+  float zoom = 1.0; //(iResolution.y / 256.0);
+  vec4 p = ModelViewProjectionMatrix * vec4(Position * zoom, 1.0, 1.0);
+  p.y -= 1.0;
+  gl_Position = (p);
   OutTexture = Texture;
 }

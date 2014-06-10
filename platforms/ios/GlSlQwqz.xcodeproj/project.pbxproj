@@ -47,28 +47,6 @@
 		C24BB07118B7431300DD1FFE /* cpSpaceStep.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835AD188B2EB5008021D5 /* cpSpaceStep.c */; };
 		C24BB07218B7431300DD1FFE /* cpSpatialIndex.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835AE188B2EB5008021D5 /* cpSpatialIndex.c */; };
 		C24BB07318B7431300DD1FFE /* cpSweep1D.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835B0188B2EB5008021D5 /* cpSweep1D.c */; };
-		C24BB07418B7431300DD1FFE /* Animation.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835B5188B2EB5008021D5 /* Animation.c */; };
-		C24BB07518B7431300DD1FFE /* AnimationState.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835B7188B2EB5008021D5 /* AnimationState.c */; };
-		C24BB07618B7431300DD1FFE /* AnimationStateData.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835B9188B2EB5008021D5 /* AnimationStateData.c */; };
-		C24BB07718B7431300DD1FFE /* Atlas.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835BB188B2EB5008021D5 /* Atlas.c */; };
-		C24BB07818B7431300DD1FFE /* AtlasAttachmentLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835BD188B2EB5008021D5 /* AtlasAttachmentLoader.c */; };
-		C24BB07918B7431300DD1FFE /* Attachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835BF188B2EB5008021D5 /* Attachment.c */; };
-		C24BB07A18B7431300DD1FFE /* AttachmentLoader.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835C1188B2EB5008021D5 /* AttachmentLoader.c */; };
-		C24BB07B18B7431300DD1FFE /* Bone.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835C3188B2EB5008021D5 /* Bone.c */; };
-		C24BB07C18B7431300DD1FFE /* BoneData.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835C5188B2EB5008021D5 /* BoneData.c */; };
-		C24BB07D18B7431300DD1FFE /* BoundingBoxAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835C7188B2EB5008021D5 /* BoundingBoxAttachment.c */; };
-		C24BB07E18B7431300DD1FFE /* Event.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835C9188B2EB5008021D5 /* Event.c */; };
-		C24BB07F18B7431300DD1FFE /* EventData.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835CB188B2EB5008021D5 /* EventData.c */; };
-		C24BB08018B7431300DD1FFE /* extension.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835CD188B2EB5008021D5 /* extension.c */; };
-		C24BB08118B7431300DD1FFE /* Json.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835CF188B2EB5008021D5 /* Json.c */; };
-		C24BB08218B7431300DD1FFE /* RegionAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835D1188B2EB5008021D5 /* RegionAttachment.c */; };
-		C24BB08318B7431300DD1FFE /* Skeleton.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835D3188B2EB5008021D5 /* Skeleton.c */; };
-		C24BB08418B7431300DD1FFE /* SkeletonBounds.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835D5188B2EB5008021D5 /* SkeletonBounds.c */; };
-		C24BB08518B7431300DD1FFE /* SkeletonData.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835D7188B2EB5008021D5 /* SkeletonData.c */; };
-		C24BB08618B7431300DD1FFE /* SkeletonJson.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835D9188B2EB5008021D5 /* SkeletonJson.c */; };
-		C24BB08718B7431300DD1FFE /* Skin.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835DB188B2EB5008021D5 /* Skin.c */; };
-		C24BB08818B7431300DD1FFE /* Slot.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835DD188B2EB5008021D5 /* Slot.c */; };
-		C24BB08918B7431300DD1FFE /* SlotData.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835DF188B2EB5008021D5 /* SlotData.c */; };
 		C24BB08A18B7431300DD1FFE /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835E4188B2EB5008021D5 /* ioapi.c */; };
 		C24BB08B18B7431300DD1FFE /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835E6188B2EB5008021D5 /* unzip.c */; };
 		C24BB08C18B7431300DD1FFE /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835E9188B2EB5008021D5 /* adler32.c */; };
@@ -82,7 +60,6 @@
 		C24BB09418B7431300DD1FFE /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A835FD188B2EB5008021D5 /* zutil.c */; };
 		C24BB09618B7431300DD1FFE /* libqwqz.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83600188B2EB5008021D5 /* libqwqz.c */; };
 		C24BB09718B7431300DD1FFE /* pnglite.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83603188B2EB5008021D5 /* pnglite.c */; };
-		C24BB09818B7431300DD1FFE /* spine_bridge.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83605188B2EB5008021D5 /* spine_bridge.c */; };
 		C24BB09A18B7431300DD1FFE /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */; };
 		C24BB09B18B7431300DD1FFE /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCFECB6311EC0D2000BBBE2A /* OpenGLES.framework */; };
 		C24BB09C18B7431300DD1FFE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCFECB6B11EC0D5200BBBE2A /* QuartzCore.framework */; };
@@ -1040,29 +1017,7 @@
 				C24BB07118B7431300DD1FFE /* cpSpaceStep.c in Sources */,
 				C24BB07218B7431300DD1FFE /* cpSpatialIndex.c in Sources */,
 				C24BB07318B7431300DD1FFE /* cpSweep1D.c in Sources */,
-				C24BB07418B7431300DD1FFE /* Animation.c in Sources */,
 				C24BB0AD18B743AE00DD1FFE /* test_main.c in Sources */,
-				C24BB07518B7431300DD1FFE /* AnimationState.c in Sources */,
-				C24BB07618B7431300DD1FFE /* AnimationStateData.c in Sources */,
-				C24BB07718B7431300DD1FFE /* Atlas.c in Sources */,
-				C24BB07818B7431300DD1FFE /* AtlasAttachmentLoader.c in Sources */,
-				C24BB07918B7431300DD1FFE /* Attachment.c in Sources */,
-				C24BB07A18B7431300DD1FFE /* AttachmentLoader.c in Sources */,
-				C24BB07B18B7431300DD1FFE /* Bone.c in Sources */,
-				C24BB07C18B7431300DD1FFE /* BoneData.c in Sources */,
-				C24BB07D18B7431300DD1FFE /* BoundingBoxAttachment.c in Sources */,
-				C24BB07E18B7431300DD1FFE /* Event.c in Sources */,
-				C24BB07F18B7431300DD1FFE /* EventData.c in Sources */,
-				C24BB08018B7431300DD1FFE /* extension.c in Sources */,
-				C24BB08118B7431300DD1FFE /* Json.c in Sources */,
-				C24BB08218B7431300DD1FFE /* RegionAttachment.c in Sources */,
-				C24BB08318B7431300DD1FFE /* Skeleton.c in Sources */,
-				C24BB08418B7431300DD1FFE /* SkeletonBounds.c in Sources */,
-				C24BB08518B7431300DD1FFE /* SkeletonData.c in Sources */,
-				C24BB08618B7431300DD1FFE /* SkeletonJson.c in Sources */,
-				C24BB08718B7431300DD1FFE /* Skin.c in Sources */,
-				C24BB08818B7431300DD1FFE /* Slot.c in Sources */,
-				C24BB08918B7431300DD1FFE /* SlotData.c in Sources */,
 				C24BB08A18B7431300DD1FFE /* ioapi.c in Sources */,
 				C24BB08B18B7431300DD1FFE /* unzip.c in Sources */,
 				C24BB08C18B7431300DD1FFE /* adler32.c in Sources */,
@@ -1076,7 +1031,6 @@
 				C24BB09418B7431300DD1FFE /* zutil.c in Sources */,
 				C24BB09618B7431300DD1FFE /* libqwqz.c in Sources */,
 				C24BB09718B7431300DD1FFE /* pnglite.c in Sources */,
-				C24BB09818B7431300DD1FFE /* spine_bridge.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -392,9 +392,9 @@ int impl_draw(int b) {
 }
 
 
-int impl_resize(int width, int height, int u) {
+int impl_resize(int width, int height, int ew, int eh, int u) {
 
-  int resized = qwqz_resize(qwqz_engine, width, height, u);
+  int resized = qwqz_resize(qwqz_engine, width, height, ew, eh, u);
 
   //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
   //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
@@ -549,6 +549,8 @@ int impl_main(int argc, char** argv, GLuint b) {
   
   qwqz_engine->g_lastFrameBuffer = b;
 
+  qwqz_engine->m_Zoom2 = 512;
+  
   glActiveTexture(GL_TEXTURE0);
 
   /* Initialize the protothread state variables with PT_INIT(). */
