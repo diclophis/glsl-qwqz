@@ -168,13 +168,47 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
 
   identity(ProjectionMatrix);
 
+//  if (0) {
+//  } else {
+//    //width = ew;
+//    //height = eh;
+//  }
+  
+
+  float a;
+  float b;
+  float c;
+  float d;
+  
   e->m_ScreenWidth = width;
   e->m_ScreenHeight = height;
+  e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   
-  float a = -1.0 * e->m_Zoom2;
-  float b = 1.0 * e->m_Zoom2;
-  float c = -1.0 * e->m_Zoom2;
-  float d = 1.0 * e->m_Zoom2;
+//  if (0 && ew != width) {
+////    e->m_ScreenWidth = ew;
+////    e->m_ScreenHeight = eh;
+////
+////    e->m_ScreenAspect = width / height;
+////    //e->m_ScreenAspect = (float)ew / (float)eh;
+//    
+////    a = -1.0 * e->m_Zoom2 * 0.05;
+////    b = 1.0 * e->m_Zoom2 * 0.05;
+////    c = -1.0 * e->m_Zoom2; //* e->m_ScreenAspect;
+////    d = 1.0 * e->m_Zoom2; //* e->m_ScreenAspect;
+//    a = -2.0;
+//    b = 2.0;
+//    c = -1.0 * e->m_Zoom2;
+//    d = 1.0 * e->m_Zoom2;
+//  } else {
+  
+    a = -1.0 * e->m_Zoom2 * e->m_ScreenAspect;
+    b = 1.0 * e->m_Zoom2 * e->m_ScreenAspect;
+    c = -1.0 * e->m_Zoom2;
+    d = 1.0 * e->m_Zoom2;
+  
+//  }
+
+  glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
 
   float eee = 0.0;
   float ff = -1.25;
@@ -182,7 +216,7 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
   ortho(ProjectionMatrix, (a), (b), (c), (d), (eee), (ff));
   
 //  if (0) {
-//    e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
+//
 //    e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
 //    e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
 //  } else {
@@ -192,7 +226,6 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
 //  }
   
   //if (1) {
-    glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
   //} else {
   //  glViewport(0, 0, ew, eh);
   //}
@@ -201,7 +234,7 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
 
   e->m_IsScreenResized = 1;
 
-  //LOGV("wtf: %d %d %f\n", width, height, e->m_ScreenAspect);
+  LOGV("wtf: %d %d %d %d %f\n", width, height, ew, eh, e->m_ScreenAspect);
 
   return 0;
 }

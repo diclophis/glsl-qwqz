@@ -549,8 +549,8 @@ int impl_main(int argc, char** argv, GLuint b) {
   
   qwqz_engine->g_lastFrameBuffer = b;
 
-  qwqz_engine->m_Zoom2 = 512;
-  
+  qwqz_engine->m_Zoom2 = 256.0;
+
   glActiveTexture(GL_TEXTURE0);
 
   /* Initialize the protothread state variables with PT_INIT(). */

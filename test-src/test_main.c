@@ -58,9 +58,13 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
   for (int i=0; i<2; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
     //if (1) {
-      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    //if (ew != width) {
+    //  glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, eh , ew);
     //} else {
-    //  glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, ew, eh);
+      glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+    //}
+    //} else {
+      //glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, eh, ew);
     //}
 
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);

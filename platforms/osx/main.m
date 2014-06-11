@@ -16,8 +16,8 @@ FILE *iosfopen(const char *filename, const char *mode) {
   return fopen(filename, mode);
 }
 
-static int kWindowWidth = 512;
-static int kWindowHeight = 512;
+static int kWindowWidth = 320;
+static int kWindowHeight = 568;
 static bool left_down = false;
 static bool right_down = false;
 static bool reset_down = false;
