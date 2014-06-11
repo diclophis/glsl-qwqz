@@ -168,13 +168,6 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
 
   identity(ProjectionMatrix);
 
-//  if (0) {
-//  } else {
-//    //width = ew;
-//    //height = eh;
-//  }
-  
-
   float a;
   float b;
   float c;
@@ -214,23 +207,6 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
   float ff = -1.25;
   
   ortho(ProjectionMatrix, (a), (b), (c), (d), (eee), (ff));
-  
-//  if (0) {
-//
-//    e->m_ScreenHalfWidth = e->m_ScreenWidth * 0.5;
-//    e->m_ScreenHalfHeight = e->m_ScreenHeight * 0.5;
-//  } else {
-//    e->m_ScreenAspect = ew / eh;
-//    e->m_ScreenHalfWidth = ew * 0.5;
-//    e->m_ScreenHalfHeight = eh * 0.5;
-//  }
-  
-  //if (1) {
-  //} else {
-  //  glViewport(0, 0, ew, eh);
-  //}
-  
-  //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   e->m_IsScreenResized = 1;
 

@@ -76,7 +76,19 @@ static GLuint g_LastRenderBuffer = -1;
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderbuffer);
     glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, colorRenderbuffer);
     
-    [self startGame:0];
+    // The pixel dimensions of the CAEAGLLayer
+    GLint backingWidth;
+    GLint backingHeight;
+    
+    //CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
+    
+    //Bind framebuffers to the context and this layer
+    [context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:eaglLayer];
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
+    
+    
+    //[self startGame:0];
     //glGenRenderbuffersOES(1, &depthRenderbuffer);
     //glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
     //glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
@@ -162,9 +174,6 @@ static GLuint g_LastRenderBuffer = -1;
 
     impl_draw(defaultFramebuffer);
     
-    //const GLenum discards[]  = {GL_DEPTH_ATTACHMENT_OES};
-    //glDiscardFramebufferEXT(GL_FRAMEBUFFER_OES, 1, discards);
-    
     if (g_LastRenderBuffer != colorRenderbuffer) {
       g_LastRenderBuffer = colorRenderbuffer;
       glBindRenderbufferOES(GL_RENDERBUFFER_OES, colorRenderbuffer);
@@ -209,7 +218,6 @@ static GLuint g_LastRenderBuffer = -1;
 
 -(void)stopAnimation {
   if (animating) {
-    //Engine::CurrentGamePause();
     [displayLink invalidate];
     displayLink = nil;
     animating = FALSE;
@@ -220,16 +228,12 @@ static GLuint g_LastRenderBuffer = -1;
 -(void)startGame:(id)i {
   implMainStatus = impl_main(0, NULL, defaultFramebuffer);
   [self resize:self.layer.frame.size.width :self.layer.frame.size.height :self.layer.frame.size.width :self.layer.frame.size.height];
-
-  //impl_resize(self.layer.frame.size.width, self.layer.frame.size.height, self.layer.frame.size.width, self.layer.frame.size.height, defaultFramebuffer);
-  //glViewport(0, 0, self.layer.frame.size.width, self.layer.frame.size.height);
-  
-  //initAudio2();
 }
 
 -(void)layoutSubviews {
-  //NSLog(@"wtf %f", self.layer.frame.size.height);
-  [self resize:self.layer.frame.size.width :self.layer.frame.size.height :self.layer.frame.size.width :self.layer.frame.size.height];
+  if ([self wasActive]) {
+    [self resize:self.layer.frame.size.height :self.layer.frame.size.width :self.layer.frame.size.width :self.layer.frame.size.height];
+  }
 }
 
 
@@ -239,13 +243,13 @@ static GLuint g_LastRenderBuffer = -1;
   GLint backingHeight;
   
   CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
-
+  
   //Bind framebuffers to the context and this layer
   [context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:eaglLayer];
   glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
   glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
 
-  impl_resize(ew, eh, ew, eh, defaultFramebuffer);
+  impl_resize(backingWidth, backingHeight, ew, eh, defaultFramebuffer);
 
   rotated = !rotated;
 }
