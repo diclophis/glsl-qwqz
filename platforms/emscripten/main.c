@@ -38,9 +38,9 @@ void draw(void) {
 void resize(int width, int height, void *userData) {
   kWindowWidth = width;
   kWindowHeight = height;
-  impl_resize(width, height, 0);
+  impl_resize(width, height, width, height, 0);
   glutInitWindowSize(kWindowWidth, kWindowHeight);
-  glViewport(0, 0, width, height);
+  //glViewport(0, 0, width, height);
 }
 
 
