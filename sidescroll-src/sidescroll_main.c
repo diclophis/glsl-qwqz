@@ -129,13 +129,13 @@ static spAnimationStateData* stateData;
 static spAnimationState* state;
 static float verticeBuffer1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float verticeBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-static float bgsScroll[4] = { 0.0, 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static float bgsScroll[] = { 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 //static int jumped = 0;
 static int num_bg = 0;
-static int bg_range = 4;
+static int bg_range = 0;
 static int bg_first = 0;
-static int bg_last = 3;
+static int bg_last = 0;
 
 //protothreads
 static struct pt pt1, pt2;
@@ -240,8 +240,7 @@ int impl_draw(int b) {
   //float source_bg_width = 320.0;
   //float source_bg_scale = bg_scale;
   //float total_w = source_bg_width * (float)(bg_range - 1);
-  float spd_x = 20.0; // + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 00.0);
-
+  float spd_x = 75.0; // + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 00.0);
 
   //physics
   while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
@@ -258,7 +257,7 @@ int impl_draw(int b) {
     }
   }
 
-  if (bgsScroll[bg_first] <= -(2.0 * bgsSkeleton->data->bones[1]->length * 4.0)) {
+  if (bgsScroll[bg_first] <= -((float)(bg_range / 2) * bgsSkeleton->data->bones[1]->length * 4.0)) {
     bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 50.0; // * (float)(bg_range - 1); //((float)bg_range - 1) * source_bg_width;
     bg_first++;
     bg_last++;
@@ -416,6 +415,11 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
 
 int impl_main(int argc, char** argv, GLuint b) {
 
+num_bg = 0;
+bg_range = 2;
+bg_first = 0;
+bg_last = (bg_range - 1);
+
   qwqz_engine = qwqz_create();
 
   GLuint v = 0;
@@ -500,7 +504,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   num_bg = bgsSkeleton->slotCount;
   
   for (int i=0; i<bg_range; i++) {
-    float f = (float)(i - 2) * (bgsSkeleton->data->bones[1]->length * 4.0); // * bg_scale));
+    float f = (float)(i - (i / 2)) * (bgsSkeleton->data->bones[1]->length * 4.0); // * bg_scale));
     bgsScroll[i] = f;
   }
 

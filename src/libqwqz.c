@@ -210,7 +210,7 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
 
   e->m_IsScreenResized = 1;
 
-  LOGV("wtf: %d %d %d %d %f\n", width, height, ew, eh, e->m_ScreenAspect);
+  //LOGV("wtf: %d %d %d %d %f\n", width, height, ew, eh, e->m_ScreenAspect);
 
   return 0;
 }

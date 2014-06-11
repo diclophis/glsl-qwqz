@@ -52,7 +52,7 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
   
   glActiveTexture(GL_TEXTURE0);
   
-  LOGV("resizing to %d %d %d %d\n", width, height, ew, eh);
+  //LOGV("resizing to %d %d %d %d\n", width, height, ew, eh);
   int resized = qwqz_resize(qwqz_engine, width, height, ew, eh, u);
 
   for (int i=0; i<2; i++) {

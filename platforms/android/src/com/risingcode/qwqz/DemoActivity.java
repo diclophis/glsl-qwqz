@@ -93,17 +93,19 @@ public class DemoActivity extends Activity {
     at1.setStereoVolume(1.0f, 1.0f);
     */
 
+/*
     try {
-      android.content.res.AssetFileDescriptor afd = getAssets().openFd("sound/music.mp3");
-      android.media.MediaPlayer player = new android.media.MediaPlayer();
-      player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-      player.prepare();
-      player.setVolume(1f, 1f);
-      player.setLooping(true);
-      player.start();
+      //android.content.res.AssetFileDescriptor afd = getAssets().openFd("sound/music.mp3");
+      //android.media.MediaPlayer player = new android.media.MediaPlayer();
+      //player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+      //player.prepare();
+      //player.setVolume(1f, 1f);
+      //player.setLooping(true);
+      //player.start();
     } catch (java.io.IOException e) {
       Log.v(this.toString(), e.toString() + "WTF!!!!!!!!!!!!!!");
     }
+*/
 
     int res = initNative(getAssets());
 	}
