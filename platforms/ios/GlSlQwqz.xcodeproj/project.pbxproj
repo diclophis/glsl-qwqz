@@ -9,10 +9,8 @@
 /* Begin PBXBuildFile section */
 		C21B2B9E1659E618005EEE4E /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */; };
 		C24BB04C18B7431300DD1FFE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FC1417661285413100166578 /* Default.png */; };
-		C24BB04D18B7431300DD1FFE /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FC1417681285413100166578 /* MainWindow.xib */; };
 		C24BB04E18B7431300DD1FFE /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = FCF8913213E8AA3900AFEB8E /* Entitlements.plist */; };
 		C24BB04F18B7431300DD1FFE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */; };
-		C24BB05018B7431300DD1FFE /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */; };
 		C24BB05118B7431300DD1FFE /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C2A83676188B42D7008021D5 /* assets */; };
 		C24BB05318B7431300DD1FFE /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417631285413100166578 /* EAGLView.mm */; };
 		C24BB05418B7431300DD1FFE /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
@@ -67,7 +65,9 @@
 		C24BB09E18B7431300DD1FFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		C24BB09F18B7431300DD1FFE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
 		C24BB0AD18B743AE00DD1FFE /* test_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C24BB0AB18B743AE00DD1FFE /* test_main.c */; };
-		C256A04B165B7AEB00D00554 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */; };
+		C29A84F11946E37A002AB893 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29A84F01946E37A002AB893 /* Application.xib */; };
+		C29A84F21946E37A002AB893 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29A84F01946E37A002AB893 /* Application.xib */; };
+		C29A84F31946E37A002AB893 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29A84F01946E37A002AB893 /* Application.xib */; };
 		C2A83607188B2EB5008021D5 /* rocketeer_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83574188B2EB5008021D5 /* rocketeer_main.c */; };
 		C2A83608188B2EB5008021D5 /* chipmunk.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83579188B2EB5008021D5 /* chipmunk.c */; };
 		C2A83609188B2EB5008021D5 /* ChipmunkDebugDraw.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A8357F188B2EB5008021D5 /* ChipmunkDebugDraw.c */; };
@@ -137,10 +137,8 @@
 		C2A8364C188B2EB5008021D5 /* spine_bridge.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A83605188B2EB5008021D5 /* spine_bridge.c */; };
 		C2A83677188B42D7008021D5 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C2A83676188B42D7008021D5 /* assets */; };
 		C2B47B5618ADE4C900176881 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FC1417661285413100166578 /* Default.png */; };
-		C2B47B5718ADE4C900176881 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FC1417681285413100166578 /* MainWindow.xib */; };
 		C2B47B5818ADE4C900176881 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = FCF8913213E8AA3900AFEB8E /* Entitlements.plist */; };
 		C2B47B5918ADE4C900176881 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */; };
-		C2B47B5A18ADE4C900176881 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */; };
 		C2B47B5B18ADE4C900176881 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = C2A83676188B42D7008021D5 /* assets */; };
 		C2B47B5D18ADE4C900176881 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417631285413100166578 /* EAGLView.mm */; };
 		C2B47B5E18ADE4C900176881 /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
@@ -225,7 +223,6 @@
 		FC14176C1285413100166578 /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
 		FC14176D1285413100166578 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FC1417661285413100166578 /* Default.png */; };
 		FC14176E1285413100166578 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417671285413100166578 /* main.mm */; };
-		FC14176F1285413100166578 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = FC1417681285413100166578 /* MainWindow.xib */; };
 		FCA06F0811EDD6BB00FE4BFA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0711EDD6BB00FE4BFA /* UIKit.framework */; };
 		FCA06F0C11EDD6D100FE4BFA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		FCDE095112D92F17004CE9B7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
@@ -240,7 +237,7 @@
 		C24BB0A618B7431300DD1FFE /* test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "test-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/test-Info.plist"; sourceTree = "<absolute>"; };
 		C24BB0AB18B743AE00DD1FFE /* test_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_main.c; sourceTree = "<group>"; };
 		C24BB0AC18B743AE00DD1FFE /* test_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test_main.h; sourceTree = "<group>"; };
-		C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
+		C29A84F01946E37A002AB893 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
 		C2A83574188B2EB5008021D5 /* rocketeer_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rocketeer_main.c; sourceTree = "<group>"; };
 		C2A83575188B2EB5008021D5 /* rocketeer_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rocketeer_main.h; sourceTree = "<group>"; };
 		C2A83579188B2EB5008021D5 /* chipmunk.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = chipmunk.c; sourceTree = "<group>"; };
@@ -399,7 +396,6 @@
 		FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlSlQwqzAppDelegate.m; sourceTree = "<group>"; };
 		FC1417661285413100166578 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		FC1417671285413100166578 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
-		FC1417681285413100166578 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		FC14176A1285413100166578 /* rocketeer-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "rocketeer-Info.plist"; sourceTree = "<group>"; };
 		FCA06F0711EDD6BB00FE4BFA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -455,6 +451,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				C29A84F01946E37A002AB893 /* Application.xib */,
 				C2A83676188B42D7008021D5 /* assets */,
 				C24BB0AA18B743AE00DD1FFE /* test-src */,
 				C2B47BB318ADE54400176881 /* sidescroll-src */,
@@ -463,8 +460,6 @@
 				FC1417611285413100166578 /* Classes */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				FC1417671285413100166578 /* main.mm */,
-				FC1417681285413100166578 /* MainWindow.xib */,
-				C256A04A165B7AEB00D00554 /* MainWindow-iPad.xib */,
 				FC14176A1285413100166578 /* rocketeer-Info.plist */,
 				C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */,
 				FC1417661285413100166578 /* Default.png */,
@@ -824,10 +819,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC14176D1285413100166578 /* Default.png in Resources */,
-				FC14176F1285413100166578 /* MainWindow.xib in Resources */,
+				C29A84F11946E37A002AB893 /* Application.xib in Resources */,
 				FCF8913313E8AA3900AFEB8E /* Entitlements.plist in Resources */,
 				C21B2B9E1659E618005EEE4E /* Default-568h@2x.png in Resources */,
-				C256A04B165B7AEB00D00554 /* MainWindow-iPad.xib in Resources */,
 				C2A83677188B42D7008021D5 /* assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -837,10 +831,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C24BB04C18B7431300DD1FFE /* Default.png in Resources */,
-				C24BB04D18B7431300DD1FFE /* MainWindow.xib in Resources */,
+				C29A84F31946E37A002AB893 /* Application.xib in Resources */,
 				C24BB04E18B7431300DD1FFE /* Entitlements.plist in Resources */,
 				C24BB04F18B7431300DD1FFE /* Default-568h@2x.png in Resources */,
-				C24BB05018B7431300DD1FFE /* MainWindow-iPad.xib in Resources */,
 				C24BB05118B7431300DD1FFE /* assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -850,10 +843,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2B47B5618ADE4C900176881 /* Default.png in Resources */,
-				C2B47B5718ADE4C900176881 /* MainWindow.xib in Resources */,
+				C29A84F21946E37A002AB893 /* Application.xib in Resources */,
 				C2B47B5818ADE4C900176881 /* Entitlements.plist in Resources */,
 				C2B47B5918ADE4C900176881 /* Default-568h@2x.png in Resources */,
-				C2B47B5A18ADE4C900176881 /* MainWindow-iPad.xib in Resources */,
 				C2B47B5B18ADE4C900176881 /* assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

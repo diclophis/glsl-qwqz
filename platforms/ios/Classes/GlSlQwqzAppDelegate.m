@@ -34,10 +34,10 @@
 
 
 -(void)applicationDidBecomeActive:(UIApplication *)application {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(handleDidChangeStatusBarOrientationNotification:)
-                                               name:UIApplicationDidChangeStatusBarOrientationNotification
-                                             object:nil];
+//  [[NSNotificationCenter defaultCenter] addObserver:self
+//                                           selector:@selector(handleDidChangeStatusBarOrientationNotification:)
+//                                               name:UIApplicationDidChangeStatusBarOrientationNotification
+//                                             object:nil];
 //
 //  [glView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
   
@@ -71,7 +71,7 @@
   }
   NSLog(@"%f, %f, %f, %f", screenSize.width, screenSize.height, screenSize.width, screenSize.height);
 
-  [glView resize:screenSize.width :screenSize.height :screenSize2.width :screenSize2.height];
+  //[glView resize:screenSize.width :screenSize.height :screenSize2.width :screenSize2.height];
   //glViewport(0, 0, screenSize.width, screenSize.height);
 }
 
