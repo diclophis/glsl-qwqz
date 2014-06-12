@@ -126,6 +126,7 @@ static float gChipmunkGravity = -30.0;
 static float gChipmunkPlayerMass = 1.0;
 static float gChipmunkPlayerElasticity = 0.85;
 static float gChipmunkGroundElasticity = 0.33;
+static float gChipmunkPlayerSpeed = 1.0;
 
 // spine stuff
 static spSkeleton* bgsSkeleton;
@@ -231,6 +232,7 @@ int impl_hit(int x, int y, int s) {
     cpBody *body = bodies[0];
     cpVect jump = cpv(0.0, gChipmunkJumpPower);
     cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
+    spd_x += 100.0;
   }
   
   return 0;
@@ -307,10 +309,17 @@ int impl_draw(int b) {
 
         cpBody *body = bodies[i];
         cpVect bodyOff = cpBodyGetPosition(body);
+        cpVect newVel = cpBodyGetVelocity(body);
+        if (newVel.y < 0.0) {
+          spd_x -= 1.0;
+        }
+
+if (spd_x < 0.0) {
+  spd_x = 0.0;
+}
 
         if (1 && bodyOff.y < 48.0) {
           //vel limit
-          //cpVect newVel = cpBodyGetVelocity(body);
           //float velocity_limit = 1;
           //float velocity_mag = cpvlength(newVel);
           //if (velocity_mag > velocity_limit) {
