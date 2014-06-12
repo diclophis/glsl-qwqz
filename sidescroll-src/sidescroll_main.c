@@ -232,7 +232,9 @@ int impl_hit(int x, int y, int s) {
     cpBody *body = bodies[0];
     cpVect jump = cpv(0.0, gChipmunkJumpPower);
     cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
-    spd_x += 100.0;
+    if (spd_x < 2000.0) {
+      spd_x += 100.0;
+    }
   }
   
   return 0;
@@ -311,7 +313,7 @@ int impl_draw(int b) {
         cpVect bodyOff = cpBodyGetPosition(body);
         cpVect newVel = cpBodyGetVelocity(body);
         if (newVel.y < 0.0) {
-          spd_x -= 1.0;
+          spd_x -= 10.0;
         }
 
 if (spd_x < 0.0) {

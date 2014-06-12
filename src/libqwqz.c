@@ -480,6 +480,9 @@ int qwqz_tick_timer(qwqz_timer timer) {
     gettimeofday(&tim, NULL);
     timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
     float step = timer->t2 - timer->t1;
+    if (step > 0.016) {
+      step = 0.016;
+    }
     timer->t1 = timer->t2;
     timer->step = step;
     timer->m_SimulationTime += step;

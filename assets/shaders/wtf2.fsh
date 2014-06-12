@@ -15,7 +15,7 @@ void main()
   vec2 resolution = iResolution;
   
   // real fragment position
-  vec2 pos = (gl_FragCoord.xy/resolution.xy);
+  vec2 pos = (gl_FragCoord.xy / resolution.xy);
   pos.x *= resolution.y/resolution.x;
 
   vec2 p = ((gl_FragCoord.xy/resolution.xy) - 0.5) * 4.0;

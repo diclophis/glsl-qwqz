@@ -16,7 +16,6 @@ static int renderBufferTexture = -1;
 
 
 int impl_draw(int b) {
-  return 0;
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
@@ -94,7 +93,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
-  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/balls.fsh");
+  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/wtf2.fsh");
   f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/graph.fsh");
 
   if (v1 && f1) {
