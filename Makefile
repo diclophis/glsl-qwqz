@@ -57,11 +57,11 @@ emscripten-test:
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make install
 
 android: android-clean
-	cd platforms/android && IMPL=sidescroll make
-	cd platforms/android && IMPL=sidescroll make install
+	cd platforms/android && IMPL=test make
+	cd platforms/android && IMPL=test make install
 
 android-install:
-	cd platforms/android && IMPL=sidescroll make install
+	cd platforms/android && IMPL=test make install
 
 android-clean:
 	cd platforms/android && IMPL=test make clean

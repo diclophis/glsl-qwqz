@@ -177,29 +177,10 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
   e->m_ScreenHeight = height;
   e->m_ScreenAspect = e->m_ScreenWidth / e->m_ScreenHeight;
   
-//  if (0 && ew != width) {
-////    e->m_ScreenWidth = ew;
-////    e->m_ScreenHeight = eh;
-////
-////    e->m_ScreenAspect = width / height;
-////    //e->m_ScreenAspect = (float)ew / (float)eh;
-//    
-////    a = -1.0 * e->m_Zoom2 * 0.05;
-////    b = 1.0 * e->m_Zoom2 * 0.05;
-////    c = -1.0 * e->m_Zoom2; //* e->m_ScreenAspect;
-////    d = 1.0 * e->m_Zoom2; //* e->m_ScreenAspect;
-//    a = -2.0;
-//    b = 2.0;
-//    c = -1.0 * e->m_Zoom2;
-//    d = 1.0 * e->m_Zoom2;
-//  } else {
-  
-    a = -1.0 * e->m_Zoom2 * e->m_ScreenAspect;
-    b = 1.0 * e->m_Zoom2 * e->m_ScreenAspect;
-    c = -1.0 * e->m_Zoom2;
-    d = 1.0 * e->m_Zoom2;
-  
-//  }
+  a = -1.0 * e->m_Zoom2 * e->m_ScreenAspect;
+  b = 1.0 * e->m_Zoom2 * e->m_ScreenAspect;
+  c = -1.0 * e->m_Zoom2;
+  d = 1.0 * e->m_Zoom2;
 
   glViewport(0, 0, e->m_ScreenWidth, e->m_ScreenHeight);
 
@@ -210,17 +191,12 @@ int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u) {
 
   e->m_IsScreenResized = 1;
 
-  //LOGV("wtf: %d %d %d %d %f\n", width, height, ew, eh, e->m_ScreenAspect);
-
   return 0;
 }
 
 
 int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e) {
   translate(e, NULL, 0, 0, 0);
-
-  //glUniformMatrix4fv(e->ModelViewProjectionMatrix_location, 1, GL_FALSE, ProjectionMatrix);
-
   return 0;
 }
 
@@ -266,24 +242,9 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
 
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
-  //qwqz_checkgl("main\n");
-  
-  //glVertexAttribPointer(e->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  //glVertexAttribPointer(e->g_PositionAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-  //glEnableVertexAttribArray(e->g_PositionAttribute);
-  //qwqz_checkgl("main\n");
-
-  //glVertexAttribPointer(e->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
-  //glEnableVertexAttribArray(e->g_TextureAttribute);
-  //qwqz_checkgl("main\n");
-
-  //size_t interleaved_buffer_size = 0;// (ff->m_numSprites * ff->m_Stride * 12);
-  //glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_STREAM_DRAW);
-  //qwqz_checkgl("main\n");
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  //qwqz_checkgl("main\n");
 
   return 0;
 }
@@ -320,7 +281,6 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
     ff->m_NeedsAttribs = 0;
     size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
     glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
-    //glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
     glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
   }
 }
@@ -329,26 +289,11 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   if (ff->m_numSpritesBatched > 0) {
     size_t interleaved_buffer_size = (ff->m_numSprites * ff->m_Stride * 4);
-    //size_t interleaved_buffer_size2 = (ff->m_numSpritesBatched * ff->m_Stride * 6);
-    //LOGV("%d %d\n", interleaved_buffer_size, interleaved_buffer_size2);
     glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
-    //glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size2, ff->m_Sprites);
-
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices, GL_DYNAMIC_DRAW);
-    //glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, ff->m_numSpritesBatched * 6 * sizeof(GLshort), ff->indices);
-
-    // 1st [mode] parameter is what kind of primitive to render.
-    // 2nd [count] parameter should be the number of elements to render. ie. the number of vertices
-    // 3rd [type] parameter should be the type of the value in the 4th parameter.. can ONLY be either
-    //  GL_UNSIGNED_BYTE or GL_UNSIGNED_SHORT or GL_UNSIGNED_INT
-    // 4th [indices] parameter is a pointer to where the indices are stored.
+    //glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
     
     GLint total_elements = (ff->m_numSpritesBatched * 6);
     glDrawElements(GL_TRIANGLES, total_elements, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //glDrawElements(GL_TRIANGLES, ff->m_numSpritesBatched * 6, GL_UNSIGNED_SHORT, ff->indices);
   }
 }
 
@@ -394,13 +339,11 @@ int qwqz_compile(GLuint type, const char *vsh) {
 
 int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   png_t tex;
-  //char* data = qwqz_load("assets/textures/0.png");
   FILE *fp = iosfopen(path, "rb");
   unsigned char* data;
   GLuint textureHandle;
 
   png_init(0, 0);
-  //fseek(m_TextureFileHandles->at(i)->fp, m_TextureFileHandles->at(i)->off, 0);
   png_open_read(&tex, 0, fp);
   *w = tex.width;
   *h = tex.height;
@@ -456,7 +399,6 @@ int qwqz_texture_init(GLuint unit, const char *path, int *w, int *h) {
   free(data);
   free(tempData);
 
-  //LOGV("created opengles texture: %d\n", textureHandle);
   return textureHandle;
 }
 
@@ -523,26 +465,34 @@ int qwqz_timer_init(qwqz_timer timer) {
 
 
 int qwqz_tick_timer(qwqz_timer timer) {
-  float inc = 0.2;
-  if (timer->accum > 0.0) {
-    timer->m_SimulationTime += inc;
-    timer->accum -= inc; 
-    if (timer->accum > 0.0) {
-      return 1;
-    } else {
-      return 0;
-    }
-  } else {
+//  float inc = 0.0355;
+//  if (timer->accum > inc) {
+//    timer->m_SimulationTime += inc;
+//    timer->accum -= inc; 
+//    if (timer->accum > 0.0) {
+//      return 1;
+//    } else {
+//      return 0;
+//    }
+//  } else {
+  
     struct timeval tim;
     gettimeofday(&tim, NULL);
     timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
     float step = timer->t2 - timer->t1;
-    //LOGV("%f\n", step);
     timer->t1 = timer->t2;
-    timer->step = inc;
-    timer->accum = step;
-    return 1;
-  }
+    timer->step = step;
+    timer->m_SimulationTime += step;
+    int r = 0;
+    if (timer->accum == 0.0) {
+      timer->accum = step;
+      r = 1;
+    } else {
+      timer->accum = 0.0;
+    }
+    return r;
+  
+//  }
 }
 
 

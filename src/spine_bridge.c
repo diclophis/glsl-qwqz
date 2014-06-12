@@ -15,7 +15,7 @@ void _spAtlasPage_createTexture (spAtlasPage* self, const char* path) {
 
   int r = (int)RO;
   int unit = GL_TEXTURE0 + r;
-  int t0 = qwqz_texture_init(unit, path, &outW, &outH);
+  qwqz_texture_init(unit, path, &outW, &outH);
   self->rendererObject = RO;
 
   RO++;
