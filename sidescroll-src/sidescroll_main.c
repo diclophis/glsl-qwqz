@@ -2,6 +2,7 @@
 
 //TODO: move this into libqwqz
 #define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) / 180.0 * M_PI)
+#define RADIANS_TO_DEGREES(__ANGLE__) ((__ANGLE__) * (180.0 / M_PI));
 
 #include "opengles_bridge.h"
 #include "libqwqz.h"
@@ -117,6 +118,7 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 // libqwqz stuff
 static qwqz_handle qwqz_engine = NULL;
+static gRenderPhysicsDebug = 0;
 
 // chipmunk stuff
 static cpSpace *space;
@@ -272,7 +274,6 @@ int impl_draw(int b) {
   
   glClear(GL_COLOR_BUFFER_BIT);
 
-  if (1) {
     spSkeleton_updateWorldTransform(bgsSkeleton);
 
     qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
@@ -293,9 +294,6 @@ int impl_draw(int b) {
     
     glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-  }
-
-  if (1) { 
 
     qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
     qwqz_engine->m_Batches[1].m_NeedsAttribs = 1;
@@ -316,11 +314,11 @@ int impl_draw(int b) {
           spd_x -= 10.0;
         }
 
-if (spd_x < 0.0) {
-  spd_x = 0.0;
-}
+        if (spd_x < 0.0) {
+          spd_x = 0.0;
+        }
 
-        if (1 && bodyOff.y < 48.0) {
+        if (bodyOff.y < 48.0) {
           //vel limit
           //float velocity_limit = 1;
           //float velocity_mag = cpvlength(newVel);
@@ -332,6 +330,9 @@ if (spd_x < 0.0) {
           cpBodySetPosition(body, cpv(bodyOff.x, 100.0));
         }
 
+        float r = cpBodyGetAngle(body);
+        ra->rotation = RADIANS_TO_DEGREES(r);
+        spRegionAttachment_updateOffset(ra);
 
         spRegionAttachment_computeWorldVertices(ra, (bodyOff.x) - x, (bodyOff.y) - y, s->bone, verticeBuffer);
         qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, ra->uvs);
@@ -341,9 +342,7 @@ if (spd_x < 0.0) {
     glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
 
-  }
-  
-  if (0) {
+  if (gRenderPhysicsDebug) {
     // Draw the renderer contents and reset it back to the last tick's state.
 
     ChipmunkDebugDrawClearRenderer();
@@ -369,8 +368,10 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
     glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
-  
-  ChipmunkDebugDrawResizeRenderer(width, height);
+ 
+  if (gRenderPhysicsDebug) {
+    ChipmunkDebugDrawResizeRenderer(width, height);
+  }
 
   return resized;
 }
@@ -389,7 +390,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   GLuint program = 0;
   GLuint program2 = 0;
 
-  if (0) {
+  if (gRenderPhysicsDebug) {
     ChipmunkDebugDrawInit();
   }
 
@@ -404,7 +405,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   //foor
   cpShape *shape;
-  shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 0.0), cpv(1000, 0.0), 48.0f));
+  shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-256, -48.0), cpv(256, -48.0), 48.0 * 2.0));
   cpShapeSetElasticity(shape, gChipmunkGroundElasticity);
   cpShapeSetFriction(shape, 0.0f);
   cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
