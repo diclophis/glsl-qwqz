@@ -115,12 +115,19 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
   cpSpaceDebugDraw(space, &drawOptions);
 }
 
-
+// libqwqz stuff
 static qwqz_handle qwqz_engine = NULL;
+
+// chipmunk stuff
 static cpSpace *space;
-//static int setup = 0;
+static cpBody **bodies;
+static float gChipmunkJumpPower = 60.0;
+static float gChipmunkGravity = -30.0;
+static float gChipmunkPlayerMass = 1.0;
+static float gChipmunkPlayerElasticity = 0.85;
+static float gChipmunkGroundElasticity = 0.33;
 
-
+// spine stuff
 static spSkeleton* bgsSkeleton;
 static spAnimationStateData* bgsStateData;
 static spAnimationState* bgsState;
@@ -130,101 +137,99 @@ static spAnimationState* state;
 static float verticeBuffer1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float verticeBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float bgsScroll[] = { 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-static cpBody **bodies;
-//static int jumped = 0;
 static int num_bg = 0;
 static int bg_range = 0;
 static int bg_first = 0;
 static int bg_last = 0;
+static float spd_x = 75.0;
 
-//protothreads
-static struct pt pt1, pt2;
-/* Two flags that the two protothread functions use. */
-static int protothread1_flag, protothread2_flag;
-
-
-/**
- * This is a very small example that shows how to use
- * protothreads. The program consists of two protothreads that wait
- * for each other to toggle a variable.
- */
-/**
- * The first protothread function. A protothread function must always
- * return an integer, but must never explicitly return - returning is
- * performed inside the protothread statements.
- *
- * The protothread function is driven by the main loop further down in
- * the code.
- */
-static int
-protothread1(struct pt *pt)
-{
-  /* A protothread function must begin with PT_BEGIN() which takes a
-     pointer to a struct pt. */
-  PT_BEGIN(pt);
-
-  /* We loop forever here. */
-  while(1) {
-    /* Wait until the other protothread has set its flag. */
-    PT_WAIT_UNTIL(pt, protothread2_flag != 0);
-    //LOGV("Protothread 1 running\n");
-
-    /* We then reset the other protothread's flag, and set our own
-       flag so that the other protothread can run. */
-    protothread2_flag = 0;
-    protothread1_flag = 1;
-
-    /* And we loop. */
-  }
-
-  /* All protothread functions must end with PT_END() which takes a
-     pointer to a struct pt. */
-  PT_END(pt);
-}
-
-/**
- * The second protothread function. This is almost the same as the
- * first one.
- */
-static int
-protothread2(struct pt *pt)
-{
-  PT_BEGIN(pt);
-
-  while(1) {
-    /* Let the other protothread run. */
-    protothread2_flag = 1;
-
-    /* Wait until the other protothread has set its flag. */
-    PT_WAIT_UNTIL(pt, protothread1_flag != 0);
-    //LOGV("Protothread 2 running\n");
-    
-    /* We then reset the other protothread's flag. */
-    protothread1_flag = 0;
-
-    /* And we loop. */
-  }
-  PT_END(pt);
-}
-
-/**
- * Finally, we have the main loop. Here is where the protothreads are
- * initialized and scheduled. First, however, we define the
- * protothread state variables pt1 and pt2, which hold the state of
- * the two protothreads.
- */
-  
-  /*
-   * Then we schedule the two protothreads by repeatedly calling their
-   * protothread functions and passing a pointer to the protothread
-   * state variables as arguments.
-   */
+////protothreads
+//static struct pt pt1, pt2;
+///* Two flags that the two protothread functions use. */
+//static int protothread1_flag, protothread2_flag;
+//
+//
+///**
+// * This is a very small example that shows how to use
+// * protothreads. The program consists of two protothreads that wait
+// * for each other to toggle a variable.
+// */
+///**
+// * The first protothread function. A protothread function must always
+// * return an integer, but must never explicitly return - returning is
+// * performed inside the protothread statements.
+// *
+// * The protothread function is driven by the main loop further down in
+// * the code.
+// */
+//static int
+//protothread1(struct pt *pt)
+//{
+//  /* A protothread function must begin with PT_BEGIN() which takes a
+//     pointer to a struct pt. */
+//  PT_BEGIN(pt);
+//
+//  /* We loop forever here. */
+//  while(1) {
+//    /* Wait until the other protothread has set its flag. */
+//    PT_WAIT_UNTIL(pt, protothread2_flag != 0);
+//    //LOGV("Protothread 1 running\n");
+//
+//    /* We then reset the other protothread's flag, and set our own
+//       flag so that the other protothread can run. */
+//    protothread2_flag = 0;
+//    protothread1_flag = 1;
+//
+//    /* And we loop. */
+//  }
+//
+//  /* All protothread functions must end with PT_END() which takes a
+//     pointer to a struct pt. */
+//  PT_END(pt);
+//}
+//
+///**
+// * The second protothread function. This is almost the same as the
+// * first one.
+// */
+//static int
+//protothread2(struct pt *pt)
+//{
+//  PT_BEGIN(pt);
+//
+//  while(1) {
+//    /* Let the other protothread run. */
+//    protothread2_flag = 1;
+//
+//    /* Wait until the other protothread has set its flag. */
+//    PT_WAIT_UNTIL(pt, protothread1_flag != 0);
+//    //LOGV("Protothread 2 running\n");
+//    
+//    /* We then reset the other protothread's flag. */
+//    protothread1_flag = 0;
+//
+//    /* And we loop. */
+//  }
+//  PT_END(pt);
+//}
+///**
+//* Finally, we have the main loop. Here is where the protothreads are
+//* initialized and scheduled. First, however, we define the
+//* protothread state variables pt1 and pt2, which hold the state of
+//* the two protothreads.
+//*/
+//
+///*
+//* Then we schedule the two protothreads by repeatedly calling their
+//* protothread functions and passing a pointer to the protothread
+//* state variables as arguments.
+//*/
 
 int impl_hit(int x, int y, int s) {
   
   if (s == 0) {
     cpBody *body = bodies[0];
-    cpVect jump = cpv(0.0, 100.0);
+    cpVect jump = cpv(0.0, gChipmunkJumpPower);
     cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
   }
   
@@ -232,33 +237,19 @@ int impl_hit(int x, int y, int s) {
 }
 
 int impl_draw(int b) {
-  //LOGV("impl_draw\n");
-
-  //protothread1(&pt1);
-  //protothread2(&pt2);
-
-  //float source_bg_width = 320.0;
-  //float source_bg_scale = bg_scale;
-  //float total_w = source_bg_width * (float)(bg_range - 1);
-  float spd_x = 75.0; // + ((sinf(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5) + 1.0) * 00.0);
-
-  //physics
   while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
-    float dx = floor((-spd_x * qwqz_engine->m_Timers[0].step));
-    cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
+    float dx = ((-spd_x * qwqz_engine->m_Timers[0].step));
+
+    // physics tick
+    cpSpaceStep(space, qwqz_engine->m_Timers[0].step * 10.0);
+    // background tick
     for (int a=0; a<bg_range; a++) {
-      //if (bgsScroll[a] < -(bgsSkeleton->data->bones[1]->length * 4.0)) {
-        //int b = (a + (bg_range - 1)) % bg_range;
-        //LOGV("setting %d to %d + %f\n", a, b, total_w);
-        //LOGV("> %f\n", bgsScroll[a]);
-      //} else {
-        bgsScroll[a] += dx;
-      //}
+      bgsScroll[a] += dx;
     }
   }
 
   if (bgsScroll[bg_first] <= -((float)(bg_range / 2) * bgsSkeleton->data->bones[1]->length * 4.0)) {
-    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 50.0; // * (float)(bg_range - 1); //((float)bg_range - 1) * source_bg_width;
+    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 50.0;
     bg_first++;
     bg_last++;
     if (bg_first > (bg_range - 1)) {
@@ -274,24 +265,12 @@ int impl_draw(int b) {
 
   skeleton->root->scaleX = 1.0;
   skeleton->root->scaleY = 1.0;
-
-  // not needed explicitly given that doShaderBg draws the to the entire screen
-  //qwqz_bind_frame_buffer(qwqz_engine, b);
-  //glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-  //if (!setup) {
-    //setup = 1;
-    //glBindFramebuffer(GL_FRAMEBUFFER, b);
-  //}
   
   glClear(GL_COLOR_BUFFER_BIT);
 
   if (1) {
-  
     spSkeleton_updateWorldTransform(bgsSkeleton);
-    
-    //glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-    
+
     qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
     qwqz_engine->m_Batches[0].m_NeedsAttribs = 1;
     qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
@@ -310,25 +289,7 @@ int impl_draw(int b) {
     
     glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-
   }
-
-  //for (int a=0; a<bg_range; a++) {
-  //  if (bgsScroll[a] <= -(bgsSkeleton->data->bones[1]->length * 4.0)) {
-      //int b = (a + (bg_range - 1)) % bg_range;
-      //LOGV("setting %d to %d + %f\n", a, b, total_w);
-  //    bgsScroll[a] = (bgsSkeleton->data->bones[1]->length * 4.0); // * (float)(bg_range - 1); //((float)bg_range - 1) * source_bg_width;
-  //    LOGV("> %f\n", bgsScroll[a]);
-  //  } else {
-  //    //bgsScroll[a] += dx;
-  //  }
-  //}
-
-  //if (!setup) {
-  //  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-  //}
-  //glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-  //qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[0]);
 
   if (1) { 
 
@@ -340,29 +301,26 @@ int impl_draw(int b) {
       spSlot *s = skeleton->drawOrder[i];
       spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
       if (s->attachment->type == SP_ATTACHMENT_REGION) {
-        //float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
-
         float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
-        //float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
-
         float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
         float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
 
         cpBody *body = bodies[i];
+        cpVect bodyOff = cpBodyGetPosition(body);
 
-        if (1) {
-          cpVect newVel = cpBodyGetVelocity(body);
-          float velocity_limit = 100;
-          float velocity_mag = cpvlength(newVel);
-          if (velocity_mag > velocity_limit) {
-            float velocity_scale = velocity_limit / velocity_mag;
-            newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
-          }
-
-          cpBodySetVelocity(body, newVel);
+        if (1 && bodyOff.y < 48.0) {
+          //vel limit
+          //cpVect newVel = cpBodyGetVelocity(body);
+          //float velocity_limit = 1;
+          //float velocity_mag = cpvlength(newVel);
+          //if (velocity_mag > velocity_limit) {
+          //  float velocity_scale = velocity_limit / velocity_mag;
+          //  newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+          //}
+          cpBodySetVelocity(body, cpv(0.0, 100.0));
+          cpBodySetPosition(body, cpv(bodyOff.x, 100.0));
         }
 
-        cpVect bodyOff = cpBodyGetPosition(body);
 
         spRegionAttachment_computeWorldVertices(ra, (bodyOff.x) - x, (bodyOff.y) - y, s->bone, verticeBuffer);
         qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, ra->uvs);
@@ -395,30 +353,23 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
 
   int resized = qwqz_resize(qwqz_engine, width, height, ew, eh, u);
 
-  //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-  //qwqz_batch_clear(&qwqz_engine->m_Batches[1]);
-
-
   for (int i=0; i<2; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
     glUniform2f(qwqz_engine->m_Linkages[i].g_ResolutionUniform, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
-
   
   ChipmunkDebugDrawResizeRenderer(width, height);
-
 
   return resized;
 }
 
 
 int impl_main(int argc, char** argv, GLuint b) {
-
-num_bg = 0;
-bg_range = 2;
-bg_first = 0;
-bg_last = (bg_range - 1);
+  num_bg = 0;
+  bg_range = 2;
+  bg_first = 0;
+  bg_last = (bg_range - 1);
 
   qwqz_engine = qwqz_create();
 
@@ -432,18 +383,18 @@ bg_last = (bg_range - 1);
   }
 
   space = cpSpaceNew();
-  cpSpaceSetIterations(space, 10);
-  cpSpaceSetGravity(space, cpv(0, -40));
+  //cpSpaceSetIterations(space, 8);
+  cpSpaceSetGravity(space, cpv(0, gChipmunkGravity));
   //cpSpaceSetDamping(space, 1.00);
-  cpSpaceSetCollisionSlop(space, 0.01);
+  //cpSpaceSetCollisionSlop(space, 0.1);
 
   cpBody *body;
   cpBody *staticBody = cpSpaceGetStaticBody(space);
 
   //foor
   cpShape *shape;
-  shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 48), cpv(1000, 48), 0.0f));
-  cpShapeSetElasticity(shape, 0.0f);
+  shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 0.0), cpv(1000, 0.0), 48.0f));
+  cpShapeSetElasticity(shape, gChipmunkGroundElasticity);
   cpShapeSetFriction(shape, 0.0f);
   cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
 
@@ -528,7 +479,7 @@ bg_last = (bg_range - 1);
       float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y)) + 300.0;
 
       cpBody *body;
-      float m = 1.0;
+      float m = gChipmunkPlayerMass;
       body = cpSpaceAddBody(space, cpBodyNew(m, cpMomentForBox(m, ra->width * ra->scaleX * 1.0, ra->height * ra->scaleY * 1.0)));
       bodies[i] = body;
 
@@ -536,7 +487,7 @@ bg_last = (bg_range - 1);
       cpBodySetPosition(body, cpv(x, y));
 
       shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * ra->scaleX * 1.0, ra->height * ra->scaleY * 1.0, 0.0f));
-      cpShapeSetElasticity(shape, 0.0f);
+      cpShapeSetElasticity(shape, gChipmunkPlayerElasticity);
       cpShapeSetFriction(shape, 0.0f);
     }
   }
@@ -557,9 +508,9 @@ bg_last = (bg_range - 1);
 
   glActiveTexture(GL_TEXTURE0);
 
-  /* Initialize the protothread state variables with PT_INIT(). */
-  PT_INIT(&pt1);
-  PT_INIT(&pt2);
+//  /* Initialize the protothread state variables with PT_INIT(). */
+//  PT_INIT(&pt1);
+//  PT_INIT(&pt2);
   
   return 0;
 }
