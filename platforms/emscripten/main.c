@@ -62,7 +62,6 @@ void processMouseMotion(int x, int y) {
 
 
 void processNormalKeys(unsigned char key, int x, int y) {
-  LOGV("key: %d %c\n", key, key);
   if (key == 32) {
     if (debug_down) {
       impl_hit(0, 0, 2);
@@ -102,7 +101,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
 
 
 int main(int argc, char** argv) {
-  char *wh;
+  char *wh = NULL;
   
   wh = emscripten_run_script_string("(function(){return document.body.offsetWidth;})()");
   kWindowWidth = atoi(wh);
@@ -110,12 +109,9 @@ int main(int argc, char** argv) {
   wh = emscripten_run_script_string("(function(){return document.body.offsetHeight;})()");
   kWindowHeight = atoi(wh);
 
-  LOGV("%s %d %d\n", wh, kWindowWidth, kWindowHeight);
-
-
   glutInit(&argc,argv);
   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-  glutCreateWindow("does emscripten GLUT wrapper set window.title?, do I need a title? //TODO");
+  glutCreateWindow("");
   glutKeyboardFunc(processNormalKeys);
   glutKeyboardUpFunc(processNormalKeys);
   glutMouseFunc(processMouse);

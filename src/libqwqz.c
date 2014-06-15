@@ -80,9 +80,11 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
 
   glLinkProgram(e->m_Program);
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
-  msg = (char *)malloc(sizeof(char) * l);
-  glGetProgramInfoLog(e->m_Program, l, NULL, msg);
-  LOGV("program info: %s\n", msg);
+  if (l) {
+    msg = (char *)malloc(sizeof(char) * l);
+    glGetProgramInfoLog(e->m_Program, l, NULL, msg);
+    LOGV("program info: %s\n", msg);
+  }
 
   glUseProgram(e->m_Program);
   e->g_PositionAttribute = 0;
@@ -325,9 +327,11 @@ int qwqz_compile(GLuint type, const char *vsh) {
     glShaderSource(v, 1, &vs, NULL);
     glCompileShader(v);
     glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
-    msg = (char *)malloc(sizeof(char) * l);
-    glGetShaderInfoLog(v, l, NULL, msg);
-    LOGV("shader info: %s %s %d\n", vsh, msg, v);
+    if (l) {
+      msg = (char *)malloc(sizeof(char) * l);
+      glGetShaderInfoLog(v, l, NULL, msg);
+      LOGV("shader info: %s %s %d\n", vsh, msg, v);
+    }
 
     free(b);
     free(msg);
@@ -443,7 +447,6 @@ int qwqz_buffer_target_init(GLuint renderedTexture) {
 
   // Always check that our framebuffer is ok
   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    LOGV("doh\n");
     return 0;
   } else {
     return FramebufferName;
