@@ -77,13 +77,24 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
 
   char *msg = NULL;
   int l = 0;
+  int success = 0;
 
   glLinkProgram(e->m_Program);
+  glGetProgramiv(e->m_Program, GL_LINK_STATUS, &success);
   glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
-  if (l) {
+  if (!success && l) {
     msg = (char *)malloc(sizeof(char) * l);
     glGetProgramInfoLog(e->m_Program, l, NULL, msg);
     LOGV("program info: %s\n", msg);
+  }
+
+  glValidateProgram(e->m_Program);
+  glGetProgramiv(e->m_Program, GL_VALIDATE_STATUS, &success);
+  glGetProgramiv(e->m_Program, GL_INFO_LOG_LENGTH, &l);
+  if (!success && l) {
+    msg = (char *)malloc(sizeof(char) * l);
+    glGetProgramInfoLog(e->m_Program, l, NULL, msg);
+    LOGV("validate program info: %s\n", msg);
   }
 
   glUseProgram(e->m_Program);
@@ -318,6 +329,7 @@ void qwqz_batch_add(qwqz_batch ff, int _renderObject, float *vertices, float *co
 
 int qwqz_compile(GLuint type, const char *vsh) {
   int l = 0;
+  int success = 0;
   GLuint v = 0;
   char *b = qwqz_load(vsh);
   char *msg = NULL;
@@ -326,8 +338,9 @@ int qwqz_compile(GLuint type, const char *vsh) {
     v = glCreateShader(type);
     glShaderSource(v, 1, &vs, NULL);
     glCompileShader(v);
+    glGetShaderiv(v, GL_COMPILE_STATUS, &success);
     glGetShaderiv(v, GL_INFO_LOG_LENGTH, &l);
-    if (l) {
+    if (!success && l) {
       msg = (char *)malloc(sizeof(char) * l);
       glGetShaderInfoLog(v, l, NULL, msg);
       LOGV("shader info: %s %s %d\n", vsh, msg, v);
