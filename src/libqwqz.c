@@ -255,6 +255,8 @@ int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count) {
 
   glGenBuffers(ff->m_numInterleavedBuffers, ff->m_InterleavedBuffers);
   glBindBuffer(GL_ARRAY_BUFFER, ff->m_InterleavedBuffers[0]);
+  size_t interleaved_buffer_size = (ff->m_numSprites * ff->m_Stride * 4);
+  glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -302,8 +304,7 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff) {
   if (ff->m_numSpritesBatched > 0) {
     size_t interleaved_buffer_size = (ff->m_numSprites * ff->m_Stride * 4);
-    glBufferData(GL_ARRAY_BUFFER, interleaved_buffer_size, ff->m_Sprites, GL_DYNAMIC_DRAW);
-    //glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, interleaved_buffer_size, ff->m_Sprites);
     
     GLint total_elements = (ff->m_numSpritesBatched * 6);
     glDrawElements(GL_TRIANGLES, total_elements, GL_UNSIGNED_SHORT, (GLvoid*)((char*)NULL));

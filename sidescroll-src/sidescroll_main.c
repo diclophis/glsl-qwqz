@@ -118,7 +118,7 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 // libqwqz stuff
 static qwqz_handle qwqz_engine = NULL;
-static gRenderPhysicsDebug = 0;
+static int gRenderPhysicsDebug = 0;
 
 // chipmunk stuff
 static cpSpace *space;
@@ -128,7 +128,7 @@ static float gChipmunkGravity = -30.0;
 static float gChipmunkPlayerMass = 1.0;
 static float gChipmunkPlayerElasticity = 0.85;
 static float gChipmunkGroundElasticity = 0.33;
-static float gChipmunkPlayerSpeed = 1.0;
+static float gChipmunkPlayerSpeed = 75.0;
 
 // spine stuff
 static spSkeleton* bgsSkeleton;
@@ -144,7 +144,6 @@ static int num_bg = 0;
 static int bg_range = 0;
 static int bg_first = 0;
 static int bg_last = 0;
-static float spd_x = 75.0;
 
 ////protothreads
 //static struct pt pt1, pt2;
@@ -234,8 +233,8 @@ int impl_hit(int x, int y, int s) {
     cpBody *body = bodies[0];
     cpVect jump = cpv(0.0, gChipmunkJumpPower);
     cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
-    if (spd_x < 2000.0) {
-      spd_x += 100.0;
+    if (gChipmunkPlayerSpeed < 2000.0) {
+      gChipmunkPlayerSpeed += 100.0;
     }
   }
   
@@ -244,7 +243,7 @@ int impl_hit(int x, int y, int s) {
 
 int impl_draw(int b) {
   while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
-    float dx = ((-spd_x * qwqz_engine->m_Timers[0].step));
+    float dx = ((-gChipmunkPlayerSpeed * qwqz_engine->m_Timers[0].step));
 
     // physics tick
     cpSpaceStep(space, qwqz_engine->m_Timers[0].step * 10.0);
@@ -311,11 +310,11 @@ int impl_draw(int b) {
         cpVect bodyOff = cpBodyGetPosition(body);
         cpVect newVel = cpBodyGetVelocity(body);
         if (newVel.y < 0.0) {
-          spd_x -= 10.0;
+          gChipmunkPlayerSpeed -= 10.0;
         }
 
-        if (spd_x < 0.0) {
-          spd_x = 0.0;
+        if (gChipmunkPlayerSpeed < 0.0) {
+          gChipmunkPlayerSpeed = 0.0;
         }
 
         if (bodyOff.y < 48.0) {

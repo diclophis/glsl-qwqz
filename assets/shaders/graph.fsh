@@ -11,7 +11,7 @@ varying vec2 OutTexture;
 #define time iGlobalTime
 
 // ---- change scale here ----
-float scale = 1.0;
+float scale = 5.0;
 
 vec3 iMouse = vec3(0.0, 0.0, 0.0);
 
@@ -20,11 +20,11 @@ float function( vec2 v ) {
   float r = length( v );
   float t = atan( v.y, v.x );
   
-  return sin(r * 10.0) * 0.05;
+  //return sin(r * 10.0) * 0.05;
   //return sin( r + time * 0.7 ) - sin( t * t + time * 0.33 );
   //return sin( r + time ) - cos( t + time * 0.33 );
   //return sin( r + time ) - sin( sin( t * t ) + time * 0.33 );
-  //return mix(sin(t * time * 0.1), sin(time), sin(time) + 1.0);
+  return mix(sin(t * time * 0.1), sin(time), sin(time) + 1.0);
 }
 
 float value( vec2 p, float size ) {
@@ -50,16 +50,10 @@ float grid( vec2 p, float width ) {
 
 void main(void)
 {
-  float width = 0.0025; //1.0 / iResolution.x; //1.0 / max(iResolution.x, iResolution.y);
-  vec2 control = iResolution.xy * 0.5; //vec2(.0, 0.0); //mix( iResolution.xy * 0.5, iMouse.xy, 1.0 - step( iMouse.z, 0.0 ) );
+  float width = 0.0025;
+  vec2 control = iResolution.xy * 0.5;
   
   vec2 uv = ( gl_FragCoord.xy - control ) * width;
-  //if (iResolution.x > iResolution.y) {
-    //uv.x *= (iResolution.x / iResolution.y); //1.0 + sin(iGlobalTime);
-    //uv.y *= 1.0 + sin(iGlobalTime);
-  //} else {
-    //uv.x *= (iResolution.y / iResolution.x) * (iResolution.y / iResolution.x); //1.0 + sin(iGlobalTime);
-  //}
   
   float k_grid = grid( uv, width );
   float k_func = value( uv * scale, width * scale );

@@ -80,19 +80,10 @@ static GLuint g_LastRenderBuffer = -1;
     GLint backingWidth;
     GLint backingHeight;
     
-    //CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
-    
     //Bind framebuffers to the context and this layer
     [context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:eaglLayer];
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
-    
-    
-    //[self startGame:0];
-    //glGenRenderbuffersOES(1, &depthRenderbuffer);
-    //glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
-    //glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
-    //glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
     
     if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES) {
       NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
