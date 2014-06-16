@@ -7,7 +7,7 @@
     <style>
       html { margin: 0; padding: 0; height: 100%; }
       body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
-      canvas { padding: 0; margin: 0; display: block; width: 100%; height: 100%; }
+      canvas { padding: 0; margin: 0; background: magenta; }
     </style>
     <script>
       var queryString = (function(a) {
@@ -71,30 +71,30 @@
     </script>
   </head>
   <body>
+    <canvas id="glut-window" width="0" height="0"></canvas>
     <script>
       var Module = {
         noInitialRun: true,
-        print: (function() {
-          return function(text) {
-            console.log(text);
-          };
-        })(),
-        canvas: (function() {
-          var canvas = document.createElement("canvas");
-          document.body.appendChild(canvas);
-          return canvas; 
-        })(),
-        setStatus: function(text) {
-          console.log(text);
+        print: function(text) {
+          //console.log(text);
         },
+        printErr: function(text) {
+          //console.log(text);
+        },
+        setStatus: function(text) {
+          //console.log(text);
+        },
+        canvas: document.getElementById("glut-window"),
         totalDependencies: 0,
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
-          Module.setStatus(left ? 'Downloading: ' + (this.totalDependencies-left) + '/' + this.totalDependencies : 'All downloads complete.');
+          var percentComplete = parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0);
+          this.canvas.style.width = percentComplete + "%";
+          this.canvas.style.height = percentComplete + "%";
         },
         arguments: [
-          "assets/shaders/basic.vsh",
-          queryString["fragment"] || "assets/shaders/flower.fsh"
+          //"assets/shaders/basic.vsh",
+          //queryString["fragment"] || "assets/shaders/flower.fsh"
         ]
       };
     </script>
@@ -104,35 +104,35 @@
         var manifestUrl = "index.appcache";
         manifestFile.open("GET", manifestUrl, true);
         Module.addRunDependency("manifest");
+        var fetchFileFromManifest = function(line) {
+          if (line.indexOf("assets") == 0) {
+            var lastSlashIndex = line.lastIndexOf("/");
+            var dirName = line.substr(0, lastSlashIndex);
+            var baseName = line.substr(lastSlashIndex + 1, line.length);
+            var dataFile = new XMLHttpRequest();
+            dataFile.open("GET", line, true);
+            dataFile.responseType = "arraybuffer";
+            Module.addRunDependency(line);
+            dataFile.onload = function(e) {
+              var arrayBuffer = this.response;
+              var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
+              Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
+              Module.removeRunDependency(line);
+            }
+            dataFile.send(null);
+          }
+        };
         manifestFile.onload = function(e) {
           var assets = Module.FS_createFolder("/", "assets", true, true);
           var shaders = Module.FS_createFolder(assets, "shaders", true, true);
           var textures = Module.FS_createFolder(assets, "textures", true, true);
           var spine = Module.FS_createFolder(assets, "spine", true, true);
           var lines = this.response.split("\n");
-          for (i in lines) {
-            (function() {
-              var line = lines[i];
-              if (line.indexOf("assets") == 0) {
-                var lastSlashIndex = line.lastIndexOf("/");
-                var dirName = line.substr(0, lastSlashIndex);
-                var baseName = line.substr(lastSlashIndex + 1, line.length);
-                var dataFile = new XMLHttpRequest();
-                dataFile.open("GET", line, true);
-                dataFile.responseType = "arraybuffer";
-                Module.addRunDependency(line);
-                dataFile.onload = function(e) {
-                  var arrayBuffer = this.response;
-                  var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
-                  Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
-                  Module.removeRunDependency(line);
-                }
-                dataFile.send(null);
-              }
-            })();
+          for (var i=0; i<lines.length; i++) {
+            fetchFileFromManifest(lines[i]);
           }
           Module.removeRunDependency("manifest");
-        }
+        };
         manifestFile.send(null);
     </script>
   </body>
