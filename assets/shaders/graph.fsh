@@ -11,7 +11,7 @@ varying vec2 OutTexture;
 #define time iGlobalTime
 
 // ---- change scale here ----
-float scale = 5.0;
+float scale = 2.0;
 
 vec3 iMouse = vec3(0.0, 0.0, 0.0);
 
@@ -20,16 +20,19 @@ float function( vec2 v ) {
   float r = length( v );
   float t = atan( v.y, v.x );
   
-  //return sin(r * 10.0) * 0.05;
+  return (sin((iGlobalTime + r) * 1.0) * 1.0);
   //return sin( r + time * 0.7 ) - sin( t * t + time * 0.33 );
   //return sin( r + time ) - cos( t + time * 0.33 );
   //return sin( r + time ) - sin( sin( t * t ) + time * 0.33 );
-  return mix(sin(t * time * 0.1), sin(time), sin(time) + 1.0);
+  //return t; //sin((r) * 2.0); //mix(sin(t * time * 0.1), sin(time), sin(time) + 1.0);
+  //return sin(iGlobalTime);
+  //return 0.05;
 }
 
 float value( vec2 p, float size ) {
   float error = size;
-  return 1.0 / ( max( abs( function( p ) / error ) - 1.0, 0.0 ) + 1.0 );
+  float w = 1.0;
+  return w / ( max( abs( function( p ) / error ) - w, 0.0 ) + w );
 }
 
 float grid( vec2 p, float width ) {
@@ -50,12 +53,13 @@ float grid( vec2 p, float width ) {
 
 void main(void)
 {
-  float width = 0.0025;
+  float width = 0.0095;
   vec2 control = iResolution.xy * 0.5;
   
   vec2 uv = ( gl_FragCoord.xy - control ) * width;
   
   float k_grid = grid( uv, width );
+
   float k_func = value( uv * scale, width * scale );
   
   gl_FragColor = vec4( ( 1.0 - k_func ) * k_grid );
