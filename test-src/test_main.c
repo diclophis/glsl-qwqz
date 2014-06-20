@@ -21,7 +21,7 @@ int impl_draw(int b) {
 
   qwqz_bind_frame_buffer(qwqz_engine, b);
 
-  glClear(GL_COLOR_BUFFER_BIT);
+  //glClear(GL_COLOR_BUFFER_BIT);
 
   int max_shader_layers = 2;
   

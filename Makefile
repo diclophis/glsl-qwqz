@@ -52,7 +52,6 @@ emscripten-rocketeer:
 	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make install
 
 emscripten-test:
-	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make clean
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make
 	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make install
 
