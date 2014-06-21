@@ -94,7 +94,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
   f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/galaxy.fsh");
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/null.fsh");
+  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rings.fsh");
 
   if (v1 && f1) {
     // Create and link the shader program
