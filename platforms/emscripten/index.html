@@ -7,7 +7,16 @@
     <style>
       html { margin: 0; padding: 0; height: 100%; }
       body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
-      canvas { padding: 0; margin: 0; background: magenta; }
+      canvas {
+        width: 100%;
+        height: 100%;
+        background:
+          linear-gradient(0deg, #000000 2px, rgba(0,0,0,0) 2px),
+          linear-gradient(90deg, #000000 2px, rgba(0,0,0,0) 2px),
+          linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgb(134, 134, 134);
+        x-background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+      }
     </style>
     <script>
       var queryString = (function(a) {
@@ -86,11 +95,19 @@
         },
         canvas: document.getElementById("glut-window"),
         totalDependencies: 0,
+        percentComplete: 0,
+        leftCounter: 0,
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
-          var percentComplete = parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0);
-          this.canvas.style.width = percentComplete + "%";
-          this.canvas.style.height = percentComplete + "%";
+          this.percentComplete = parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0);
+          this.leftCounter = left;
+          //this.canvas.style.width = percentComplete + "%";
+          //this.canvas.style.height = percentComplete + "%";
+          console.log("t", this.totalDependencies, "l", left, "perc", this.percentComplete);
+          this.canvas.style.backgroundSize = "100px " + (102 - this.percentComplete) + "px, " + (102 - this.percentComplete) + "px 100px, 20px 20px, 20px 20px";
+          //if (this.percentComplete == 100) {
+          //debugger;
+          //}
         },
         arguments: [
           //"assets/shaders/basic.vsh",
@@ -117,7 +134,14 @@
               var arrayBuffer = this.response;
               var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
               Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
-              Module.removeRunDependency(line);
+              //if (Module.leftCounter == 1) {
+              //  setTimeout(function() {
+              //    Module.removeRunDependency(line);
+              //  }, 200);
+              //} else {
+                Module.removeRunDependency(line);
+              //}
+//console.log("p", Module.percentComplete, Module.leftCounter);
             }
             dataFile.send(null);
           }
