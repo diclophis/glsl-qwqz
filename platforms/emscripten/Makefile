@@ -62,6 +62,7 @@ install: $(hash_dir) build/raptor_island_$(impl).js
 	ln -nsf $(hash_dir) ~/emscripten.risingcode.com/public/latest-qwqz
 	ruby cache_manifest.rb ../../assets/spine ../../assets/shaders > ~/emscripten.risingcode.com/public/latest-qwqz/index.appcache
 	cp -R ../../assets ~/emscripten.risingcode.com/public/latest-qwqz
-	touch ~/emscripten.risingcode.com/public/latest-qwqz/favicon.ico
+	ln -nsf ~/favicon.ico ~/emscripten.risingcode.com/public/latest-qwqz/favicon.ico
+	ln -nsf ~/favicon.ico ~/emscripten.risingcode.com/public/favicon.ico
 	install -C index.html ~/emscripten.risingcode.com/public/latest-qwqz
 	install -C $(build)/raptor_island_$(impl).js ~/emscripten.risingcode.com/public/latest-qwqz/raptor_island.js

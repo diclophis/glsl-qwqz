@@ -15,7 +15,7 @@
           linear-gradient(90deg, #000000 2px, rgba(0,0,0,0) 2px),
           linear-gradient(0deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px),
           linear-gradient(90deg, rgba(255,255,255,0.298039) 1px, rgba(0,0,0,0) 1px), rgb(134, 134, 134);
-        x-background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+        background-size: 100px 104px, 104px 100px, 20px 20px, 20px 20px;
       }
     </style>
     <script>
@@ -28,6 +28,8 @@
         }
         return c
       })(window.location.search);
+
+      /*
       // Checking for an update. Always the first event fired in the sequence.
       window.applicationCache.addEventListener("checking", function(e) {
         window.clearTimeout(installerTimeout);
@@ -77,6 +79,7 @@
       if(window.applicationCache.status === window.applicationCache.UPDATEREADY) {  
         onUpdateReady();  
       }
+      */
     </script>
   </head>
   <body>
@@ -97,17 +100,12 @@
         totalDependencies: 0,
         percentComplete: 0,
         leftCounter: 0,
+        preDepCount: 0,
         monitorRunDependencies: function(left) {
           this.totalDependencies = Math.max(this.totalDependencies, left);
           this.percentComplete = parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0);
           this.leftCounter = left;
-          //this.canvas.style.width = percentComplete + "%";
-          //this.canvas.style.height = percentComplete + "%";
-          console.log("t", this.totalDependencies, "l", left, "perc", this.percentComplete);
           this.canvas.style.backgroundSize = "100px " + (102 - this.percentComplete) + "px, " + (102 - this.percentComplete) + "px 100px, 20px 20px, 20px 20px";
-          //if (this.percentComplete == 100) {
-          //debugger;
-          //}
         },
         arguments: [
           //"assets/shaders/basic.vsh",
@@ -117,10 +115,53 @@
     </script>
     <script src="raptor_island.js"></script>
     <script>
+      var FakeModule = {
+        useRealModule: false,
+        dependencies: [],
+        catchUpAndUseRealModule: function() {
+          //for (var i=0; i<this.dependencies.length; i++) {
+          //  Module.addRunDependency(this.dependencies[i]);
+          //}
+          this.useRealModule = true;
+        },
+        addRunDependency: function(name) {
+          if (this.useRealModule && typeof(Module.addRunDependency) === "function") {
+            Module.addRunDependency(name);
+          } else {
+            this.dependencies.push(name);
+          }
+        },
+        addToRealModuleEventually: function(line, dirName, baseName, byteArray) {
+          if (this.useRealModule && typeof(Module.FS_createDataFile) === "function" && typeof(Module.FS_createFolder) === "function") {
+            if (line != null) {
+              Module.removeRunDependency(line);
+              return Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
+            } else {
+              return Module.FS_createFolder(dirName, baseName, true, true);
+            }
+          } else {
+            console.log("deferred");
+            //setTimeout(this.addToRealModuleEventually, 1000, line, dirName, baseName, byteArray);
+          }
+        },
+        removeRunDependency: function(name) {
+          if (this.useRealModule && typeof(Module.removeRunDependency) === "function") {
+            Module.removeRunDependency(name);
+          } else {
+            //this.dependencies.push(name);
+          }
+        }
+      };
+      window.FakeModule = FakeModule;
+    </script>
+    <script>
+      FakeModule.catchUpAndUseRealModule();
+    </script>
+    <script>
         var manifestFile = new XMLHttpRequest();
         var manifestUrl = "index.appcache";
         manifestFile.open("GET", manifestUrl, true);
-        Module.addRunDependency("manifest");
+        FakeModule.addRunDependency("manifest");
         var fetchFileFromManifest = function(line) {
           if (line.indexOf("assets") == 0) {
             var lastSlashIndex = line.lastIndexOf("/");
@@ -129,33 +170,25 @@
             var dataFile = new XMLHttpRequest();
             dataFile.open("GET", line, true);
             dataFile.responseType = "arraybuffer";
-            Module.addRunDependency(line);
+            FakeModule.addRunDependency(line);
             dataFile.onload = function(e) {
               var arrayBuffer = this.response;
               var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
-              Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
-              //if (Module.leftCounter == 1) {
-              //  setTimeout(function() {
-              //    Module.removeRunDependency(line);
-              //  }, 200);
-              //} else {
-                Module.removeRunDependency(line);
-              //}
-//console.log("p", Module.percentComplete, Module.leftCounter);
+              FakeModule.addToRealModuleEventually(line, dirName, baseName, byteArray);
             }
             dataFile.send(null);
           }
         };
         manifestFile.onload = function(e) {
-          var assets = Module.FS_createFolder("/", "assets", true, true);
-          var shaders = Module.FS_createFolder(assets, "shaders", true, true);
-          var textures = Module.FS_createFolder(assets, "textures", true, true);
-          var spine = Module.FS_createFolder(assets, "spine", true, true);
+          var assets = FakeModule.addToRealModuleEventually(null, "/", "assets");
+          var shaders = FakeModule.addToRealModuleEventually(null, assets, "shaders");
+          var textures = FakeModule.addToRealModuleEventually(null, assets, "textures");
+          var spine = FakeModule.addToRealModuleEventually(null, assets, "spine");
           var lines = this.response.split("\n");
           for (var i=0; i<lines.length; i++) {
             fetchFileFromManifest(lines[i]);
           }
-          Module.removeRunDependency("manifest");
+          FakeModule.removeRunDependency("manifest");
         };
         manifestFile.send(null);
     </script>
