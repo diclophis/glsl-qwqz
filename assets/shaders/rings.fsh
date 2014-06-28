@@ -18,14 +18,17 @@ varying vec2 OutTexture;
 vec3 hsv(float h,float s,float v) {
 	return mix(vec3(1.),clamp((abs(fract(h+vec3(3.,2.,1.)/3.)*6.-3.)-1.),0.,1.),s)*v;
 }
+
 float circle(vec2 p, float r) {
 	return smoothstep(0.1, 0.0, abs(length(p)-r)); // try changing the 0.1 to 0.3
 }
+
 float r3 = sqrt(3.0);
+
 void main(void) {
 	vec2 uv = -1.0 + 2.0*gl_FragCoord.xy / iResolution.xy;
 	uv.x *= iResolution.x/iResolution.y;
-	uv *= 10.0;
+	uv *= (1.0 * (tan(sin(iGlobalTime * 0.25)) * 8.0) + 8.0);
 	float r = smoothstep(-0.7, 0.7, sin(iGlobalTime*1.57-length(uv)*0.1))+1.0;
 	vec2 rep = vec2(4.0,r3*4.0);
 	vec2 p1 = mod(uv, rep)-rep*0.5;
@@ -46,5 +49,5 @@ void main(void) {
 	c += circle(p6, r);
 	c += circle(p7, r);
 	c += circle(p8 , r);
-	gl_FragColor = vec4(hsv(r+0.7, 1.0, c), 1.0);
+	gl_FragColor = vec4(hsv(r, 1.0, c), 1.0);
 }
