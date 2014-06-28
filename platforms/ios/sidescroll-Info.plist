@@ -30,8 +30,6 @@
 	<string>Application</string>
 	<key>NSMainNibFile~ipad</key>
 	<string>Application</string>
-	<key>UIApplicationExitsOnSuspend</key>
-	<true/>
 	<key>UIInterfaceOrientation</key>
 	<string>UIInterfaceOrientationPortrait</string>
 	<key>UIStatusBarHidden</key>
