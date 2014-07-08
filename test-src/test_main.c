@@ -23,7 +23,7 @@ int impl_draw(int b) {
 
   //glClear(GL_COLOR_BUFFER_BIT);
 
-  int max_shader_layers = 2;
+  int max_shader_layers = 1;
   
   for (int i=0; i<max_shader_layers; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
@@ -93,8 +93,8 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 2);
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
-  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/galaxy.fsh");
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rings.fsh");
+  f1 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rings.fsh");
+  //f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rings.fsh.out");
 
   if (v1 && f1) {
     // Create and link the shader program
