@@ -447,7 +447,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   //spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
 
   v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh.out");
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh.out");
+  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
 
   if (v && f2) {
     program = glCreateProgram();

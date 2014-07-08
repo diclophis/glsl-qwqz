@@ -49,5 +49,7 @@ void main(void) {
 	c += circle(p6, r);
 	c += circle(p7, r);
 	c += circle(p8 , r);
+  //c *= (0.5 * mod(gl_FragCoord.y, 4.0));
+
 	gl_FragColor = vec4(hsv(r, 1.0, c), 1.0);
 }
