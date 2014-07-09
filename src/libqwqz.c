@@ -493,7 +493,7 @@ int qwqz_tick_timer(qwqz_timer timer) {
   timer->step += timer->accum;
   
   // calculate how many frames will have passed on the next vsync
-  int frameRate = 120;
+  int frameRate = 60;
   int frameCount = (int)(timer->step * frameRate + 1);
 
   // if less then a full frame, increase delta to cover the extra

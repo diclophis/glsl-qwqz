@@ -245,6 +245,7 @@ int impl_draw(int b) {
   //while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
   {
+    LOGV("%f\n", qwqz_engine->m_Timers[0].step);
     float dx = ((-gChipmunkPlayerSpeed * qwqz_engine->m_Timers[0].step));
 
     // physics tick
