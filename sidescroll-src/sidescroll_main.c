@@ -242,10 +242,8 @@ int impl_hit(int x, int y, int s) {
 }
 
 int impl_draw(int b) {
-  //while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
   {
-    LOGV("%f\n", qwqz_engine->m_Timers[0].step);
     float dx = ((-gChipmunkPlayerSpeed * qwqz_engine->m_Timers[0].step));
 
     // physics tick
@@ -257,7 +255,7 @@ int impl_draw(int b) {
   }
 
   if (bgsScroll[bg_first] <= -((float)(bg_range / 2) * bgsSkeleton->data->bones[1]->length * 4.0)) {
-    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 50.0;
+    bgsScroll[bg_first] = bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 0.0;
     bg_first++;
     bg_last++;
     if (bg_first > (bg_range - 1)) {
@@ -328,9 +326,13 @@ int impl_draw(int b) {
           //  float velocity_scale = velocity_limit / velocity_mag;
           //  newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
           //}
-          cpBodySetVelocity(body, cpv(0.0, 100.0));
-          cpBodySetPosition(body, cpv(bodyOff.x, 100.0));
+          //cpBodySetVelocity(body, cpv(0.0, -newVel.y));
+          //cpBodySetPosition(body, cpv(bodyOff.x, 100.0));
         }
+
+        bodyOff.x = 0.0;
+
+        cpBodySetPosition(body, bodyOff); //cpv(0.0, bodyOff.y));
 
         float r = cpBodyGetAngle(body);
         ra->rotation = RADIANS_TO_DEGREES(r);
@@ -398,9 +400,9 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   space = cpSpaceNew();
   cpSpaceSetGravity(space, cpv(0, gChipmunkGravity));
-  //cpSpaceSetIterations(space, 128);
-  //cpSpaceSetDamping(space, 1.00);
-  //cpSpaceSetCollisionSlop(space, 0.00001);
+  cpSpaceSetIterations(space, 1);
+  cpSpaceSetDamping(space, 0.99);
+  cpSpaceSetCollisionSlop(space, 1.0);
 
   cpBody *body = 0;
   cpBody *staticBody = cpSpaceGetStaticBody(space);
