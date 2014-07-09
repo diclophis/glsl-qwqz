@@ -81,116 +81,97 @@
       }
       */
     </script>
-  </head>
-  <body>
-    <canvas id="glut-window" width="0" height="0"></canvas>
     <script>
-      var Module = {
-        noInitialRun: true,
-        print: function(text) {
-          //console.log(text);
-        },
-        printErr: function(text) {
-          //console.log(text);
-        },
-        setStatus: function(text) {
-          //console.log(text);
-        },
-        canvas: document.getElementById("glut-window"),
-        totalDependencies: 0,
-        percentComplete: 0,
-        leftCounter: 0,
-        preDepCount: 0,
-        monitorRunDependencies: function(left) {
-          this.totalDependencies = Math.max(this.totalDependencies, left);
-          this.percentComplete = parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0);
-          this.leftCounter = left;
-          this.canvas.style.backgroundSize = "100px " + (102 - this.percentComplete) + "px, " + (102 - this.percentComplete) + "px 100px, 20px 20px, 20px 20px";
-        },
-        arguments: [
-          //"assets/shaders/basic.vsh",
-          //queryString["fragment"] || "assets/shaders/flower.fsh"
-        ]
-      };
-    </script>
-    <script src="raptor_island.js"></script>
-    <script>
-      var FakeModule = {
-        useRealModule: false,
-        dependencies: [],
-        catchUpAndUseRealModule: function() {
-          //for (var i=0; i<this.dependencies.length; i++) {
-          //  Module.addRunDependency(this.dependencies[i]);
-          //}
-          this.useRealModule = true;
-        },
-        addRunDependency: function(name) {
-          if (this.useRealModule && typeof(Module.addRunDependency) === "function") {
-            Module.addRunDependency(name);
-          } else {
-            this.dependencies.push(name);
-          }
-        },
-        addToRealModuleEventually: function(line, dirName, baseName, byteArray) {
-          if (this.useRealModule && typeof(Module.FS_createDataFile) === "function" && typeof(Module.FS_createFolder) === "function") {
+      window.onload = function() {
+        window.Module = {
+          noInitialRun: true,
+          print: function(text) {
+            //console.log(text);
+          },
+          printErr: function(text) {
+            //console.log(text);
+          },
+          setStatus: function(text) {
+            //console.log(text);
+          },
+          canvas: document.getElementById("glut-window"),
+          totalDependencies: 0,
+          percentComplete: 0,
+          leftCounter: 0,
+          preDepCount: 0,
+          depCounter: 0,
+          monitorRunDependencies: function(left) {
+            this.totalDependencies = Math.max(this.totalDependencies, left);
+            this.percentComplete = (parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0));
+            if (this.percentComplete > 100) { this.percentComplete = 100; }
+            this.leftCounter = left;
+            this.canvas.style.backgroundSize = "100px " + (102 - this.percentComplete) + "px, " + (102 - this.percentComplete) + "px 100px, 20px 20px, 20px 20px";
+          },
+          addToRealModuleEventually: function(line, dirName, baseName, byteArray) {
             if (line != null) {
-              Module.removeRunDependency(line);
+              var del = (Module.depCounter++ * 17 * 2);
+              setTimeout(function() {
+                Module.removeRunDependency(line);
+              }, del);
+
               return Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
             } else {
               return Module.FS_createFolder(dirName, baseName, true, true);
             }
-          } else {
-            console.log("deferred");
-            //setTimeout(this.addToRealModuleEventually, 1000, line, dirName, baseName, byteArray);
-          }
-        },
-        removeRunDependency: function(name) {
-          if (this.useRealModule && typeof(Module.removeRunDependency) === "function") {
-            Module.removeRunDependency(name);
-          } else {
-            //this.dependencies.push(name);
-          }
-        }
-      };
-      window.FakeModule = FakeModule;
-    </script>
-    <script>
-      FakeModule.catchUpAndUseRealModule();
-    </script>
-    <script>
-        var manifestFile = new XMLHttpRequest();
-        var manifestUrl = "index.appcache";
-        manifestFile.open("GET", manifestUrl, true);
-        FakeModule.addRunDependency("manifest");
-        var fetchFileFromManifest = function(line) {
-          if (line.indexOf("assets") == 0) {
-            var lastSlashIndex = line.lastIndexOf("/");
-            var dirName = line.substr(0, lastSlashIndex);
-            var baseName = line.substr(lastSlashIndex + 1, line.length);
-            var dataFile = new XMLHttpRequest();
-            dataFile.open("GET", line, true);
-            dataFile.responseType = "arraybuffer";
-            FakeModule.addRunDependency(line);
-            dataFile.onload = function(e) {
-              var arrayBuffer = this.response;
-              var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
-              FakeModule.addToRealModuleEventually(line, dirName, baseName, byteArray);
+          },
+          arguments: [
+            //"assets/shaders/basic.vsh",
+            //queryString["fragment"] || "assets/shaders/flower.fsh"
+          ]
+        };
+
+        var raptorUrl = "raptor_island.js";
+        var script = document.createElement("script");
+        script.src = (raptorUrl);
+
+        script.onload = function(e) {
+          var FakeModule = window.Module;
+          var manifestFile = new XMLHttpRequest();
+          var manifestUrl = "index.appcache";
+          manifestFile.open("GET", manifestUrl, true);
+          FakeModule.addRunDependency("manifest");
+          var fetchFileFromManifest = function(line) {
+            if (line.indexOf("assets") == 0) {
+              var lastSlashIndex = line.lastIndexOf("/");
+              var dirName = line.substr(0, lastSlashIndex);
+              var baseName = line.substr(lastSlashIndex + 1, line.length);
+              var dataFile = new XMLHttpRequest();
+              dataFile.open("GET", line, true);
+              dataFile.responseType = "arraybuffer";
+              FakeModule.addRunDependency(line);
+              dataFile.onload = function(e) {
+                var arrayBuffer = this.response;
+                var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
+                FakeModule.addToRealModuleEventually(line, dirName, baseName, byteArray);
+              }
+              dataFile.send(null);
             }
-            dataFile.send(null);
-          }
+          };
+          manifestFile.onload = function(e) {
+            var assets = FakeModule.addToRealModuleEventually(null, "/", "assets");
+            var shaders = FakeModule.addToRealModuleEventually(null, assets, "shaders");
+            var textures = FakeModule.addToRealModuleEventually(null, assets, "textures");
+            var spine = FakeModule.addToRealModuleEventually(null, assets, "spine");
+            var lines = this.response.split("\n");
+            for (var i=0; i<lines.length; i++) {
+              fetchFileFromManifest(lines[i]);
+            }
+            FakeModule.removeRunDependency("manifest");
+          };
+          manifestFile.send(null);
         };
-        manifestFile.onload = function(e) {
-          var assets = FakeModule.addToRealModuleEventually(null, "/", "assets");
-          var shaders = FakeModule.addToRealModuleEventually(null, assets, "shaders");
-          var textures = FakeModule.addToRealModuleEventually(null, assets, "textures");
-          var spine = FakeModule.addToRealModuleEventually(null, assets, "spine");
-          var lines = this.response.split("\n");
-          for (var i=0; i<lines.length; i++) {
-            fetchFileFromManifest(lines[i]);
-          }
-          FakeModule.removeRunDependency("manifest");
-        };
-        manifestFile.send(null);
+        document.body.appendChild(script);
+      };
+    </script>
+  </head>
+  <body>
+    <canvas id="glut-window" width="0" height="0"></canvas>
+    <script>
     </script>
   </body>
 </html>
