@@ -123,8 +123,8 @@ static int gRenderPhysicsDebug = 0;
 // chipmunk stuff
 static cpSpace *space;
 static cpBody **bodies;
-static float gChipmunkJumpPower = 60.0;
-static float gChipmunkGravity = -30.0;
+static float gChipmunkJumpPower = 250.0;
+static float gChipmunkGravity = -1200.0;
 static float gChipmunkPlayerMass = 1.0;
 static float gChipmunkPlayerElasticity = 0.85;
 static float gChipmunkGroundElasticity = 0.33;
@@ -242,11 +242,13 @@ int impl_hit(int x, int y, int s) {
 }
 
 int impl_draw(int b) {
-  while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
+  //while(qwqz_tick_timer(&qwqz_engine->m_Timers[0])) {
+  qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
+  {
     float dx = ((-gChipmunkPlayerSpeed * qwqz_engine->m_Timers[0].step));
 
     // physics tick
-    cpSpaceStep(space, qwqz_engine->m_Timers[0].step * 10.0);
+    cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
     // background tick
     for (int a=0; a<bg_range; a++) {
       bgsScroll[a] += dx;
@@ -394,12 +396,12 @@ int impl_main(int argc, char** argv, GLuint b) {
   }
 
   space = cpSpaceNew();
-  //cpSpaceSetIterations(space, 8);
   cpSpaceSetGravity(space, cpv(0, gChipmunkGravity));
+  //cpSpaceSetIterations(space, 128);
   //cpSpaceSetDamping(space, 1.00);
-  //cpSpaceSetCollisionSlop(space, 0.1);
+  //cpSpaceSetCollisionSlop(space, 0.00001);
 
-  cpBody *body;
+  cpBody *body = 0;
   cpBody *staticBody = cpSpaceGetStaticBody(space);
 
   //foor
@@ -525,4 +527,3 @@ int impl_main(int argc, char** argv, GLuint b) {
   
   return 0;
 }
-

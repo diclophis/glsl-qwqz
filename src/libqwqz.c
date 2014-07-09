@@ -482,37 +482,33 @@ int qwqz_timer_init(qwqz_timer timer) {
 
 
 int qwqz_tick_timer(qwqz_timer timer) {
-//  float inc = 0.0355;
-//  if (timer->accum > inc) {
-//    timer->m_SimulationTime += inc;
-//    timer->accum -= inc; 
-//    if (timer->accum > 0.0) {
-//      return 1;
-//    } else {
-//      return 0;
-//    }
-//  } else {
+  struct timeval tim;
+  gettimeofday(&tim, NULL);
+  timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
+  timer->step = timer->t2 - timer->t1;
+  timer->t1 = timer->t2;
+  timer->m_SimulationTime += timer->step;
+
+  // add in whatever time we currently have saved in the buffer
+  timer->step += timer->accum;
   
-    struct timeval tim;
-    gettimeofday(&tim, NULL);
-    timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
-    float step = timer->t2 - timer->t1;
-    //if (step > 0.016) {
-    //  step = 0.016;
-    //}
-    timer->t1 = timer->t2;
-    timer->step = step;
-    timer->m_SimulationTime += step;
-    int r = 0;
-    if (timer->accum == 0.0) {
-      timer->accum = step;
-      r = 1;
-    } else {
-      timer->accum = 0.0;
-    }
-    return r;
-  
-//  }
+  // calculate how many frames will have passed on the next vsync
+  int frameRate = 120;
+  int frameCount = (int)(timer->step * frameRate + 1);
+
+  // if less then a full frame, increase delta to cover the extra
+  if (frameCount <= 0) { frameCount = 1; }
+
+  // save off the delta, we will need it later to update the buffer
+  float oldDelta = timer->step;
+
+  // recalculate delta to be an even frame rate multiple
+  timer->step = (float)frameCount / (float)frameRate;
+
+  // update delta buffer so we keep the same time on average
+  timer->accum = oldDelta - timer->step;
+
+  return 0;
 }
 
 
