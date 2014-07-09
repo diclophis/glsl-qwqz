@@ -10,11 +10,11 @@ varying vec2 OutTexture;
 
 void main( void ) {
 
-vec2 position = gl_FragCoord.xy / iResolution.y * 2.0 - vec2(iResolution.x / iResolution.y, 1.0);
+vec2 position = gl_FragCoord.xy / iResolution.y * 3.0 - vec2(iResolution.x / iResolution.y, 1.0);
 
 vec3 col = vec3(0, 0, 0);
 
-  float time = iGlobalTime * 0.1;
+  float time = iGlobalTime * 0.01;
 
 for (int i = 0; i < 1; ++i) {
 float mt = mod(time, 999.0) * 0.3 * (float(i) * 0.3);

@@ -58,7 +58,7 @@ void main(void)
   
   vec2 uv = ( gl_FragCoord.xy - control ) * width;
   
-  float k_grid = grid( uv, width );
+  float k_grid = grid( uv, width ); // 1.0
 
   float k_func = value( uv * scale, width * scale );
   
