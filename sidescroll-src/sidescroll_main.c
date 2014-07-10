@@ -451,7 +451,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   bgsState = spAnimationState_create(bgsStateData);
   //spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
 
-  v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh.out");
+  v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh");
   f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/filledquad.fsh");
 
   if (v && f2) {
