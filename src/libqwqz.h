@@ -80,7 +80,7 @@ void ortho(GLfloat *m, GLfloat left, GLfloat right, GLfloat bottom, GLfloat top,
 
 void qwqz_checkgl(const char *s);
 qwqz_handle qwqz_create(void);
-char *qwqz_load(const char *path);
+char *qwqz_load(const char *path, unsigned int *len);
 int qwqz_draw(qwqz_handle e);
 int qwqz_resize(qwqz_handle e, int width, int height, int ew, int eh, int u);
 int qwqz_batch_init(qwqz_batch ff, qwqz_linkage e, int count);

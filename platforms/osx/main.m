@@ -104,7 +104,6 @@ void processNormalKeys(unsigned char key, int x, int y) {
   }
 }
 
-
 int main(int argc, char** argv) {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 

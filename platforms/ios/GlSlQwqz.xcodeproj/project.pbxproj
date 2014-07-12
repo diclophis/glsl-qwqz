@@ -65,6 +65,50 @@
 		C24BB09E18B7431300DD1FFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		C24BB09F18B7431300DD1FFE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
 		C24BB0AD18B743AE00DD1FFE /* test_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C24BB0AB18B743AE00DD1FFE /* test_main.c */; };
+		C29154221971263400ACB00E /* openal.c in Sources */ = {isa = PBXBuildFile; fileRef = C29154211971263400ACB00E /* openal.c */; };
+		C29154231971263400ACB00E /* openal.c in Sources */ = {isa = PBXBuildFile; fileRef = C29154211971263400ACB00E /* openal.c */; };
+		C29154241971263400ACB00E /* openal.c in Sources */ = {isa = PBXBuildFile; fileRef = C29154211971263400ACB00E /* openal.c */; };
+		C29154261971265200ACB00E /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C29154251971265200ACB00E /* OpenAL.framework */; };
+		C291543A1971269A00ACB00E /* fastmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154281971269A00ACB00E /* fastmix.cpp */; };
+		C291543B1971269A00ACB00E /* fastmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154281971269A00ACB00E /* fastmix.cpp */; };
+		C291543C1971269A00ACB00E /* fastmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154281971269A00ACB00E /* fastmix.cpp */; };
+		C291543D1971269A00ACB00E /* load_it.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542A1971269A00ACB00E /* load_it.cpp */; };
+		C291543E1971269A00ACB00E /* load_it.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542A1971269A00ACB00E /* load_it.cpp */; };
+		C291543F1971269A00ACB00E /* load_it.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542A1971269A00ACB00E /* load_it.cpp */; };
+		C29154401971269A00ACB00E /* load_mod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542B1971269A00ACB00E /* load_mod.cpp */; };
+		C29154411971269A00ACB00E /* load_mod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542B1971269A00ACB00E /* load_mod.cpp */; };
+		C29154421971269A00ACB00E /* load_mod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542B1971269A00ACB00E /* load_mod.cpp */; };
+		C29154431971269A00ACB00E /* load_s3m.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542C1971269A00ACB00E /* load_s3m.cpp */; };
+		C29154441971269A00ACB00E /* load_s3m.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542C1971269A00ACB00E /* load_s3m.cpp */; };
+		C29154451971269A00ACB00E /* load_s3m.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542C1971269A00ACB00E /* load_s3m.cpp */; };
+		C29154461971269A00ACB00E /* load_wav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542D1971269A00ACB00E /* load_wav.cpp */; };
+		C29154471971269A00ACB00E /* load_wav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542D1971269A00ACB00E /* load_wav.cpp */; };
+		C29154481971269A00ACB00E /* load_wav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542D1971269A00ACB00E /* load_wav.cpp */; };
+		C29154491971269A00ACB00E /* load_xm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542E1971269A00ACB00E /* load_xm.cpp */; };
+		C291544A1971269A00ACB00E /* load_xm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542E1971269A00ACB00E /* load_xm.cpp */; };
+		C291544B1971269A00ACB00E /* load_xm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542E1971269A00ACB00E /* load_xm.cpp */; };
+		C291544C1971269A00ACB00E /* mmcmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542F1971269A00ACB00E /* mmcmp.cpp */; };
+		C291544D1971269A00ACB00E /* mmcmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542F1971269A00ACB00E /* mmcmp.cpp */; };
+		C291544E1971269A00ACB00E /* mmcmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C291542F1971269A00ACB00E /* mmcmp.cpp */; };
+		C291544F1971269A00ACB00E /* modplug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154301971269A00ACB00E /* modplug.cpp */; };
+		C29154501971269A00ACB00E /* modplug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154301971269A00ACB00E /* modplug.cpp */; };
+		C29154511971269A00ACB00E /* modplug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154301971269A00ACB00E /* modplug.cpp */; };
+		C29154521971269A00ACB00E /* snd_dsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154321971269A00ACB00E /* snd_dsp.cpp */; };
+		C29154531971269A00ACB00E /* snd_dsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154321971269A00ACB00E /* snd_dsp.cpp */; };
+		C29154541971269A00ACB00E /* snd_dsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154321971269A00ACB00E /* snd_dsp.cpp */; };
+		C29154551971269A00ACB00E /* snd_flt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154331971269A00ACB00E /* snd_flt.cpp */; };
+		C29154561971269A00ACB00E /* snd_flt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154331971269A00ACB00E /* snd_flt.cpp */; };
+		C29154571971269A00ACB00E /* snd_flt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154331971269A00ACB00E /* snd_flt.cpp */; };
+		C29154581971269A00ACB00E /* snd_fx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154341971269A00ACB00E /* snd_fx.cpp */; };
+		C29154591971269A00ACB00E /* snd_fx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154341971269A00ACB00E /* snd_fx.cpp */; };
+		C291545A1971269A00ACB00E /* snd_fx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154341971269A00ACB00E /* snd_fx.cpp */; };
+		C291545B1971269A00ACB00E /* sndfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154351971269A00ACB00E /* sndfile.cpp */; };
+		C291545C1971269A00ACB00E /* sndfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154351971269A00ACB00E /* sndfile.cpp */; };
+		C291545D1971269A00ACB00E /* sndfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154351971269A00ACB00E /* sndfile.cpp */; };
+		C291545E1971269A00ACB00E /* sndmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154371971269A00ACB00E /* sndmix.cpp */; };
+		C291545F1971269A00ACB00E /* sndmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154371971269A00ACB00E /* sndmix.cpp */; };
+		C29154601971269A00ACB00E /* sndmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154371971269A00ACB00E /* sndmix.cpp */; };
+		C29154611971341100ACB00E /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C29154251971265200ACB00E /* OpenAL.framework */; };
 		C29A84F11946E37A002AB893 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29A84F01946E37A002AB893 /* Application.xib */; };
 		C29A84F21946E37A002AB893 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29A84F01946E37A002AB893 /* Application.xib */; };
 		C29A84F31946E37A002AB893 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = C29A84F01946E37A002AB893 /* Application.xib */; };
@@ -237,6 +281,26 @@
 		C24BB0A618B7431300DD1FFE /* test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "test-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/test-Info.plist"; sourceTree = "<absolute>"; };
 		C24BB0AB18B743AE00DD1FFE /* test_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_main.c; sourceTree = "<group>"; };
 		C24BB0AC18B743AE00DD1FFE /* test_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test_main.h; sourceTree = "<group>"; };
+		C29154211971263400ACB00E /* openal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = openal.c; sourceTree = "<group>"; };
+		C29154251971265200ACB00E /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		C29154281971269A00ACB00E /* fastmix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fastmix.cpp; sourceTree = "<group>"; };
+		C29154291971269A00ACB00E /* it_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = it_defs.h; sourceTree = "<group>"; };
+		C291542A1971269A00ACB00E /* load_it.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = load_it.cpp; sourceTree = "<group>"; };
+		C291542B1971269A00ACB00E /* load_mod.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = load_mod.cpp; sourceTree = "<group>"; };
+		C291542C1971269A00ACB00E /* load_s3m.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = load_s3m.cpp; sourceTree = "<group>"; };
+		C291542D1971269A00ACB00E /* load_wav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = load_wav.cpp; sourceTree = "<group>"; };
+		C291542E1971269A00ACB00E /* load_xm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = load_xm.cpp; sourceTree = "<group>"; };
+		C291542F1971269A00ACB00E /* mmcmp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mmcmp.cpp; sourceTree = "<group>"; };
+		C29154301971269A00ACB00E /* modplug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modplug.cpp; sourceTree = "<group>"; };
+		C29154311971269A00ACB00E /* modplug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modplug.h; sourceTree = "<group>"; };
+		C29154321971269A00ACB00E /* snd_dsp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snd_dsp.cpp; sourceTree = "<group>"; };
+		C29154331971269A00ACB00E /* snd_flt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snd_flt.cpp; sourceTree = "<group>"; };
+		C29154341971269A00ACB00E /* snd_fx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snd_fx.cpp; sourceTree = "<group>"; };
+		C29154351971269A00ACB00E /* sndfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sndfile.cpp; sourceTree = "<group>"; };
+		C29154361971269A00ACB00E /* sndfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sndfile.h; sourceTree = "<group>"; };
+		C29154371971269A00ACB00E /* sndmix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sndmix.cpp; sourceTree = "<group>"; };
+		C29154381971269A00ACB00E /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
+		C29154391971269A00ACB00E /* tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tables.h; sourceTree = "<group>"; };
 		C29A84F01946E37A002AB893 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
 		C2A83574188B2EB5008021D5 /* rocketeer_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rocketeer_main.c; sourceTree = "<group>"; };
 		C2A83575188B2EB5008021D5 /* rocketeer_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rocketeer_main.h; sourceTree = "<group>"; };
@@ -423,6 +487,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C29154261971265200ACB00E /* OpenAL.framework in Frameworks */,
 				C24BB09A18B7431300DD1FFE /* MediaPlayer.framework in Frameworks */,
 				C24BB09B18B7431300DD1FFE /* OpenGLES.framework in Frameworks */,
 				C24BB09C18B7431300DD1FFE /* QuartzCore.framework in Frameworks */,
@@ -436,6 +501,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C29154611971341100ACB00E /* OpenAL.framework in Frameworks */,
 				C2B47BA418ADE4C900176881 /* MediaPlayer.framework in Frameworks */,
 				C2B47BA518ADE4C900176881 /* OpenGLES.framework in Frameworks */,
 				C2B47BA618ADE4C900176881 /* QuartzCore.framework in Frameworks */,
@@ -474,6 +540,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C29154251971265200ACB00E /* OpenAL.framework */,
 				FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */,
 				FCFECB6311EC0D2000BBBE2A /* OpenGLES.framework */,
 				FCFECB6B11EC0D5200BBBE2A /* QuartzCore.framework */,
@@ -494,6 +561,31 @@
 			path = "../../test-src";
 			sourceTree = "<group>";
 		};
+		C29154271971269A00ACB00E /* libmodplug */ = {
+			isa = PBXGroup;
+			children = (
+				C29154281971269A00ACB00E /* fastmix.cpp */,
+				C29154291971269A00ACB00E /* it_defs.h */,
+				C291542A1971269A00ACB00E /* load_it.cpp */,
+				C291542B1971269A00ACB00E /* load_mod.cpp */,
+				C291542C1971269A00ACB00E /* load_s3m.cpp */,
+				C291542D1971269A00ACB00E /* load_wav.cpp */,
+				C291542E1971269A00ACB00E /* load_xm.cpp */,
+				C291542F1971269A00ACB00E /* mmcmp.cpp */,
+				C29154301971269A00ACB00E /* modplug.cpp */,
+				C29154311971269A00ACB00E /* modplug.h */,
+				C29154321971269A00ACB00E /* snd_dsp.cpp */,
+				C29154331971269A00ACB00E /* snd_flt.cpp */,
+				C29154341971269A00ACB00E /* snd_fx.cpp */,
+				C29154351971269A00ACB00E /* sndfile.cpp */,
+				C29154361971269A00ACB00E /* sndfile.h */,
+				C29154371971269A00ACB00E /* sndmix.cpp */,
+				C29154381971269A00ACB00E /* stdafx.h */,
+				C29154391971269A00ACB00E /* tables.h */,
+			);
+			path = libmodplug;
+			sourceTree = "<group>";
+		};
 		C2A83573188B2EB5008021D5 /* rocketeer-src */ = {
 			isa = PBXGroup;
 			children = (
@@ -507,6 +599,7 @@
 		C2A83576188B2EB5008021D5 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				C29154211971263400ACB00E /* openal.c */,
 				C2A83577188B2EB5008021D5 /* contrib */,
 				C2A835FF188B2EB5008021D5 /* impl_main.h */,
 				C2A83600188B2EB5008021D5 /* libqwqz.c */,
@@ -524,6 +617,7 @@
 		C2A83577188B2EB5008021D5 /* contrib */ = {
 			isa = PBXGroup;
 			children = (
+				C29154271971269A00ACB00E /* libmodplug */,
 				C2A83578188B2EB5008021D5 /* chipmunk */,
 				C2A835B4188B2EB5008021D5 /* spine */,
 				C2A835E2188B2EB5008021D5 /* unzip */,
@@ -899,7 +993,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C291543A1971269A00ACB00E /* fastmix.cpp in Sources */,
 				FC14176B1285413100166578 /* EAGLView.mm in Sources */,
+				C291544C1971269A00ACB00E /* mmcmp.cpp in Sources */,
 				FC14176C1285413100166578 /* GlSlQwqzAppDelegate.m in Sources */,
 				FC14176E1285413100166578 /* main.mm in Sources */,
 				C2A83607188B2EB5008021D5 /* rocketeer_main.c in Sources */,
@@ -913,6 +1009,7 @@
 				C2A83610188B2EB5008021D5 /* cpCollision.c in Sources */,
 				C2A83611188B2EB5008021D5 /* cpConstraint.c in Sources */,
 				C2A83612188B2EB5008021D5 /* cpDampedRotarySpring.c in Sources */,
+				C29154491971269A00ACB00E /* load_xm.cpp in Sources */,
 				C2A83613188B2EB5008021D5 /* cpDampedSpring.c in Sources */,
 				C2A83614188B2EB5008021D5 /* cpGearJoint.c in Sources */,
 				C2A83615188B2EB5008021D5 /* cpGrooveJoint.c in Sources */,
@@ -922,20 +1019,26 @@
 				C2A83619188B2EB5008021D5 /* cpPolyShape.c in Sources */,
 				C2A8361A188B2EB5008021D5 /* cpRatchetJoint.c in Sources */,
 				C2A8361B188B2EB5008021D5 /* cpRotaryLimitJoint.c in Sources */,
+				C291545E1971269A00ACB00E /* sndmix.cpp in Sources */,
 				C2A8361C188B2EB5008021D5 /* cpShape.c in Sources */,
 				C2A8361D188B2EB5008021D5 /* cpSimpleMotor.c in Sources */,
+				C291543D1971269A00ACB00E /* load_it.cpp in Sources */,
 				C2A8361E188B2EB5008021D5 /* cpSlideJoint.c in Sources */,
+				C29154401971269A00ACB00E /* load_mod.cpp in Sources */,
 				C2A8361F188B2EB5008021D5 /* cpSpace.c in Sources */,
+				C29154461971269A00ACB00E /* load_wav.cpp in Sources */,
 				C2A83620188B2EB5008021D5 /* cpSpaceComponent.c in Sources */,
 				C2A83621188B2EB5008021D5 /* cpSpaceDebug.c in Sources */,
 				C2A83622188B2EB5008021D5 /* cpSpaceHash.c in Sources */,
 				C2A83623188B2EB5008021D5 /* cpSpaceQuery.c in Sources */,
+				C291545B1971269A00ACB00E /* sndfile.cpp in Sources */,
 				C2A83624188B2EB5008021D5 /* cpSpaceStep.c in Sources */,
 				C2A83625188B2EB5008021D5 /* cpSpatialIndex.c in Sources */,
 				C2A83626188B2EB5008021D5 /* cpSweep1D.c in Sources */,
 				C2A83627188B2EB5008021D5 /* Animation.c in Sources */,
 				C2A83628188B2EB5008021D5 /* AnimationState.c in Sources */,
 				C2A83629188B2EB5008021D5 /* AnimationStateData.c in Sources */,
+				C29154581971269A00ACB00E /* snd_fx.cpp in Sources */,
 				C2A8362A188B2EB5008021D5 /* Atlas.c in Sources */,
 				C2A8362B188B2EB5008021D5 /* AtlasAttachmentLoader.c in Sources */,
 				C2A8362C188B2EB5008021D5 /* Attachment.c in Sources */,
@@ -943,10 +1046,12 @@
 				C2A8362E188B2EB5008021D5 /* Bone.c in Sources */,
 				C2A8362F188B2EB5008021D5 /* BoneData.c in Sources */,
 				C2A83630188B2EB5008021D5 /* BoundingBoxAttachment.c in Sources */,
+				C29154551971269A00ACB00E /* snd_flt.cpp in Sources */,
 				C2A83631188B2EB5008021D5 /* Event.c in Sources */,
 				C2A83632188B2EB5008021D5 /* EventData.c in Sources */,
 				C2A83633188B2EB5008021D5 /* extension.c in Sources */,
 				C2A83634188B2EB5008021D5 /* Json.c in Sources */,
+				C291544F1971269A00ACB00E /* modplug.cpp in Sources */,
 				C2A83635188B2EB5008021D5 /* RegionAttachment.c in Sources */,
 				C2A83636188B2EB5008021D5 /* Skeleton.c in Sources */,
 				C2A83637188B2EB5008021D5 /* SkeletonBounds.c in Sources */,
@@ -958,9 +1063,12 @@
 				C2A8363D188B2EB5008021D5 /* ioapi.c in Sources */,
 				C2A8363E188B2EB5008021D5 /* unzip.c in Sources */,
 				C2A8363F188B2EB5008021D5 /* adler32.c in Sources */,
+				C29154431971269A00ACB00E /* load_s3m.cpp in Sources */,
 				C2A83640188B2EB5008021D5 /* compress.c in Sources */,
+				C29154221971263400ACB00E /* openal.c in Sources */,
 				C2A83641188B2EB5008021D5 /* crc32.c in Sources */,
 				C2A83642188B2EB5008021D5 /* deflate.c in Sources */,
+				C29154521971269A00ACB00E /* snd_dsp.cpp in Sources */,
 				C2A83643188B2EB5008021D5 /* inffast.c in Sources */,
 				C2A83644188B2EB5008021D5 /* inflate.c in Sources */,
 				C2A83645188B2EB5008021D5 /* inftrees.c in Sources */,
@@ -979,6 +1087,7 @@
 				C24BB05318B7431300DD1FFE /* EAGLView.mm in Sources */,
 				C24BB05418B7431300DD1FFE /* GlSlQwqzAppDelegate.m in Sources */,
 				C24BB05518B7431300DD1FFE /* main.mm in Sources */,
+				C291543C1971269A00ACB00E /* fastmix.cpp in Sources */,
 				C24BB05618B7431300DD1FFE /* chipmunk.c in Sources */,
 				C24BB05718B7431300DD1FFE /* ChipmunkDebugDraw.c in Sources */,
 				C24BB05818B7431300DD1FFE /* ChipmunkDemoShaderSupport.c in Sources */,
@@ -987,24 +1096,33 @@
 				C24BB05B18B7431300DD1FFE /* cpBBTree.c in Sources */,
 				C24BB05C18B7431300DD1FFE /* cpBody.c in Sources */,
 				C24BB05D18B7431300DD1FFE /* cpCollision.c in Sources */,
+				C29154511971269A00ACB00E /* modplug.cpp in Sources */,
 				C24BB05E18B7431300DD1FFE /* cpConstraint.c in Sources */,
 				C24BB05F18B7431300DD1FFE /* cpDampedRotarySpring.c in Sources */,
 				C24BB06018B7431300DD1FFE /* cpDampedSpring.c in Sources */,
+				C29154451971269A00ACB00E /* load_s3m.cpp in Sources */,
 				C24BB06118B7431300DD1FFE /* cpGearJoint.c in Sources */,
 				C24BB06218B7431300DD1FFE /* cpGrooveJoint.c in Sources */,
 				C24BB06318B7431300DD1FFE /* cpHashSet.c in Sources */,
+				C29154481971269A00ACB00E /* load_wav.cpp in Sources */,
 				C24BB06418B7431300DD1FFE /* cpPinJoint.c in Sources */,
 				C24BB06518B7431300DD1FFE /* cpPivotJoint.c in Sources */,
 				C24BB06618B7431300DD1FFE /* cpPolyShape.c in Sources */,
 				C24BB06718B7431300DD1FFE /* cpRatchetJoint.c in Sources */,
+				C291545D1971269A00ACB00E /* sndfile.cpp in Sources */,
+				C291544B1971269A00ACB00E /* load_xm.cpp in Sources */,
 				C24BB06818B7431300DD1FFE /* cpRotaryLimitJoint.c in Sources */,
 				C24BB06918B7431300DD1FFE /* cpShape.c in Sources */,
 				C24BB06A18B7431300DD1FFE /* cpSimpleMotor.c in Sources */,
+				C29154241971263400ACB00E /* openal.c in Sources */,
 				C24BB06B18B7431300DD1FFE /* cpSlideJoint.c in Sources */,
 				C24BB06C18B7431300DD1FFE /* cpSpace.c in Sources */,
+				C29154571971269A00ACB00E /* snd_flt.cpp in Sources */,
 				C24BB06D18B7431300DD1FFE /* cpSpaceComponent.c in Sources */,
 				C24BB06E18B7431300DD1FFE /* cpSpaceDebug.c in Sources */,
 				C24BB06F18B7431300DD1FFE /* cpSpaceHash.c in Sources */,
+				C29154541971269A00ACB00E /* snd_dsp.cpp in Sources */,
+				C29154601971269A00ACB00E /* sndmix.cpp in Sources */,
 				C24BB07018B7431300DD1FFE /* cpSpaceQuery.c in Sources */,
 				C24BB07118B7431300DD1FFE /* cpSpaceStep.c in Sources */,
 				C24BB07218B7431300DD1FFE /* cpSpatialIndex.c in Sources */,
@@ -1015,11 +1133,15 @@
 				C24BB08C18B7431300DD1FFE /* adler32.c in Sources */,
 				C24BB08D18B7431300DD1FFE /* compress.c in Sources */,
 				C24BB08E18B7431300DD1FFE /* crc32.c in Sources */,
+				C29154421971269A00ACB00E /* load_mod.cpp in Sources */,
 				C24BB08F18B7431300DD1FFE /* deflate.c in Sources */,
 				C24BB09018B7431300DD1FFE /* inffast.c in Sources */,
+				C291544E1971269A00ACB00E /* mmcmp.cpp in Sources */,
 				C24BB09118B7431300DD1FFE /* inflate.c in Sources */,
 				C24BB09218B7431300DD1FFE /* inftrees.c in Sources */,
+				C291545A1971269A00ACB00E /* snd_fx.cpp in Sources */,
 				C24BB09318B7431300DD1FFE /* trees.c in Sources */,
+				C291543F1971269A00ACB00E /* load_it.cpp in Sources */,
 				C24BB09418B7431300DD1FFE /* zutil.c in Sources */,
 				C24BB09618B7431300DD1FFE /* libqwqz.c in Sources */,
 				C24BB09718B7431300DD1FFE /* pnglite.c in Sources */,
@@ -1042,6 +1164,7 @@
 				C2B47B6718ADE4C900176881 /* cpBody.c in Sources */,
 				C2B47B6818ADE4C900176881 /* cpCollision.c in Sources */,
 				C2B47B6918ADE4C900176881 /* cpConstraint.c in Sources */,
+				C29154441971269A00ACB00E /* load_s3m.cpp in Sources */,
 				C2B47B6A18ADE4C900176881 /* cpDampedRotarySpring.c in Sources */,
 				C2B47B6B18ADE4C900176881 /* cpDampedSpring.c in Sources */,
 				C2B47B6C18ADE4C900176881 /* cpGearJoint.c in Sources */,
@@ -1051,11 +1174,16 @@
 				C2B47B7018ADE4C900176881 /* cpPivotJoint.c in Sources */,
 				C2B47B7118ADE4C900176881 /* cpPolyShape.c in Sources */,
 				C2B47B7218ADE4C900176881 /* cpRatchetJoint.c in Sources */,
+				C29154561971269A00ACB00E /* snd_flt.cpp in Sources */,
+				C291543E1971269A00ACB00E /* load_it.cpp in Sources */,
+				C291544A1971269A00ACB00E /* load_xm.cpp in Sources */,
 				C2B47B7318ADE4C900176881 /* cpRotaryLimitJoint.c in Sources */,
 				C2B47B7418ADE4C900176881 /* cpShape.c in Sources */,
 				C2B47B7518ADE4C900176881 /* cpSimpleMotor.c in Sources */,
+				C29154471971269A00ACB00E /* load_wav.cpp in Sources */,
 				C2B47B7618ADE4C900176881 /* cpSlideJoint.c in Sources */,
 				C2B47B7718ADE4C900176881 /* cpSpace.c in Sources */,
+				C291543B1971269A00ACB00E /* fastmix.cpp in Sources */,
 				C2B47B7818ADE4C900176881 /* cpSpaceComponent.c in Sources */,
 				C2B47B7918ADE4C900176881 /* cpSpaceDebug.c in Sources */,
 				C2B47B7A18ADE4C900176881 /* cpSpaceHash.c in Sources */,
@@ -1064,7 +1192,9 @@
 				C2B47B7D18ADE4C900176881 /* cpSpatialIndex.c in Sources */,
 				C2B47B7E18ADE4C900176881 /* cpSweep1D.c in Sources */,
 				C2B47B7F18ADE4C900176881 /* Animation.c in Sources */,
+				C291545C1971269A00ACB00E /* sndfile.cpp in Sources */,
 				C2B47B8018ADE4C900176881 /* AnimationState.c in Sources */,
+				C29154591971269A00ACB00E /* snd_fx.cpp in Sources */,
 				C2B47B8118ADE4C900176881 /* AnimationStateData.c in Sources */,
 				C2B47B8218ADE4C900176881 /* Atlas.c in Sources */,
 				C2B47B8318ADE4C900176881 /* AtlasAttachmentLoader.c in Sources */,
@@ -1072,11 +1202,13 @@
 				C2B47B8518ADE4C900176881 /* AttachmentLoader.c in Sources */,
 				C2E26B5A1942D168006382B3 /* MeshAttachment.c in Sources */,
 				C2B47B8618ADE4C900176881 /* Bone.c in Sources */,
+				C29154501971269A00ACB00E /* modplug.cpp in Sources */,
 				C2B47B8718ADE4C900176881 /* BoneData.c in Sources */,
 				C2B47B8818ADE4C900176881 /* BoundingBoxAttachment.c in Sources */,
 				C2B47B8918ADE4C900176881 /* Event.c in Sources */,
 				C2B47B8A18ADE4C900176881 /* EventData.c in Sources */,
 				C2B47B8B18ADE4C900176881 /* extension.c in Sources */,
+				C291544D1971269A00ACB00E /* mmcmp.cpp in Sources */,
 				C2B47B8C18ADE4C900176881 /* Json.c in Sources */,
 				C2B47B8D18ADE4C900176881 /* RegionAttachment.c in Sources */,
 				C2B47B8E18ADE4C900176881 /* Skeleton.c in Sources */,
@@ -1086,6 +1218,7 @@
 				C2B47B9218ADE4C900176881 /* Skin.c in Sources */,
 				C2B47B9318ADE4C900176881 /* Slot.c in Sources */,
 				C2B47B9418ADE4C900176881 /* SlotData.c in Sources */,
+				C29154531971269A00ACB00E /* snd_dsp.cpp in Sources */,
 				C2B47B9518ADE4C900176881 /* ioapi.c in Sources */,
 				C2B47B9618ADE4C900176881 /* unzip.c in Sources */,
 				C2E26B5B1942D168006382B3 /* SkinnedMeshAttachment.c in Sources */,
@@ -1096,11 +1229,14 @@
 				C2B47B9B18ADE4C900176881 /* inffast.c in Sources */,
 				C2B47B9C18ADE4C900176881 /* inflate.c in Sources */,
 				C2B47B9D18ADE4C900176881 /* inftrees.c in Sources */,
+				C29154411971269A00ACB00E /* load_mod.cpp in Sources */,
 				C2B47B9E18ADE4C900176881 /* trees.c in Sources */,
 				C2B47B9F18ADE4C900176881 /* zutil.c in Sources */,
 				C2B47BB618ADE54400176881 /* sidescroll_main.c in Sources */,
 				C2B47BA018ADE4C900176881 /* libqwqz.c in Sources */,
+				C291545F1971269A00ACB00E /* sndmix.cpp in Sources */,
 				C2B47BA118ADE4C900176881 /* pnglite.c in Sources */,
+				C29154231971263400ACB00E /* openal.c in Sources */,
 				C2B47BA218ADE4C900176881 /* spine_bridge.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1267,7 +1403,14 @@
 				INFOPLIST_FILE = "test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = test;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1301,7 +1444,14 @@
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = test;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1336,7 +1486,14 @@
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "test-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = test;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1385,7 +1542,14 @@
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = sidescroll;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1419,7 +1583,14 @@
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = sidescroll;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1454,7 +1625,14 @@
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/sidescroll-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = sidescroll;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

@@ -358,7 +358,9 @@ int impl_draw(int b) {
     ChipmunkDebugDrawFlushRenderer();
     ChipmunkDebugDrawPopRenderer();
   }
-  
+
+  main_x(0, NULL);
+
   return 0;
 }
 

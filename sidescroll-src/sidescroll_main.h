@@ -1,3 +1,4 @@
 // sidescroll main header
 
-//int impl_draw();
+extern int main_x(int, char **);
+

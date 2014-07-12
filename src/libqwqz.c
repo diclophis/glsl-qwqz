@@ -47,11 +47,12 @@ qwqz_handle qwqz_create(void) {
 }
 
 
-char *qwqz_load(const char *path) {
+char *qwqz_load(const char *path, unsigned int *le) {
   FILE *fd = iosfopen(path, "rb");
   if (fd) {
     fseek(fd, 0, SEEK_END);
     unsigned int len = ftell(fd);
+    *le = len;
     rewind(fd);
     char *buffer = NULL;
     buffer = (char *)malloc(sizeof(char) * (len + 1));
@@ -332,7 +333,8 @@ int qwqz_compile(GLuint type, const char *vsh) {
   int l = 0;
   int success = 0;
   GLuint v = 0;
-  char *b = qwqz_load(vsh);
+  unsigned int len = 0;
+  char *b = qwqz_load(vsh, &len);
   char *msg = NULL;
   if (b) {
     const char *vs = b;
