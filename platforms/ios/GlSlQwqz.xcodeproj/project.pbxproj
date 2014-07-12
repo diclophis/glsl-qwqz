@@ -65,9 +65,6 @@
 		C24BB09E18B7431300DD1FFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA06F0B11EDD6D100FE4BFA /* Foundation.framework */; };
 		C24BB09F18B7431300DD1FFE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDE095012D92F17004CE9B7 /* AudioToolbox.framework */; };
 		C24BB0AD18B743AE00DD1FFE /* test_main.c in Sources */ = {isa = PBXBuildFile; fileRef = C24BB0AB18B743AE00DD1FFE /* test_main.c */; };
-		C29154221971263400ACB00E /* openal.c in Sources */ = {isa = PBXBuildFile; fileRef = C29154211971263400ACB00E /* openal.c */; };
-		C29154231971263400ACB00E /* openal.c in Sources */ = {isa = PBXBuildFile; fileRef = C29154211971263400ACB00E /* openal.c */; };
-		C29154241971263400ACB00E /* openal.c in Sources */ = {isa = PBXBuildFile; fileRef = C29154211971263400ACB00E /* openal.c */; };
 		C29154261971265200ACB00E /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C29154251971265200ACB00E /* OpenAL.framework */; };
 		C291543A1971269A00ACB00E /* fastmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154281971269A00ACB00E /* fastmix.cpp */; };
 		C291543B1971269A00ACB00E /* fastmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154281971269A00ACB00E /* fastmix.cpp */; };
@@ -281,7 +278,6 @@
 		C24BB0A618B7431300DD1FFE /* test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "test-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/test-Info.plist"; sourceTree = "<absolute>"; };
 		C24BB0AB18B743AE00DD1FFE /* test_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_main.c; sourceTree = "<group>"; };
 		C24BB0AC18B743AE00DD1FFE /* test_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test_main.h; sourceTree = "<group>"; };
-		C29154211971263400ACB00E /* openal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = openal.c; sourceTree = "<group>"; };
 		C29154251971265200ACB00E /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		C29154281971269A00ACB00E /* fastmix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fastmix.cpp; sourceTree = "<group>"; };
 		C29154291971269A00ACB00E /* it_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = it_defs.h; sourceTree = "<group>"; };
@@ -599,7 +595,6 @@
 		C2A83576188B2EB5008021D5 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				C29154211971263400ACB00E /* openal.c */,
 				C2A83577188B2EB5008021D5 /* contrib */,
 				C2A835FF188B2EB5008021D5 /* impl_main.h */,
 				C2A83600188B2EB5008021D5 /* libqwqz.c */,
@@ -1065,7 +1060,6 @@
 				C2A8363F188B2EB5008021D5 /* adler32.c in Sources */,
 				C29154431971269A00ACB00E /* load_s3m.cpp in Sources */,
 				C2A83640188B2EB5008021D5 /* compress.c in Sources */,
-				C29154221971263400ACB00E /* openal.c in Sources */,
 				C2A83641188B2EB5008021D5 /* crc32.c in Sources */,
 				C2A83642188B2EB5008021D5 /* deflate.c in Sources */,
 				C29154521971269A00ACB00E /* snd_dsp.cpp in Sources */,
@@ -1114,7 +1108,6 @@
 				C24BB06818B7431300DD1FFE /* cpRotaryLimitJoint.c in Sources */,
 				C24BB06918B7431300DD1FFE /* cpShape.c in Sources */,
 				C24BB06A18B7431300DD1FFE /* cpSimpleMotor.c in Sources */,
-				C29154241971263400ACB00E /* openal.c in Sources */,
 				C24BB06B18B7431300DD1FFE /* cpSlideJoint.c in Sources */,
 				C24BB06C18B7431300DD1FFE /* cpSpace.c in Sources */,
 				C29154571971269A00ACB00E /* snd_flt.cpp in Sources */,
@@ -1236,7 +1229,6 @@
 				C2B47BA018ADE4C900176881 /* libqwqz.c in Sources */,
 				C291545F1971269A00ACB00E /* sndmix.cpp in Sources */,
 				C2B47BA118ADE4C900176881 /* pnglite.c in Sources */,
-				C29154231971263400ACB00E /* openal.c in Sources */,
 				C2B47BA218ADE4C900176881 /* spine_bridge.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

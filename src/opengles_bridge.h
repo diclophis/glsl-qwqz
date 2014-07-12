@@ -125,3 +125,17 @@
 #if EMSCRIPTEN
   #include <emscripten.h>
 #endif
+
+#include "libmodplug/modplug.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#ifdef __APPLE__
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#else
+#include <AL/al.h>
+#include <AL/alc.h>
+#endif
