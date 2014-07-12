@@ -96,6 +96,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
     msg = (char *)malloc(sizeof(char) * l);
     glGetProgramInfoLog(e->m_Program, l, NULL, msg);
     LOGV("validate program info: %s\n", msg);
+    free(msg);
   }
 
   glUseProgram(e->m_Program);
@@ -519,4 +520,94 @@ void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer) {
     e->g_lastFrameBuffer = buffer;
     glBindFramebuffer(GL_FRAMEBUFFER, buffer);
   }
+}
+
+qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
+  qwqz_audio_stream st = malloc(sizeof(struct qwqz_audio_stream_t));
+  st->bits = 16;
+  st->frequency = 44100;
+  st->channels = 2;
+  st->format = AL_FORMAT_STEREO16;
+  
+  st->numberOfBuffers = 16;
+  st->bufferSize = 1024 * 8;
+  st->read = 0;
+  st->lastPrimedBuffer = 0;
+  
+  st->buffers = (ALuint *)malloc(sizeof(ALuint *) * st->numberOfBuffers);
+  alGenBuffers(st->numberOfBuffers, st->buffers);
+  alGenSources(1, &st->source);
+  
+  unsigned int lenn = 0;
+  char *buffer = qwqz_load(sound_file, &lenn);
+  st->modFile = ModPlug_Load(buffer, lenn);
+  free(buffer);
+  
+  st->data = (void *)malloc(st->bufferSize);
+  
+  qwqz_audio_fill(st);
+  assert((alGetError() == AL_NO_ERROR));
+  return st;
+}
+
+
+int qwqz_audio_fill(qwqz_audio_stream st) {
+  ALint buffersProcessed = 0;
+  ALuint buffer2 = 0;
+  
+  alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
+  assert((alGetError() == AL_NO_ERROR));
+  
+  if (buffersProcessed > 0) {
+    while(buffersProcessed) {
+      alSourceUnqueueBuffers(st->source, 1, &buffer2);
+      assert((alGetError() == AL_NO_ERROR));
+      
+      st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
+      if (st->read == 0) {
+        ModPlug_Seek(st->modFile, 0);
+      }
+      
+      alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
+      alSourceQueueBuffers(st->source, 1, &buffer2);
+      buffersProcessed--;
+      assert((alGetError() == AL_NO_ERROR));
+    }
+  } else {
+    while (st->lastPrimedBuffer < st->numberOfBuffers) {
+      buffer2 = st->buffers[st->lastPrimedBuffer];
+      
+      st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
+      if (st->read == 0) {
+        ModPlug_Seek(st->modFile, 0);
+      }
+      
+      alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
+      alSourceQueueBuffers(st->source, 1, &buffer2);
+      st->lastPrimedBuffer++;
+      assert((alGetError() == AL_NO_ERROR));
+    }
+  }
+  
+  return 0;
+}
+
+int qwqz_audio_play(qwqz_audio_stream st) {
+  alSourcePlay(st->source);
+  assert((alGetError() == AL_NO_ERROR));
+  
+  return 0;
+}
+
+int qwqz_audio_bind_device(void) {
+  ALCdevice* device = NULL;
+  ALCcontext* context = NULL;
+  
+  device = alcOpenDevice(NULL);
+  context = alcCreateContext(device, NULL);
+  alcMakeContextCurrent(context);
+  
+  assert((alGetError() == AL_NO_ERROR));
+  
+  return 0;
 }

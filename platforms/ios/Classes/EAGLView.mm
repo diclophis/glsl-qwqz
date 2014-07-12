@@ -5,6 +5,7 @@
 
 
 extern "C" {
+  #include "opengles_bridge.h"
   #include "libqwqz.h"
 }
 

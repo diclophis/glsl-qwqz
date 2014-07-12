@@ -118,6 +118,7 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 
 // libqwqz stuff
 static qwqz_handle qwqz_engine = NULL;
+static qwqz_audio_stream qwqz_audio = NULL;
 static int gRenderPhysicsDebug = 0;
 
 // chipmunk stuff
@@ -359,7 +360,7 @@ int impl_draw(int b) {
     ChipmunkDebugDrawPopRenderer();
   }
 
-  main_x(0, NULL);
+  qwqz_audio_fill(qwqz_audio);
 
   return 0;
 }
@@ -529,6 +530,10 @@ int impl_main(int argc, char** argv, GLuint b) {
 //  /* Initialize the protothread state variables with PT_INIT(). */
 //  PT_INIT(&pt1);
 //  PT_INIT(&pt2);
+  
+  qwqz_audio_bind_device();
+  qwqz_audio = qwqz_create_audio_stream("assets/sounds/0.mod");
+  qwqz_audio_play(qwqz_audio);
   
   return 0;
 }

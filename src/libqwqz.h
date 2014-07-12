@@ -102,3 +102,23 @@ int qwqz_linkage_resize(qwqz_handle ee, qwqz_linkage e);
 
 FILE *iosfopen(const char *filename, const char *mode);
 void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer);
+
+struct qwqz_audio_stream_t {
+  ALuint *buffers;
+  int numberOfBuffers;
+  int bufferSize;
+  ALuint source;
+  ModPlugFile *modFile;
+  int channels;
+  int frequency;
+  int bits;
+  ALenum format;
+  int read;
+  int lastPrimedBuffer;
+  void *data;
+};
+typedef struct qwqz_audio_stream_t *qwqz_audio_stream;
+qwqz_audio_stream qwqz_create_audio_stream(char *sound_file);
+int qwqz_audio_bind_device(void);
+int qwqz_audio_play(qwqz_audio_stream st);
+int qwqz_audio_fill(qwqz_audio_stream st);
