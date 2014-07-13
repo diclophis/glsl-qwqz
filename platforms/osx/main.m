@@ -48,6 +48,8 @@ void processMouse(int button, int state, int x, int y) {
       //Engine::CurrentGameHit(x, y, 2);
       break;
   }
+
+  glutPostRedisplay();
 }
 
 
@@ -113,6 +115,7 @@ int main(int argc, char** argv) {
   glutInitWindowPosition(1000, 500);
   glutCreateWindow("main");
   glutDisplayFunc(draw);
+  //glutOverlayDisplayFunc(draw);
   glutKeyboardFunc(processNormalKeys);
   glutKeyboardUpFunc(processNormalKeys);
   glutIgnoreKeyRepeat(true);
