@@ -10,6 +10,7 @@
 
 
 static qwqz_handle qwqz_engine = NULL;
+static qwqz_audio_stream qwqz_audio = NULL;
 static float verticeBuffer[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 static float uvBuffer[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 static int renderBufferTexture = -1;
@@ -30,6 +31,8 @@ int impl_draw(int b) {
   qwqz_batch_clear(&qwqz_engine->m_Batches[i]);
   qwqz_batch_add(&qwqz_engine->m_Batches[i], 0, verticeBuffer, NULL, uvBuffer);
   qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[i]);
+
+  qwqz_audio_fill(qwqz_audio);
 
   return 0;
 }
@@ -121,6 +124,10 @@ int impl_main(int argc, char** argv, GLuint b) {
   qwqz_batch_init(&qwqz_engine->m_Batches[3], &qwqz_engine->m_Linkages[3], 1);
   qwqz_batch_init(&qwqz_engine->m_Batches[4], &qwqz_engine->m_Linkages[4], 1);
   qwqz_batch_init(&qwqz_engine->m_Batches[5], &qwqz_engine->m_Linkages[5], 1);
+
+  qwqz_audio_bind_device();
+  qwqz_audio = qwqz_create_audio_stream("assets/sounds/1.mod");
+  qwqz_audio_play(qwqz_audio);
 
   return 0;
 }

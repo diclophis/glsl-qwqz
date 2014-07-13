@@ -14,7 +14,7 @@ float field(in vec3 p,float s) {
 	float accum = s/6.;
 	float prev = 0.;
 	float tw = 0.;
-	for (int i = 0; i < 26; ++i) {
+	for (int i = 0; i < 16; ++i) {
 		float mag = dot(p, p);
 		p = abs(p) / mag + vec3(-.5, -.4, -1.5);
 		float w = exp(-float(i) / 7.);
@@ -31,7 +31,7 @@ float field2(in vec3 p, float s) {
 	float accum = s/4.;
 	float prev = 0.;
 	float tw = 0.;
-	for (int i = 0; i < 64; ++i) {
+	for (int i = 0; i < 32; ++i) {
 		float mag = dot(p, p);
 		p = abs(p) / mag + vec3(-.5, -.4, -1.5);
 		float w = exp(-float(i) / 7.);
