@@ -19,7 +19,7 @@ static int stackedShaderCount = 0;
 
 int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
-  int i = (int)(qwqz_engine->m_Timers[0].m_SimulationTime * 0.25) % stackedShaderCount;
+  int i = (int)(qwqz_engine->m_Timers[0].m_SimulationTime * (1.8 / 4.0)) % stackedShaderCount;
 
   qwqz_bind_frame_buffer(qwqz_engine, b);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -73,7 +73,8 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
   return resized;
 }
 
-int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1, int i) {
+
+int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1) {
   GLuint program = 0;
   GLuint f1 = qwqz_compile(GL_FRAGMENT_SHADER, filename);
   if (v1 && f1) {
@@ -82,7 +83,7 @@ int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1, int i) {
     glAttachShader(program, v1);
     glAttachShader(program, f1);
 
-    qwqz_linkage_init(program, &qwqz_engine->m_Linkages[i]);
+    qwqz_linkage_init(program, &qwqz_engine->m_Linkages[stackedShaderCount]);
 
     stackedShaderCount++;
   }
@@ -90,13 +91,11 @@ int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1, int i) {
   return 0;
 }
 
+
 int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine = qwqz_create();
 
   GLuint v1 = 0;
-  //GLuint f1 = 0;
-  //GLuint f2 = 0;
-  //GLuint program = 0;
 
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
@@ -105,25 +104,20 @@ int impl_main(int argc, char** argv, GLuint b) {
   renderBufferTexture = qwqz_buffer_texture_init(GL_TEXTURE0);
   qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
 
-  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 6);
+  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 32); //TODO: figure this out
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
 
-  stack_shader(qwqz_engine, "assets/shaders/graph.fsh", v1, 0);
-  stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1, 1);
-  stack_shader(qwqz_engine, "assets/shaders/wtf.fsh", v1, 2);
-  stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1, 3);
-  stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1, 4);
-  stack_shader(qwqz_engine, "assets/shaders/subspace.fsh", v1, 5);
+  stack_shader(qwqz_engine, "assets/shaders/graph.fsh", v1);
+  stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
+  stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1);
+  stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1);
 
-  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 6);
+  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * stackedShaderCount);
 
-  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2], 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[3], &qwqz_engine->m_Linkages[3], 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[4], &qwqz_engine->m_Linkages[4], 1);
-  qwqz_batch_init(&qwqz_engine->m_Batches[5], &qwqz_engine->m_Linkages[5], 1);
+  for (int i=0; i<stackedShaderCount; i++) {
+    qwqz_batch_init(&qwqz_engine->m_Batches[i], &qwqz_engine->m_Linkages[i], 1);
+  }
 
   qwqz_audio_bind_device();
   qwqz_audio = qwqz_create_audio_stream("assets/sounds/1.mod");
