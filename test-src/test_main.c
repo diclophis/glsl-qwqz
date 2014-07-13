@@ -83,15 +83,17 @@ int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1, int i) {
 
     stackedShaderCount++;
   }
+
+  return 0;
 }
 
 int impl_main(int argc, char** argv, GLuint b) {
   qwqz_engine = qwqz_create();
 
   GLuint v1 = 0;
-  GLuint f1 = 0;
-  GLuint f2 = 0;
-  GLuint program = 0;
+  //GLuint f1 = 0;
+  //GLuint f2 = 0;
+  //GLuint program = 0;
 
   qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
   qwqz_timer_init(&qwqz_engine->m_Timers[0]);
