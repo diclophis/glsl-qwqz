@@ -5,7 +5,7 @@
 build=build
 impl=$(IMPL)
 
-OPTL=O0
+OPTL=O2
 
 CXXFLAGS=\
 -$(OPTL) \
@@ -37,11 +37,11 @@ objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wild
 HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_island_$(impl).js | cut -d" " -f 1 || echo 0)
 hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
-$(build)/raptor_island_$(impl).bc: $(build) $(objects)
-	$(CXX) -$(OPTL) $(objects) -o $(build)/raptor_island_$(impl).bc
-
 $(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
 	$(CXX) -$(OPTL) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+
+$(build)/raptor_island_$(impl).bc: $(objects)
+	$(CXX) -$(OPTL) $(objects) -o $(build)/raptor_island_$(impl).bc
 
 $(build)/%.bc: %.c
 	$(CC) $(CXXFLAGS) -c $< -o $@
@@ -55,17 +55,15 @@ $(build)/%.bc: ../../src/%.c
 $(build)/%.bc: ../../src/%.cpp
 	$(CXX) $(CFLAGS) -c $< -o $@
 
-$(build):
+clean:
+	touch /tmp/emscripten_temp && rm -R /tmp/emscripten_temp
+	touch $(build) && rm -Rf $(build)
 	mkdir -p $(build)
 	mkdir -p $(build)/contrib/zlib
 	mkdir -p $(build)/contrib/chipmunk
 	mkdir -p $(build)/contrib/spine
 	mkdir -p $(build)/contrib/pt
 	mkdir -p $(build)/contrib/libmodplug
-
-clean:
-	touch /tmp/emscripten_temp && rm -R /tmp/emscripten_temp
-	touch $(build) && rm -Rf $(build)
 
 install: $(build)/raptor_island_$(impl).js
 	mkdir -p $(hash_dir)
