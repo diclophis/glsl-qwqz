@@ -5,7 +5,7 @@
 build=build
 impl=$(IMPL)
 
-OPTL=O3
+OPTL=O0
 
 CXXFLAGS=\
 -$(OPTL) \
@@ -34,12 +34,13 @@ objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../
 
 objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../$(impl)-src/*.c)))
 
-HASH=qwqz-$(shell md5sum build/raptor_island_$(impl).js | cut -d" " -f 1)
+HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_island_$(impl).js | cut -d" " -f 1 || echo 0)
 hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
-$(build)/raptor_island_$(impl).js: $(build) $(objects)
+$(build)/raptor_island_$(impl).bc: $(build) $(objects)
 	$(CXX) -$(OPTL) $(objects) -o $(build)/raptor_island_$(impl).bc
-	#$(CXX) -$(OPTL) -s ASM_JS=1 -s VERBOSE=0 -s GL_DEBUG=0 -s PRECISE_I64_MATH=1 -s TOTAL_STACK=$(TOTAL_ALLOWED_RAM) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free', '_start_game', '_command']" $(build)/raptor_island.bc -o $(build)/raptor_island.js --js-library library_window.js
+
+$(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
 	$(CXX) -$(OPTL) -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
 
 $(build)/%.bc: %.c
@@ -66,14 +67,13 @@ clean:
 	touch /tmp/emscripten_temp && rm -R /tmp/emscripten_temp
 	touch $(build) && rm -Rf $(build)
 
-$(hash_dir):
-	mkdir $(hash_dir)
-
-install: $(hash_dir) build/raptor_island_$(impl).js
-	ln -nsf $(hash_dir) ~/emscripten.risingcode.com/public/latest-qwqz
-	ruby cache_manifest.rb ../../assets/spine ../../assets/shaders ../../assets/sounds > ~/emscripten.risingcode.com/public/latest-qwqz/index.appcache
-	cp -R ../../assets ~/emscripten.risingcode.com/public/latest-qwqz
-	ln -nsf ~/favicon.ico ~/emscripten.risingcode.com/public/latest-qwqz/favicon.ico
+install: $(build)/raptor_island_$(impl).js
+	mkdir -p $(hash_dir)
+	ruby cache_manifest.rb ../../assets/spine ../../assets/shaders ../../assets/sounds > $(hash_dir)/index.appcache
+	cp -R ../../assets $(hash_dir)
+	ln -nsf ~/favicon.ico $(hash_dir)/favicon.ico
+	install -C index.html $(hash_dir)
+	install -C $(build)/raptor_island_$(impl).js $(hash_dir)/raptor_island.js
 	ln -nsf ~/favicon.ico ~/emscripten.risingcode.com/public/favicon.ico
-	install -C index.html ~/emscripten.risingcode.com/public/latest-qwqz
-	install -C $(build)/raptor_island_$(impl).js ~/emscripten.risingcode.com/public/latest-qwqz/raptor_island.js
+	ln -nsf $(hash_dir) ~/emscripten.risingcode.com/public/latest-qwqz
+	touch ~/emscripten.risingcode.com/public/latest-qwqz
