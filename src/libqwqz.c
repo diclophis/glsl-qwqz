@@ -489,31 +489,32 @@ int qwqz_tick_timer(qwqz_timer timer) {
   gettimeofday(&tim, NULL);
   timer->t2 = tim.tv_sec + (tim.tv_usec / 1000000.0);
   float step = (timer->t2 - timer->t1);
+
+  timer->step = step;
+  timer->m_SimulationTime += timer->step;
+
+  // add in whatever time we currently have saved in the buffer
+  timer->step += timer->accum;
   
-  if (step < 0.0344) {
-    timer->step = step;
-    timer->m_SimulationTime += timer->step;
+  // calculate how many frames will have passed on the next vsync
+  int frameRate = 60;
+  int frameCount = (int)(timer->step * frameRate + 1);
 
-    // add in whatever time we currently have saved in the buffer
-    timer->step += timer->accum;
-    
-    // calculate how many frames will have passed on the next vsync
-    int frameRate = 60;
-    int frameCount = (int)(timer->step * frameRate + 1);
+  // if less then a full frame, increase delta to cover the extra
+  if (frameCount <= 0) { frameCount = 1; }
 
-    // if less then a full frame, increase delta to cover the extra
-    if (frameCount <= 0) { frameCount = 1; }
+  // save off the delta, we will need it later to update the buffer
+  float oldDelta = timer->step;
 
-    // save off the delta, we will need it later to update the buffer
-    float oldDelta = timer->step;
+  // recalculate delta to be an even frame rate multiple
+  timer->step = (float)frameCount / (float)frameRate;
 
-    // recalculate delta to be an even frame rate multiple
-    timer->step = (float)frameCount / (float)frameRate;
+  // update delta buffer so we keep the same time on average
+  timer->accum = oldDelta - timer->step;
 
-    // update delta buffer so we keep the same time on average
-    timer->accum = oldDelta - timer->step;
-  }
   timer->t1 = timer->t2;
+
+  LOGV("s %f\n", timer->step); 
 
   return 0;
 }
@@ -533,12 +534,13 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->channels = 2;
   st->format = AL_FORMAT_STEREO16;
   
-  st->numberOfBuffers = 16;
+  st->numberOfBuffers = 4;
   st->bufferSize = 1024 * 8;
   st->read = 0;
   st->lastPrimedBuffer = 0;
   
   st->buffers = (ALuint *)malloc(sizeof(ALuint *) * st->numberOfBuffers);
+  st->buffers2 = (ALuint *)malloc(sizeof(ALuint *) * st->numberOfBuffers);
   alGenBuffers(st->numberOfBuffers, st->buffers);
   alGenSources(1, &st->source);
   
@@ -550,7 +552,6 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->data = (void *)malloc(st->bufferSize);
   
   qwqz_audio_fill(st);
-  assert((alGetError() == AL_NO_ERROR));
   return st;
 }
 
@@ -560,26 +561,32 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
   ALuint buffer2 = 0;
   
   alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
-  assert((alGetError() == AL_NO_ERROR));
   
   if (buffersProcessed > 0) {
-    while(buffersProcessed) {
-      alSourceUnqueueBuffers(st->source, 1, &buffer2);
-      assert((alGetError() == AL_NO_ERROR));
-      
+    LOGV("%d\n", buffersProcessed);
+    alSourceUnqueueBuffers(st->source, buffersProcessed, st->buffers2);
+
+    for (int i=0; i<buffersProcessed; i++) {
       st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
       if (st->read == 0) {
         ModPlug_Seek(st->modFile, 0);
       }
-      
+    
+      LOGV("B %d\n", i);
+      buffer2 = st->buffers2[i];
+      LOGV("post: %d\n", buffer2);
       alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
-      alSourceQueueBuffers(st->source, 1, &buffer2);
-      buffersProcessed--;
-      assert((alGetError() == AL_NO_ERROR));
+    }
+
+    alSourceQueueBuffers(st->source, buffersProcessed, st->buffers2);
+    
+    if (buffersProcessed == st->numberOfBuffers) {
+      alSourcePlay(st->source);
     }
   } else {
     while (st->lastPrimedBuffer < st->numberOfBuffers) {
       buffer2 = st->buffers[st->lastPrimedBuffer];
+      LOGV("pre-filled: %d\n", buffer2);
       
       st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
       if (st->read == 0) {
@@ -589,7 +596,6 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
       alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
       alSourceQueueBuffers(st->source, 1, &buffer2);
       st->lastPrimedBuffer++;
-      assert((alGetError() == AL_NO_ERROR));
     }
   }
   
@@ -598,9 +604,7 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
 
 int qwqz_audio_play(qwqz_audio_stream st) {
   alSourcePlay(st->source);
-  assert((alGetError() == AL_NO_ERROR));
-  
-  return 0;
+  return (alGetError() == AL_NO_ERROR);
 }
 
 int qwqz_audio_bind_device(void) {
@@ -611,7 +615,5 @@ int qwqz_audio_bind_device(void) {
   context = alcCreateContext(device, NULL);
   alcMakeContextCurrent(context);
   
-  assert((alGetError() == AL_NO_ERROR));
-  
-  return 0;
+  return (alGetError() == AL_NO_ERROR);
 }
