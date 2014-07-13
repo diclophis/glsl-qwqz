@@ -514,8 +514,6 @@ int qwqz_tick_timer(qwqz_timer timer) {
 
   timer->t1 = timer->t2;
 
-  LOGV("s %f\n", timer->step); 
-
   return 0;
 }
 
@@ -563,7 +561,6 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
   alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
   
   if (buffersProcessed > 0) {
-    LOGV("%d\n", buffersProcessed);
     alSourceUnqueueBuffers(st->source, buffersProcessed, st->buffers2);
 
     for (int i=0; i<buffersProcessed; i++) {
@@ -572,9 +569,7 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
         ModPlug_Seek(st->modFile, 0);
       }
     
-      LOGV("B %d\n", i);
       buffer2 = st->buffers2[i];
-      LOGV("post: %d\n", buffer2);
       alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
     }
 
@@ -586,7 +581,6 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
   } else {
     while (st->lastPrimedBuffer < st->numberOfBuffers) {
       buffer2 = st->buffers[st->lastPrimedBuffer];
-      LOGV("pre-filled: %d\n", buffer2);
       
       st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
       if (st->read == 0) {
