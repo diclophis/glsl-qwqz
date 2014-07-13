@@ -124,9 +124,9 @@ static int gRenderPhysicsDebug = 0;
 // chipmunk stuff
 static cpSpace *space;
 static cpBody **bodies;
-static float gChipmunkJumpPower = 250.0;
+static float gChipmunkJumpPower = 200000.0;
 static float gChipmunkGravity = -1200.0;
-static float gChipmunkPlayerMass = 1.0;
+static float gChipmunkPlayerMass = 1000.0;
 static float gChipmunkPlayerElasticity = 0.85;
 static float gChipmunkGroundElasticity = 0.33;
 static float gChipmunkPlayerSpeed = 75.0;
@@ -244,7 +244,7 @@ int impl_hit(int x, int y, int s) {
 
 int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
-  {
+  if (qwqz_engine->m_Timers[0].step < 0.1) {
     float dx = ((-gChipmunkPlayerSpeed * qwqz_engine->m_Timers[0].step));
 
     // physics tick
@@ -253,10 +253,12 @@ int impl_draw(int b) {
     for (int a=0; a<bg_range; a++) {
       bgsScroll[a] += dx;
     }
+  } else {
+    cpSpaceStep(space, 0.0); //tick the phsyics to warm up the JS optimizer
   }
 
   if (bgsScroll[bg_first] <= -((float)(bg_range / 2) * bgsSkeleton->data->bones[1]->length * 4.0)) {
-    bgsScroll[bg_first] = floor(bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0));
+    bgsScroll[bg_first] = floor(bgsScroll[bg_last] + (bgsSkeleton->data->bones[1]->length * 4.0) - 4.0);
     bg_first++;
     bg_last++;
     if (bg_first > (bg_range - 1)) {
@@ -406,9 +408,9 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   space = cpSpaceNew();
   cpSpaceSetGravity(space, cpv(0, gChipmunkGravity));
-  cpSpaceSetIterations(space, 1);
-  cpSpaceSetDamping(space, 0.99);
-  cpSpaceSetCollisionSlop(space, 1.0);
+  cpSpaceSetIterations(space, 4);
+  //cpSpaceSetDamping(space, 0.99);
+  //cpSpaceSetCollisionSlop(space, 1.0);
 
   cpBody *body = 0;
   cpBody *staticBody = cpSpaceGetStaticBody(space);
