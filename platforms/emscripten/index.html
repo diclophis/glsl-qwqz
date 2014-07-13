@@ -157,6 +157,7 @@
             var shaders = FakeModule.addToRealModuleEventually(null, assets, "shaders");
             var textures = FakeModule.addToRealModuleEventually(null, assets, "textures");
             var spine = FakeModule.addToRealModuleEventually(null, assets, "spine");
+            var sounds = FakeModule.addToRealModuleEventually(null, assets, "sounds");
             var lines = this.response.split("\n");
             for (var i=0; i<lines.length; i++) {
               fetchFileFromManifest(lines[i]);

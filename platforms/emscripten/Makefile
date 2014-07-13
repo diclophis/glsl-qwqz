@@ -13,7 +13,12 @@ CXXFLAGS=\
 -I../../src/contrib \
 -I../../$(impl)-src \
 -DDESKTOP \
--DNDEBUG
+-DNDEBUG \
+-DHAVE_SETENV \
+-DMODPLUG_BASIC_SUPPORT \
+-DMODPLUG_FASTSOUNDLIB \
+-DHAVE_STDINT_H \
+-DHAVE_SINF
 
 CFLAGS=$(CXXFLAGS)
 
@@ -23,6 +28,7 @@ objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/chipmunk/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/spine/*.c)))
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/contrib/pt/*.c)))
+objects   += $(patsubst ../../src/%,build/%, $(patsubst %.cpp,%.bc, $(wildcard ../../src/contrib/libmodplug/*.cpp)))
 
 objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../src/*.c)))
 
@@ -45,11 +51,16 @@ $(build)/%.bc: ../../$(impl)-src/%.c
 $(build)/%.bc: ../../src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(build)/%.bc: ../../src/%.cpp
+	$(CXX) $(CFLAGS) -c $< -o $@
+
 $(build):
 	mkdir -p $(build)
 	mkdir -p $(build)/contrib/zlib
 	mkdir -p $(build)/contrib/chipmunk
 	mkdir -p $(build)/contrib/spine
+	mkdir -p $(build)/contrib/pt
+	mkdir -p $(build)/contrib/libmodplug
 
 clean:
 	touch /tmp/emscripten_temp && rm -R /tmp/emscripten_temp
