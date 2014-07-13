@@ -104,17 +104,18 @@ FILE *iosfopen(const char *filename, const char *mode);
 void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer);
 
 struct qwqz_audio_stream_t {
-  ALuint *buffers;
   int numberOfBuffers;
   int bufferSize;
-  ALuint source;
   ModPlugFile *modFile;
   int channels;
   int frequency;
   int bits;
-  ALenum format;
   int read;
   int lastPrimedBuffer;
+  ALuint *buffers;
+  ALuint *buffers2;
+  ALuint source;
+  ALenum format;
   void *data;
 };
 typedef struct qwqz_audio_stream_t *qwqz_audio_stream;
