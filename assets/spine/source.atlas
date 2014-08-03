@@ -1,6 +1,6 @@
 
 source.png
-size: 512, 1936
+size: 2048, 2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none

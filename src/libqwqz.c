@@ -87,6 +87,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
     msg = (char *)malloc(sizeof(char) * l);
     glGetProgramInfoLog(e->m_Program, l, NULL, msg);
     LOGV("program info: %s\n", msg);
+    free(msg);
   }
 
   glValidateProgram(e->m_Program);
@@ -119,7 +120,7 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
 
   //qwqz_checkgl("wtf");
   
-  free(msg);
+  //free(msg);
 
   return 0;
 }
@@ -538,8 +539,8 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->read = 0;
   st->lastPrimedBuffer = 0;
   
-  st->buffers = (ALuint *)malloc(sizeof(ALuint *) * st->numberOfBuffers);
-  st->buffers2 = (ALuint *)malloc(sizeof(ALuint *) * st->numberOfBuffers);
+  st->buffers = (ALuint *)malloc(sizeof(ALuint) * st->numberOfBuffers);
+  st->buffers2 = (ALuint *)malloc(sizeof(ALuint) * st->numberOfBuffers);
   alGenBuffers(st->numberOfBuffers, st->buffers);
   alGenSources(1, &st->source);
   
