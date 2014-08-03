@@ -44,6 +44,13 @@ test:
 test-clean:
 	cd platforms/osx && IMPL=test make clean
 
+emscripten-ntm:
+	cd platforms/emscripten && IMPL=networked-tilemap-maze ~/emscripten/emmake make
+	cd platforms/emscripten && IMPL=networked-tilemap-maze ~/emscripten/emmake make install
+
+emscripten-ntm-clean:
+	cd platforms/emscripten && IMPL=networked-tilemap-maze ~/emscripten/emmake make clean
+
 emscripten-sidescroll:
 	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make
 	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make install
