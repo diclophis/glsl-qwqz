@@ -1,5 +1,12 @@
 # Main Makefile
 
+ntm:
+	cd platforms/osx && IMPL=networked-tilemap-maze make
+	platforms/osx/build/raptor_island
+
+ntm-clean:
+	cd platforms/osx && IMPL=networked-tilemap-mze make clean
+
 sidescroll:
 	cd platforms/osx && IMPL=sidescroll make
 	platforms/osx/build/raptor_island
