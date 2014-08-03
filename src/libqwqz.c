@@ -525,6 +525,7 @@ void qwqz_bind_frame_buffer(qwqz_handle e, GLuint buffer) {
   }
 }
 
+
 qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   qwqz_audio_stream st = malloc(sizeof(struct qwqz_audio_stream_t));
   st->bits = 16;
