@@ -1,0 +1,36 @@
+{
+"skeleton": { "spine": "1.9.14", "hash": "ei0vY2fnF8Ov3HLeYiuY5tpPJxI", "width": 18, "height": 20 },
+"bones": [
+  { "name": "root" }
+],
+"ik": [],
+"slots": [
+	{ "name": "source_0000", "bone": "root", "attachment": "source_0000" }
+],
+"skins": {
+	"default": {
+		"source_0000": {
+			"source_0000": { "width": 18, "height": 20 },
+			"source_0001": { "width": 18, "height": 20 },
+			"source_0002": { "width": 18, "height": 20 },
+			"source_0003": { "width": 18, "height": 20 }
+		}
+	},
+	"0": {}
+},
+"animations": {
+	"0": {
+		"slots": {
+			"source_0000": {
+				"attachment": [
+					{ "time": 0, "name": "source_0000" },
+					{ "time": 0.1666, "name": "source_0001" },
+					{ "time": 0.3333, "name": "source_0002" },
+					{ "time": 0.5, "name": "source_0003" },
+					{ "time": 0.6666, "name": "source_0000" }
+				]
+			}
+		}
+	}
+}
+}
