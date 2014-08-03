@@ -533,7 +533,7 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->format = AL_FORMAT_STEREO16;
   
   st->numberOfBuffers = 4;
-  st->bufferSize = 1024 * 64;
+  st->bufferSize = 1024 * 1024 * 4; //16megs
   st->read = 0;
   st->lastPrimedBuffer = 0;
   
