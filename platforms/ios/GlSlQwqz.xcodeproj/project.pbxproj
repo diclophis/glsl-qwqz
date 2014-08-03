@@ -395,7 +395,7 @@
 		C29154381971269A00ACB00E /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
 		C29154391971269A00ACB00E /* tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tables.h; sourceTree = "<group>"; };
 		C29A84F01946E37A002AB893 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
-		C2A58E62198CC62C00F8EF34 /* ntm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ntm.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2A58E62198CC62C00F8EF34 /* ntm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ntm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2A58E63198CC62C00F8EF34 /* ntm-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ntm-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/ntm-Info.plist"; sourceTree = "<absolute>"; };
 		C2A58E66198CC6A700F8EF34 /* ntm_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ntm_main.c; path = "../../networked-tilemap-maze-src/ntm_main.c"; sourceTree = "<group>"; };
 		C2A83574188B2EB5008021D5 /* rocketeer_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rocketeer_main.c; sourceTree = "<group>"; };
@@ -627,24 +627,16 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				C2A58E66198CC6A700F8EF34 /* ntm_main.c */,
-				C29A84F01946E37A002AB893 /* Application.xib */,
 				C2A83676188B42D7008021D5 /* assets */,
+				C2A70DDF198DE7F000EE957A /* ios */,
+				C2A70DDE198DE7C300EE957A /* networked-tilemap-maze-src */,
 				C24BB0AA18B743AE00DD1FFE /* test-src */,
 				C2B47BB318ADE54400176881 /* sidescroll-src */,
 				C2A83573188B2EB5008021D5 /* rocketeer-src */,
 				C2A83576188B2EB5008021D5 /* src */,
 				FC1417611285413100166578 /* Classes */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
-				FC1417671285413100166578 /* main.mm */,
-				FC14176A1285413100166578 /* rocketeer-Info.plist */,
-				C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */,
-				FC1417661285413100166578 /* Default.png */,
-				C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */,
-				FCF8913213E8AA3900AFEB8E /* Entitlements.plist */,
 				C2A83679188B5AE3008021D5 /* Products */,
-				C24BB0A618B7431300DD1FFE /* test-Info.plist */,
-				C2A58E63198CC62C00F8EF34 /* ntm-Info.plist */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -696,6 +688,30 @@
 				C29154391971269A00ACB00E /* tables.h */,
 			);
 			path = libmodplug;
+			sourceTree = "<group>";
+		};
+		C2A70DDE198DE7C300EE957A /* networked-tilemap-maze-src */ = {
+			isa = PBXGroup;
+			children = (
+				C2A58E66198CC6A700F8EF34 /* ntm_main.c */,
+			);
+			name = "networked-tilemap-maze-src";
+			sourceTree = "<group>";
+		};
+		C2A70DDF198DE7F000EE957A /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				C29A84F01946E37A002AB893 /* Application.xib */,
+				FC1417671285413100166578 /* main.mm */,
+				FC14176A1285413100166578 /* rocketeer-Info.plist */,
+				C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */,
+				FC1417661285413100166578 /* Default.png */,
+				C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */,
+				FCF8913213E8AA3900AFEB8E /* Entitlements.plist */,
+				C24BB0A618B7431300DD1FFE /* test-Info.plist */,
+				C2A58E63198CC62C00F8EF34 /* ntm-Info.plist */,
+			);
+			name = ios;
 			sourceTree = "<group>";
 		};
 		C2A83573188B2EB5008021D5 /* rocketeer-src */ = {
@@ -1795,7 +1811,7 @@
 					"-DHAVE_STDINT_H",
 					"-DHAVE_SINF",
 				);
-				PRODUCT_NAME = "ntm";
+				PRODUCT_NAME = ntm;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1836,7 +1852,7 @@
 					"-DHAVE_STDINT_H",
 					"-DHAVE_SINF",
 				);
-				PRODUCT_NAME = "ntm";
+				PRODUCT_NAME = ntm;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -1878,7 +1894,7 @@
 					"-DHAVE_STDINT_H",
 					"-DHAVE_SINF",
 				);
-				PRODUCT_NAME = "ntm";
+				PRODUCT_NAME = ntm;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
