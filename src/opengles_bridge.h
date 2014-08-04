@@ -136,6 +136,11 @@
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
 #else
+#ifdef ANDROID_NDK
+#include <SLES/OpenSLES.h>
+#include <SLES/OpenSLES_Android.h>
+#else
 #include <AL/al.h>
 #include <AL/alc.h>
+#endif
 #endif
