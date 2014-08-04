@@ -36,6 +36,13 @@ float ntm_character_uw(float uw) {
 
 
 int impl_hit(int x, int y, int s) {
+  float scrh = 2.0 * (qwqz_engine->m_Zoom2 / 1.0);
+
+  skeleton->root->x = (((float)x / qwqz_engine->m_ScreenWidth) * scrh * (qwqz_engine->m_ScreenWidth / qwqz_engine->m_ScreenHeight)) - (0.5 * scrh * (qwqz_engine->m_ScreenWidth / qwqz_engine->m_ScreenHeight));
+  skeleton->root->y = scrh - (((float)y / qwqz_engine->m_ScreenHeight) * scrh);
+
+  spSkeleton_updateWorldTransform(skeleton);
+
   return 0;
 }
 
@@ -122,7 +129,6 @@ int impl_main(int argc, char** argv, GLuint b) {
   spAnimationState_setAnimationByName(state, 0, "0", 1);
 
   qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (skeleton->slotCount));
-
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
