@@ -5,7 +5,7 @@
 build=build
 impl=$(IMPL)
 
-OPTL=O0
+OPTL=O1
 
 CXXFLAGS=\
 -$(OPTL) \
@@ -38,7 +38,7 @@ HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_
 hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
 $(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
-	$(CXX) -$(OPTL) -s TOTAL_MEMORY=32000000 -std=c++11 -s ASSERTIONS=1 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+	$(CXX) -$(OPTL) -std=c++11 -s ASSERTIONS=1 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
 
 $(build)/raptor_island_$(impl).bc: $(objects)
 	$(CXX) -$(OPTL) $(objects) -std=c++11 -o $(build)/raptor_island_$(impl).bc

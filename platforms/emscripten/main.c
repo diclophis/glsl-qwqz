@@ -40,18 +40,15 @@ void resize(int width, int height, void *userData) {
   kWindowHeight = height;
   impl_resize(width, height, width, height, 0);
   glutInitWindowSize(kWindowWidth, kWindowHeight);
-  //glViewport(0, 0, width, height);
 }
 
 
 void processMouse(int button, int state, int x, int y) {
   switch (state) {
     case GLUT_DOWN:
-      //Engine::CurrentGameHit(x, y, 0);
       impl_hit(x, y, 0);
       break;
     case GLUT_UP:
-      //Engine::CurrentGameHit(x, y, 2);
       impl_hit(x, y, 2);
       break;
   }
@@ -59,7 +56,7 @@ void processMouse(int button, int state, int x, int y) {
 
 
 void processMouseMotion(int x, int y) {
-  //Engine::CurrentGameHit(x, y, 1);
+  impl_hit(x, y, 1);
 }
 
 
