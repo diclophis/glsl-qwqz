@@ -52,6 +52,7 @@ int impl_draw(int b) {
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
   glUniform2f(g_TextureOffset, ntm_character_uv((((int)(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5 * 2.0)) % 2)), ntm_character_uw(((int)(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5)) % 20));
+  //glUniform2f(g_TextureOffset, ntm_character_uv(1), ntm_character_uw(17 + (int)qwqz_engine->m_Timers[0].m_SimulationTime));
 
   spAnimationState_update(state, qwqz_engine->m_Timers[0].step);
   spAnimationState_apply(state, skeleton);
