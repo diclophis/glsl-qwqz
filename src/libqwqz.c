@@ -607,6 +607,7 @@ int qwqz_audio_play(qwqz_audio_stream st) {
 #ifdef ANDROID_NDK
   return 1;
 #else
+  ModPlug_Seek(st->modFile, 0);
   alSourcePlay(st->source);
   return (alGetError() == AL_NO_ERROR);
 #endif
