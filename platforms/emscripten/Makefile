@@ -5,7 +5,7 @@
 build=build
 impl=$(IMPL)
 
-OPTL=O1
+OPTL=O3
 
 CXXFLAGS=\
 -$(OPTL) \
@@ -37,8 +37,11 @@ objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wild
 HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_island_$(impl).js | cut -d" " -f 1 || echo 0)
 hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
+#-s OUTLINING_LIMIT=N
+#$(CXX) -$(OPTL) -profiling --closure 1 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=1 -s NO_EXIT_RUNTIME=1 -std=c++11 -s ASSERTIONS=1 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+
 $(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
-	$(CXX) -$(OPTL) -std=c++11 -s ASSERTIONS=1 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+	$(CXX) -$(OPTL) --closure 0 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=1 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
 
 $(build)/raptor_island_$(impl).bc: $(objects)
 	$(CXX) -$(OPTL) $(objects) -std=c++11 -o $(build)/raptor_island_$(impl).bc
@@ -72,6 +75,7 @@ install: $(build)/raptor_island_$(impl).js
 	ln -nsf ~/favicon.ico $(hash_dir)/favicon.ico
 	install -C index.html $(hash_dir)
 	install -C $(build)/raptor_island_$(impl).js $(hash_dir)/raptor_island.js
+	install -C $(build)/raptor_island_$(impl).js.mem $(hash_dir)/
 	ln -nsf ~/favicon.ico ~/emscripten.risingcode.com/public/favicon.ico
 	ln -nsf $(hash_dir) ~/emscripten.risingcode.com/public/latest-qwqz
 	touch ~/emscripten.risingcode.com/public/latest-qwqz

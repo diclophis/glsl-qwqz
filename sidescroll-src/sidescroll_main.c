@@ -119,6 +119,7 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 // libqwqz stuff
 static qwqz_handle qwqz_engine = NULL;
 static qwqz_audio_stream qwqz_audio = NULL;
+static int started_audio = 0;
 static int gRenderPhysicsDebug = 0;
 
 // chipmunk stuff
@@ -229,6 +230,10 @@ static int bg_last = 0;
 //*/
 
 int impl_hit(int x, int y, int s) {
+  if (!started_audio) {
+    started_audio = 1;
+    qwqz_audio_play(qwqz_audio);
+  }
   
   if (s == 0) {
     cpBody *body = bodies[0];
@@ -538,7 +543,6 @@ int impl_main(int argc, char** argv, GLuint b) {
   
   qwqz_audio_bind_device();
   qwqz_audio = qwqz_create_audio_stream("assets/sounds/0.mod");
-  qwqz_audio_play(qwqz_audio);
   
   return 0;
 }
