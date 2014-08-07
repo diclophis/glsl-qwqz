@@ -121,6 +121,8 @@ static qwqz_handle qwqz_engine = NULL;
 static qwqz_audio_stream qwqz_audio = NULL;
 static int started_audio = 0;
 static int gRenderPhysicsDebug = 0;
+static float time_on_ground = -0.1;
+static int counting_on_ground = 0.0;
 
 // chipmunk stuff
 static cpSpace *space;
@@ -280,7 +282,7 @@ int impl_draw(int b) {
   skeleton->root->scaleX = 1.0;
   skeleton->root->scaleY = 1.0;
   
-  glClear(GL_COLOR_BUFFER_BIT);
+  //glClear(GL_COLOR_BUFFER_BIT);
 
     spSkeleton_updateWorldTransform(bgsSkeleton);
 
@@ -326,7 +328,34 @@ int impl_draw(int b) {
           gChipmunkPlayerSpeed = 0.0;
         }
 
-        if (bodyOff.y < 48.0) {
+        //LOGV("foo %f\n", bodyOff.y);
+        if (bodyOff.y <= 68.9 && counting_on_ground == 0) {
+          counting_on_ground = 1;
+          //LOGV("hit ground\n");
+          qwqz_audio_play(qwqz_audio);
+        }
+
+        if (bodyOff.y <= 69.0 && counting_on_ground == 1) {
+          //LOGV("counting\n");
+          time_on_ground += qwqz_engine->m_Timers[0].step;
+        }
+
+        if (bodyOff.y > 72.0 && counting_on_ground == 1) {
+          counting_on_ground = 0;
+          //LOGV("got airborne\n");
+        }
+
+        if (bodyOff.y > 1024.0) {
+          //counting_on_ground = 0;
+          bodyOff.y = 1024.0;
+          //LOGV("got airborne\n");
+        }
+        
+        if (time_on_ground >= 4.0) {
+          LOGV("foo\n");
+          time_on_ground = 0.0;
+          qwqz_audio_play(qwqz_audio);
+
           //vel limit
           //float velocity_limit = 1;
           //float velocity_mag = cpvlength(newVel);
