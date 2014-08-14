@@ -51,10 +51,18 @@ int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-  glUniform2f(g_TextureOffset, ntm_character_uv((((int)(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5 * 2.0)) % 2)), ntm_character_uw(((int)(qwqz_engine->m_Timers[0].m_SimulationTime * 0.5)) % 20));
-  //glUniform2f(g_TextureOffset, ntm_character_uv(1), ntm_character_uw(17 + (int)qwqz_engine->m_Timers[0].m_SimulationTime));
+  float tox = ntm_character_uv((((int)(qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 2.0)) % 2));
+  float toy = ntm_character_uw(((int)(qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5))) % 20);
+  
+  //tox = 0;
+  //toy = 0;
 
-  spAnimationState_update(state, qwqz_engine->m_Timers[0].step);
+  int ax = (0 * 4);
+  int ay = ((int)(qwqz_engine->m_Timers[0].m_SimulationTime * 1.0)) % 3;
+
+  glUniform2f(g_TextureOffset, tox + ((ntm_character_uv(ax) / 12.0) * 1.0), toy + ((ntm_character_uw(1.0) / 3.0) * ay));
+
+  spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.33);
   spAnimationState_apply(state, skeleton);
   spSkeleton_updateWorldTransform(skeleton);
 
