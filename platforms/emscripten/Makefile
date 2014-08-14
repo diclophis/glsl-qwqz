@@ -5,7 +5,7 @@
 build=build
 impl=$(IMPL)
 
-OPTL=O3
+OPTL=O0
 
 CXXFLAGS=\
 -$(OPTL) \
@@ -75,7 +75,8 @@ install: $(build)/raptor_island_$(impl).js
 	ln -nsf ~/favicon.ico $(hash_dir)/favicon.ico
 	install -C index.html $(hash_dir)
 	install -C $(build)/raptor_island_$(impl).js $(hash_dir)/raptor_island.js
-	install -C $(build)/raptor_island_$(impl).js.mem $(hash_dir)/
+	(test -f $(build)/raptor_island_$(impl).js.mem && install -C $(build)/raptor_island_$(impl).js.mem $(hash_dir)/) || true
+	install -C memoryprofiler.js $(hash_dir)/
 	ln -nsf ~/favicon.ico ~/emscripten.risingcode.com/public/favicon.ico
 	ln -nsf $(hash_dir) ~/emscripten.risingcode.com/public/latest-qwqz
 	touch ~/emscripten.risingcode.com/public/latest-qwqz
