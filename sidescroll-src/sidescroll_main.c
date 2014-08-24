@@ -352,9 +352,8 @@ int impl_draw(int b) {
         }
         
         if (time_on_ground >= 4.0) {
-          LOGV("foo\n");
-          time_on_ground = 0.0;
-          qwqz_audio_play(qwqz_audio);
+          //time_on_ground = 0.0;
+          //qwqz_audio_play(qwqz_audio);
 
           //vel limit
           //float velocity_limit = 1;
