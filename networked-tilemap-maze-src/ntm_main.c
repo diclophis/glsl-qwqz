@@ -51,8 +51,8 @@ int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-  float tox = ntm_character_uv((((int)(qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 2.0)) % 2));
-  float toy = ntm_character_uw(((int)(qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5))) % 20);
+  float tox = ntm_character_uv((((int)(qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 1.0)) % 2));
+  float toy = ntm_character_uw(((int)(qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 0.5)) % 26);
   
   //tox = 0;
   //toy = 0;
@@ -153,4 +153,3 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   return 0;
 }
-
