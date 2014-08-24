@@ -143,7 +143,7 @@ static spAnimationStateData* stateData;
 static spAnimationState* state;
 static float verticeBuffer1[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 static float verticeBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-static float bgsScroll[] = { 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+static float bgsScroll[] = { 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0 }; //, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static int num_bg = 0;
 static int bg_range = 0;
 static int bg_first = 0;
@@ -424,7 +424,7 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
 
 int impl_main(int argc, char** argv, GLuint b) {
   num_bg = 0;
-  bg_range = 2;
+  bg_range = 3;
   bg_first = 0;
   bg_last = (bg_range - 1);
 
