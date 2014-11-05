@@ -5,7 +5,7 @@
 build=build
 impl=$(IMPL)
 
-OPTL=O0
+OPTL=O3
 
 CXXFLAGS=\
 -$(OPTL) \
