@@ -574,6 +574,7 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
       st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
       if (st->read == 0) {
         ModPlug_Seek(st->modFile, 0);
+        st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
       }
     
       buffer2 = st->buffers2[i];
