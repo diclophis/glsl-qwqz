@@ -23,6 +23,7 @@ static float offY = 0.0;
 
 // render stuff
 static float verticeBuffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+static int debugGrid = 8;
 
 
 float ntm_character_uv(float uv) {
@@ -57,7 +58,6 @@ int impl_hit(int x, int y, int s) {
 
 int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
-  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
   int toxi = (qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 1.0);
   int toyi = (qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 0.5);
@@ -75,12 +75,13 @@ int impl_draw(int b) {
   }
 
   skeleton->flipX = flip; // so simple
-  glUniform2f(g_TextureOffset, tox + ((ntm_character_uv(ax) / 12.0) * 1.0), toy + ((ntm_character_uw(1.0) / 3.0) * (ay % 3)));
 
-  spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.33);
+  spAnimationState_update(state, qwqz_engine->m_Timers[0].step);
   spAnimationState_apply(state, skeleton);
   spSkeleton_updateWorldTransform(skeleton);
 
+  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+  glUniform2f(g_TextureOffset, tox + ((ntm_character_uv(ax) / 12.0) * 1.0), toy + ((ntm_character_uw(1.0) / 3.0) * (ay % 3)));
 
   glClearColor(0.01, 1.0, 0.01, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -96,9 +97,18 @@ int impl_draw(int b) {
     if (lastAttachment != ra) {
       lastAttachment = ra;
     }
-    
-    spRegionAttachment_computeWorldVertices(ra, offX, offY, s->bone, verticeBuffer);
-    qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+
+    if (1) {
+      spRegionAttachment_computeWorldVertices(ra, offX , offY, s->bone, verticeBuffer);
+      qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+    } else {
+      for (int i=0; i<debugGrid; i++) {
+        for (int j=0; j<debugGrid; j++) {
+          spRegionAttachment_computeWorldVertices(ra, offX + (i * 18), offY + (j * 18), s->bone, verticeBuffer);
+          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
+        }
+      }
+    }
   }
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
@@ -154,7 +164,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   state = spAnimationState_create(stateData);
   spAnimationState_setAnimationByName(state, 0, "0", 1);
 
-  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (skeleton->slotCount));
+  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (skeleton->slotCount) * debugGrid * debugGrid);
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
