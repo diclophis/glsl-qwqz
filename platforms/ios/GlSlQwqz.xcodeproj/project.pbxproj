@@ -99,7 +99,6 @@
 		C29154581971269A00ACB00E /* snd_fx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154341971269A00ACB00E /* snd_fx.cpp */; };
 		C29154591971269A00ACB00E /* snd_fx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154341971269A00ACB00E /* snd_fx.cpp */; };
 		C291545A1971269A00ACB00E /* snd_fx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154341971269A00ACB00E /* snd_fx.cpp */; };
-		C291545B1971269A00ACB00E /* sndfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154351971269A00ACB00E /* sndfile.cpp */; };
 		C291545C1971269A00ACB00E /* sndfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154351971269A00ACB00E /* sndfile.cpp */; };
 		C291545D1971269A00ACB00E /* sndfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154351971269A00ACB00E /* sndfile.cpp */; };
 		C291545E1971269A00ACB00E /* sndmix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154371971269A00ACB00E /* sndmix.cpp */; };
@@ -357,6 +356,10 @@
 		C2E26B5A1942D168006382B3 /* MeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2E26B561942D168006382B3 /* MeshAttachment.c */; };
 		C2E26B5B1942D168006382B3 /* SkinnedMeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2E26B581942D168006382B3 /* SkinnedMeshAttachment.c */; };
 		FC03727E13E7E4E600250EB2 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */; };
+		FC13E2711B76942F00C874D2 /* MeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2E26B561942D168006382B3 /* MeshAttachment.c */; };
+		FC13E2721B76942F00C874D2 /* SkinnedMeshAttachment.c in Sources */ = {isa = PBXBuildFile; fileRef = C2E26B581942D168006382B3 /* SkinnedMeshAttachment.c */; };
+		FC13E2731B76946700C874D2 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C29154251971265200ACB00E /* OpenAL.framework */; };
+		FC13E2741B76950F00C874D2 /* sndfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C29154351971269A00ACB00E /* sndfile.cpp */; };
 		FC14176B1285413100166578 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = FC1417631285413100166578 /* EAGLView.mm */; };
 		FC14176C1285413100166578 /* GlSlQwqzAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FC1417651285413100166578 /* GlSlQwqzAppDelegate.m */; };
 		FC14176D1285413100166578 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = FC1417661285413100166578 /* Default.png */; };
@@ -372,7 +375,6 @@
 /* Begin PBXFileReference section */
 		C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		C24BB0A518B7431300DD1FFE /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C24BB0A618B7431300DD1FFE /* test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "test-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/test-Info.plist"; sourceTree = "<absolute>"; };
 		C24BB0AB18B743AE00DD1FFE /* test_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_main.c; sourceTree = "<group>"; };
 		C24BB0AC18B743AE00DD1FFE /* test_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test_main.h; sourceTree = "<group>"; };
 		C29154251971265200ACB00E /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
@@ -396,7 +398,6 @@
 		C29154391971269A00ACB00E /* tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tables.h; sourceTree = "<group>"; };
 		C29A84F01946E37A002AB893 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
 		C2A58E62198CC62C00F8EF34 /* ntm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ntm.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C2A58E63198CC62C00F8EF34 /* ntm-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "ntm-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/ntm-Info.plist"; sourceTree = "<absolute>"; };
 		C2A58E66198CC6A700F8EF34 /* ntm_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ntm_main.c; path = "../../networked-tilemap-maze-src/ntm_main.c"; sourceTree = "<group>"; };
 		C2A83574188B2EB5008021D5 /* rocketeer_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rocketeer_main.c; sourceTree = "<group>"; };
 		C2A83575188B2EB5008021D5 /* rocketeer_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rocketeer_main.h; sourceTree = "<group>"; };
@@ -542,7 +543,6 @@
 		C2A83676188B42D7008021D5 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../../assets; sourceTree = "<group>"; };
 		C2A83678188B5AE3008021D5 /* RaptorIsland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RaptorIsland.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2B47BAF18ADE4C900176881 /* sidescroll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sidescroll.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "sidescroll-Info.plist"; path = "/Users/jbardin/glsl-qwqz-1.0/platforms/ios/sidescroll-Info.plist"; sourceTree = "<absolute>"; };
 		C2B47BB418ADE54400176881 /* sidescroll_main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sidescroll_main.c; sourceTree = "<group>"; };
 		C2B47BB518ADE54400176881 /* sidescroll_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sidescroll_main.h; sourceTree = "<group>"; };
 		C2E26B561942D168006382B3 /* MeshAttachment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MeshAttachment.c; sourceTree = "<group>"; };
@@ -550,6 +550,9 @@
 		C2E26B581942D168006382B3 /* SkinnedMeshAttachment.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SkinnedMeshAttachment.c; sourceTree = "<group>"; };
 		C2E26B591942D168006382B3 /* SkinnedMeshAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinnedMeshAttachment.h; sourceTree = "<group>"; };
 		FC03727D13E7E4E600250EB2 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		FC13E2751B7696E500C874D2 /* ntm-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ntm-Info.plist"; sourceTree = "<group>"; };
+		FC13E2761B7696E500C874D2 /* sidescroll-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "sidescroll-Info.plist"; sourceTree = "<group>"; };
+		FC13E2771B7696E500C874D2 /* test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "test-Info.plist"; sourceTree = "<group>"; };
 		FC1417621285413100166578 /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
 		FC1417631285413100166578 /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
 		FC1417641285413100166578 /* GlSlQwqzAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlSlQwqzAppDelegate.h; sourceTree = "<group>"; };
@@ -570,6 +573,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC13E2731B76946700C874D2 /* OpenAL.framework in Frameworks */,
 				FC03727E13E7E4E600250EB2 /* MediaPlayer.framework in Frameworks */,
 				FCFECB6411EC0D2000BBBE2A /* OpenGLES.framework in Frameworks */,
 				FCFECB6C11EC0D5200BBBE2A /* QuartzCore.framework in Frameworks */,
@@ -701,15 +705,15 @@
 		C2A70DDF198DE7F000EE957A /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				FC13E2751B7696E500C874D2 /* ntm-Info.plist */,
+				FC13E2761B7696E500C874D2 /* sidescroll-Info.plist */,
+				FC13E2771B7696E500C874D2 /* test-Info.plist */,
 				C29A84F01946E37A002AB893 /* Application.xib */,
 				FC1417671285413100166578 /* main.mm */,
 				FC14176A1285413100166578 /* rocketeer-Info.plist */,
-				C2B47BB018ADE4CA00176881 /* sidescroll-Info.plist */,
 				FC1417661285413100166578 /* Default.png */,
 				C21B2B9D1659E618005EEE4E /* Default-568h@2x.png */,
 				FCF8913213E8AA3900AFEB8E /* Entitlements.plist */,
-				C24BB0A618B7431300DD1FFE /* test-Info.plist */,
-				C2A58E63198CC62C00F8EF34 /* ntm-Info.plist */,
 			);
 			name = ios;
 			sourceTree = "<group>";
@@ -1165,6 +1169,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC13E2711B76942F00C874D2 /* MeshAttachment.c in Sources */,
+				FC13E2721B76942F00C874D2 /* SkinnedMeshAttachment.c in Sources */,
 				C291543A1971269A00ACB00E /* fastmix.cpp in Sources */,
 				FC14176B1285413100166578 /* EAGLView.mm in Sources */,
 				C291544C1971269A00ACB00E /* mmcmp.cpp in Sources */,
@@ -1203,7 +1209,7 @@
 				C2A83621188B2EB5008021D5 /* cpSpaceDebug.c in Sources */,
 				C2A83622188B2EB5008021D5 /* cpSpaceHash.c in Sources */,
 				C2A83623188B2EB5008021D5 /* cpSpaceQuery.c in Sources */,
-				C291545B1971269A00ACB00E /* sndfile.cpp in Sources */,
+				FC13E2741B76950F00C874D2 /* sndfile.cpp in Sources */,
 				C2A83624188B2EB5008021D5 /* cpSpaceStep.c in Sources */,
 				C2A83625188B2EB5008021D5 /* cpSpatialIndex.c in Sources */,
 				C2A83626188B2EB5008021D5 /* cpSweep1D.c in Sources */,
@@ -1544,7 +1550,14 @@
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = RaptorIsland;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -1578,7 +1591,14 @@
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = RaptorIsland;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -2082,7 +2102,14 @@
 				HEADER_SEARCH_PATHS = ../../src/contrib;
 				INFOPLIST_FILE = "$(SRCROOT)/rocketeer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_CFLAGS = "-DNDEBUG";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-DMODPLUG_BASIC_SUPPORT",
+					"-DMODPLUG_FASTSOUNDLIB",
+					"-DHAVE_SETENV",
+					"-DHAVE_STDINT_H",
+					"-DHAVE_SINF",
+				);
 				PRODUCT_NAME = RaptorIsland;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
