@@ -200,7 +200,7 @@ int impl_draw(int b) {
         int c = a;
         spSlot *s = bgsSkeleton->drawOrder[c];
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-        if (s->attachment->type == ATTACHMENT_REGION) {
+        if (s->attachment->type == SP_ATTACHMENT_REGION) {
           spRegionAttachment_computeWorldVertices(ra, bgsScroll[a], 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
@@ -242,7 +242,7 @@ int impl_draw(int b) {
       for (int i=0; i<skeleton->slotCount; i++) {
         spSlot *s = skeleton->drawOrder[i];
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-        if (s->attachment->type == ATTACHMENT_REGION) {
+        if (s->attachment->type == SP_ATTACHMENT_REGION) {
           float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
           spRegionAttachment_computeWorldVertices(ra, ox, 0.0, s->bone, verticeBuffer);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
@@ -310,9 +310,11 @@ int impl_draw(int b) {
 }
 
 
-int impl_resize(int width, int height, int u) {
+//int impl_resize(int width, int height, int u) {
+int impl_resize(int width, int height, int ew, int eh, int u) {
 
-  int resized = qwqz_resize(qwqz_engine, width, height, u);
+  //int resized = qwqz_resize(qwqz_engine, width, height, u);
+  int resized = qwqz_resize(qwqz_engine, width, height, ew, eh, u);
 
   //ChipmunkDebugDrawResizeRenderer(width, height);
 
@@ -465,7 +467,8 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   if (doSpine) {
     {
-      spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
+      //spAtlas* atlas = spAtlas_readAtlasFile("assets/spine/robot.atlas");
+      spAtlas* atlas = spAtlas_createFromFile("assets/spine/robot.atlas", NULL);
       spSkeletonJson* json = spSkeletonJson_create(atlas);
       spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
       assert(skeletonData);
@@ -476,7 +479,8 @@ int impl_main(int argc, char** argv, GLuint b) {
       state = spAnimationState_create(stateData);
       spAnimationState_setAnimationByName(state, 0, "walk_alt", 1);
 
-      spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/bgs.atlas");
+      //spAtlas *atlas2 = spAtlas_readAtlasFile("assets/spine/bgs.atlas");
+      spAtlas* atlas2 = spAtlas_createFromFile("assets/spine/bgs.atlas", NULL);
       spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
       spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
       bgsSkeleton = spSkeleton_create(skeletonData2);
@@ -510,7 +514,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
     for (int i=0; i<skeleton->slotCount; i++) {
       spSlot *s = skeleton->drawOrder[i];
-      if (s->attachment->type == ATTACHMENT_REGION) {
+      if (s->attachment->type == SP_ATTACHMENT_REGION) {
 
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
 
