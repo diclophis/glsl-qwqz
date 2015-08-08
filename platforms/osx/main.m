@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
   glutMouseFunc(processMouse);
   glutMotionFunc(processMouseMotion);
   glutReshapeFunc(resize);
-  glutFullScreen();
+  //glutFullScreen();
 
 #if defined(__APPLE__) && !defined (VMDMESA)
   int swap_interval = 1;
