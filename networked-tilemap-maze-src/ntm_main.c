@@ -59,6 +59,7 @@ int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
+  // to update sprite index for animation
   int toxi = (qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 1.0);
   int toyi = (qwqz_engine->m_Timers[0].m_SimulationTime * (0.333 * 0.5) * 0.5);
   float tox = ntm_character_uv(toxi % 2);
