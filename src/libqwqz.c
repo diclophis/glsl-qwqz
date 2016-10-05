@@ -558,6 +558,8 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   free(buffer);
   
   st->data = (void *)malloc(st->bufferSize);
+
+  st->offset = 0;
   
   qwqz_audio_fill(st);
 #endif
@@ -572,9 +574,50 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
 #endif
 
 #ifdef EMSCRIPTEN
+  #define BUFFER_SIZE 1470*10
+
   ALint buffersProcessed = 0;
   ALuint buffer2 = 0;
-  
+  ALuint buffer = 0;
+  ALint buffersWereQueued = 0;
+  ALint buffersQueued = 0;
+  ALint state;
+
+  alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
+
+  while (st->offset < st->size && buffersProcessed--) {
+    // unqueue the old buffer and validate the queue length
+    alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersWereQueued);
+    alSourceUnqueueBuffers(st->source, 1, &buffer);
+
+    assert(alGetError() == AL_NO_ERROR);
+    int len = st->size - st->offset;
+    if (len > BUFFER_SIZE) {
+      len = BUFFER_SIZE;
+    }
+
+    alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersQueued);
+    assert(buffersQueued == buffersWereQueued - 1);
+
+    // queue the new buffer and validate the queue length
+    buffersWereQueued = buffersQueued;
+    alBufferData(buffer, st->format, st->data, len, st->frequency);
+
+    alSourceQueueBuffers(st->source, 1, &buffer);
+    assert(alGetError() == AL_NO_ERROR);
+
+    alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersQueued);
+    assert(buffersQueued == buffersWereQueued + 1);
+
+    // make sure it's still playing
+    alGetSourcei(st->source, AL_SOURCE_STATE, &state);
+    assert(state == AL_PLAYING);
+
+    st->offset += len;
+  }
+
+ 
+/* 
   alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
   
   if (buffersProcessed > 0) {
@@ -612,6 +655,8 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
       st->lastPrimedBuffer++;
     }
   }
+*/
+
 #endif 
 
   return 0;
@@ -628,6 +673,7 @@ int qwqz_audio_play(qwqz_audio_stream st) {
 
   ModPlug_Seek(st->modFile, 0);
   alSourcePlay(st->source);
+
   return (alGetError() == AL_NO_ERROR);
 #else
   return 1;

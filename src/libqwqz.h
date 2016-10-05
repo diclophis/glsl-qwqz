@@ -119,6 +119,8 @@ struct qwqz_audio_stream_t {
   ALuint *buffers2;
   ALuint source;
   ALenum format;
+  unsigned int offset;
+  unsigned int size;
 #else
 #endif
   void *data;
