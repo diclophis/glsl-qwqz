@@ -5,13 +5,14 @@
 build=build
 impl=$(IMPL)
 
-OPTL=O0
+OPTL=-O0
 
 CXXFLAGS=\
--$(OPTL) \
+$(OPTL) \
 -I../../src \
 -I../../src/contrib \
 -I../../$(impl)-src \
+-DEMSCRIPTEN \
 -DDESKTOP \
 -DNDEBUG \
 -DHAVE_SETENV \
@@ -38,13 +39,13 @@ HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_
 hash_dir=~/emscripten.risingcode.com/public/$(HASH)
 
 #-s OUTLINING_LIMIT=N
-#$(CXX) -$(OPTL) -profiling --closure 1 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=1 -s NO_EXIT_RUNTIME=1 -std=c++11 -s ASSERTIONS=1 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+#$(CXX) $(OPTL) -profiling --closure 1 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=1 -s NO_EXIT_RUNTIME=1 -std=c++11 -s ASSERTIONS=1 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
 
 $(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
-	$(CXX) -$(OPTL) --closure 0 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=1 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+	$(CXX) $(OPTL) --closure 1 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=0 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
 
 $(build)/raptor_island_$(impl).bc: $(objects)
-	$(CXX) -$(OPTL) $(objects) -std=c++11 -o $(build)/raptor_island_$(impl).bc
+	$(CXX) $(OPTL) $(objects) -std=c++11 -o $(build)/raptor_island_$(impl).bc
 
 $(build)/%.bc: %.c
 	$(CC) $(CXXFLAGS) -c $< -o $@

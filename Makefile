@@ -44,6 +44,13 @@ rocketeer-assets:~/Desktop/RobotAttackVector/skeleton.* ~/Desktop/RobotAttackVec
 rocketeer-clean:
 	cd platforms/osx && IMPL=rocketeer make clean
 
+linux-rocketeer:
+	cd platforms/linux && IMPL=rocketeer make
+	platforms/linux/build/raptor_island
+
+linux-rocketeer-clean:
+	cd platforms/linux && IMPL=rocketeer make clean
+
 test:
 	cd platforms/osx && IMPL=test make
 	platforms/osx/build/raptor_island
@@ -59,29 +66,32 @@ linux-test-clean:
 	cd platforms/linux && IMPL=test make clean
 
 emscripten-ntm:
-	cd platforms/emscripten && IMPL=networked-tilemap-maze ~/emscripten/emmake make
-	cd platforms/emscripten && IMPL=networked-tilemap-maze ~/emscripten/emmake make install
+	cd platforms/emscripten && IMPL=networked-tilemap-maze emmake make
+	cd platforms/emscripten && IMPL=networked-tilemap-maze emmake make install
 
 emscripten-ntm-clean:
-	cd platforms/emscripten && IMPL=networked-tilemap-maze ~/emscripten/emmake make clean
+	cd platforms/emscripten && IMPL=networked-tilemap-maze emmake make clean
 
 emscripten-sidescroll:
-	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make
-	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make install
+	cd platforms/emscripten && IMPL=sidescroll emmake make
+	cd platforms/emscripten && IMPL=sidescroll emmake make install
 
 emscripten-sidescroll-clean:
-	cd platforms/emscripten && IMPL=sidescroll ~/emscripten/emmake make clean
+	cd platforms/emscripten && IMPL=sidescroll emmake make clean
 
 emscripten-rocketeer-clean:
-	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make clean
+	cd platforms/emscripten && IMPL=rocketeer emmake make clean
 
 emscripten-rocketeer:
-	#cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make
-	cd platforms/emscripten && IMPL=rocketeer ~/emscripten/emmake make install
+	#cd platforms/emscripten && IMPL=rocketeer emmake make
+	cd platforms/emscripten && IMPL=rocketeer emmake make install
 
 emscripten-test:
-	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make
-	cd platforms/emscripten && IMPL=test ~/emscripten/emmake make install
+	cd platforms/emscripten && IMPL=test emmake make
+	cd platforms/emscripten && IMPL=test emmake make install
+
+emscripten-test-clean:
+	cd platforms/emscripten && IMPL=test emmake make clean
 
 android: android-clean
 	cd platforms/android && make

@@ -99,6 +99,8 @@ int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1) {
 
 
 int impl_main(int argc, char** argv, GLuint b) {
+  printf("starting impl_main\n");
+
   qwqz_engine = qwqz_create();
 
   GLuint v1 = 0;
@@ -114,8 +116,8 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
 
-  stack_shader(qwqz_engine, "assets/shaders/ml.fsh", v1);
-  //stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/ml.fsh", v1);
+  stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1);
 
@@ -127,7 +129,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   qwqz_audio_bind_device();
   qwqz_audio = qwqz_create_audio_stream("assets/sounds/2.mod");
-  qwqz_audio_play(qwqz_audio);
+  printf("3 %d\n", qwqz_audio_play(qwqz_audio));
 
   return 0;
 }
