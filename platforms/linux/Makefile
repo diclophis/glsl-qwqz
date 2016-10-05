@@ -21,7 +21,7 @@ CXXFLAGS=\
 -DHAVE_SINF
 
 CFLAGS=$(CXXFLAGS)
-LDFLAGS=-lpthread -lresolv -lGL -lglut -lGLU -lm -lstdc++
+LDFLAGS=-lpthread -lresolv -lGL -lglut -lGLU -lm -lstdc++ -lopenal
 
 objects   = $(patsubst %,build/%, $(patsubst %.c,%.o, $(wildcard *.c)))
 

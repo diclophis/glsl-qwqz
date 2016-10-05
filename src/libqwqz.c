@@ -541,8 +541,8 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->channels = 2;
   st->format = AL_FORMAT_STEREO16;
   
-  st->numberOfBuffers = 2;
-  st->bufferSize = 1024 * 1024; //4megs
+  st->numberOfBuffers = 16;
+  st->bufferSize = 1024 * st->bits * st->channels; //4megs
   st->read = 0;
   st->lastPrimedBuffer = 0;
   
@@ -550,7 +550,7 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->buffers2 = (ALuint *)malloc(sizeof(ALuint) * st->numberOfBuffers);
 
   alGenBuffers(st->numberOfBuffers, st->buffers);
-  //alGenBuffers(st->numberOfBuffers, st->buffers2);
+  alGenBuffers(st->numberOfBuffers, st->buffers2);
 
   alGenSources(1, &st->source);
   
@@ -584,62 +584,15 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
   ALint buffersQueued = 0;
   ALint state;
 
-/*
-
-  alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
-
-  printf(".");
-
-  while (st->offset < st->size && buffersProcessed--) {
-
-  printf(".");
-
-    // unqueue the old buffer and validate the queue length
-    alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersWereQueued);
-    alSourceUnqueueBuffers(st->source, 1, st->buffers2);
-
-    assert(alGetError() == AL_NO_ERROR);
-    
-    //int len = st->size - st->offset;
-    //if (len > BUFFER_SIZE) {
-    //  len = BUFFER_SIZE;
-    //}
-
-    alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersQueued);
-    assert(buffersQueued == buffersWereQueued - 1);
-
-    // queue the new buffer and validate the queue length
-    buffersWereQueued = buffersQueued;
-    //alBufferData(buffer, st->format, st->data, len, st->frequency);
-
-      st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
-      if (st->read == 0) {
-        ModPlug_Seek(st->modFile, 0);
-      }
-      
-      alBufferData(buffer, st->format, st->data, st->read, st->frequency);
-
-    alSourceQueueBuffers(st->source, 1, &buffer);
-    assert(alGetError() == AL_NO_ERROR);
-
-    alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersQueued);
-    assert(buffersQueued == buffersWereQueued + 1);
-
-    // make sure it's still playing
-    alGetSourcei(st->source, AL_SOURCE_STATE, &state);
-    assert(state == AL_PLAYING);
-  }
-
-*/
- 
   alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
   
   if (buffersProcessed > 0) {
     printf(".");
 
-    alSourceUnqueueBuffers(st->source, buffersProcessed, st->buffers2);
 
     for (int i=0; i<buffersProcessed; i++) {
+      alSourceUnqueueBuffers(st->source, 1, st->buffers2);
+
       st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
       if (st->read == 0) {
         ModPlug_Seek(st->modFile, 0);
@@ -648,16 +601,16 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
     
       buffer2 = st->buffers2[i];
       alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
-      alSourcei(st->source, AL_BUFFER, buffer2);
-    }
+      //alSourcei(st->source, AL_BUFFER, buffer2);
 
-    alSourceQueueBuffers(st->source, buffersProcessed, st->buffers2);
-    
-    if (buffersProcessed == st->numberOfBuffers) {
-      alSourcePlay(st->source);
+      alSourceQueueBuffers(st->source, 1, st->buffers2);
+
     }
+    
+    //if (buffersProcessed == st->numberOfBuffers) {
+    //  alSourcePlay(st->source);
+    //}
   } else {
-    printf(":");
 
     while (st->lastPrimedBuffer < st->numberOfBuffers) {
       buffer2 = st->buffers[st->lastPrimedBuffer];
@@ -668,7 +621,7 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
       }
       
       alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
-      alSourcei(st->source, AL_BUFFER, buffer2);
+      //alSourcei(st->source, AL_BUFFER, buffer2);
       alSourceQueueBuffers(st->source, 1, &buffer2);
       st->lastPrimedBuffer++;
     }
@@ -691,7 +644,8 @@ int qwqz_audio_play(qwqz_audio_stream st) {
   ModPlug_Seek(st->modFile, 0);
   alSourcePlay(st->source);
 
-  return (alGetError() == AL_NO_ERROR);
+  //return (alGetError() == AL_NO_ERROR);
+  return 1;
 #else
   return 1;
 #endif
@@ -714,7 +668,8 @@ int qwqz_audio_bind_device(void) {
   context = alcCreateContext(device, NULL);
   alcMakeContextCurrent(context);
   
-  return (alGetError() == AL_NO_ERROR);
+  //return (alGetError() == AL_NO_ERROR);
+  return 1;
 #else
   return 1;
 #endif
