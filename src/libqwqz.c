@@ -541,8 +541,8 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->channels = 2;
   st->format = AL_FORMAT_STEREO16;
   
-  st->numberOfBuffers = 2;
-  st->bufferSize = 1024 * 1024 * 9; //16megs
+  st->numberOfBuffers = 4;
+  st->bufferSize = 1024 * 1024 * 8; //4megs
   st->read = 0;
   st->lastPrimedBuffer = 0;
   
@@ -628,7 +628,7 @@ int qwqz_audio_play(qwqz_audio_stream st) {
 
   ModPlug_Seek(st->modFile, 0);
   alSourcePlay(st->source);
-  return (alGetError(0) == AL_NO_ERROR);
+  return (alGetError() == AL_NO_ERROR);
 #else
   return 1;
 #endif
@@ -651,7 +651,7 @@ int qwqz_audio_bind_device(void) {
   context = alcCreateContext(device, NULL);
   alcMakeContextCurrent(context);
   
-  return (alGetError(0) == AL_NO_ERROR);
+  return (alGetError() == AL_NO_ERROR);
 #else
   return 1;
 #endif
