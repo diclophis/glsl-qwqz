@@ -1,5 +1,7 @@
 platforms/osx/build
 platforms/emscripten/build
+platforms/linux/build
+
 .DS_Store
 *.iml
 .idea/

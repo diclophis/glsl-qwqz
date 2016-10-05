@@ -22,6 +22,13 @@ sidescroll:
 sidescroll-clean:
 	cd platforms/osx && IMPL=sidescroll make clean
 
+linux-sidescroll:
+	cd platforms/linux && IMPL=sidescroll make
+	platforms/linux/build/raptor_island
+
+linix-sidescroll-clean:
+	cd platforms/linux && IMPL=sidescroll make clean
+
 rocketeer:
 	cd platforms/osx && IMPL=rocketeer make
 	platforms/osx/build/raptor_island
@@ -43,6 +50,13 @@ test:
 
 test-clean:
 	cd platforms/osx && IMPL=test make clean
+
+linux-test:
+	cd platforms/linux && IMPL=test make
+	platforms/linux/build/raptor_island
+
+linux-test-clean:
+	cd platforms/linux && IMPL=test make clean
 
 emscripten-ntm:
 	cd platforms/emscripten && IMPL=networked-tilemap-maze ~/emscripten/emmake make

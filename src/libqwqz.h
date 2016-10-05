@@ -114,10 +114,10 @@ struct qwqz_audio_stream_t {
   int lastPrimedBuffer;
 #ifdef ANDROID_NDK
 #else
-  ALuint *buffers;
-  ALuint *buffers2;
-  ALuint source;
-  ALenum format;
+  //ALuint *buffers;
+  //ALuint *buffers2;
+  //ALuint source;
+  //ALenum format;
 #endif
   void *data;
 };

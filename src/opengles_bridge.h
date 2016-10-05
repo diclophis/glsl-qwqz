@@ -29,7 +29,7 @@
   #ifndef __APPLE__
     #define GLU_PERSPECTIVE gluPerspective
     #define glOrthof glOrtho
-    #define GLfixed GLfloat
+    //#define GLfixed GLfloat
     #define glFrustumx glFrustum
   #else
     //#define GLfixed GLfloat
@@ -140,7 +140,7 @@
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 #else
-#include <AL/al.h>
-#include <AL/alc.h>
+//#include <AL/al.h>
+//#include <AL/alc.h>
 #endif
 #endif

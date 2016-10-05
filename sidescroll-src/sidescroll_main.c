@@ -127,12 +127,12 @@ static int counting_on_ground = 0.0;
 // chipmunk stuff
 static cpSpace *space;
 static cpBody **bodies;
-static float gChipmunkJumpPower = 200000.0;
-static float gChipmunkGravity = -1200.0;
+static float gChipmunkJumpPower = 150000.0;
+static float gChipmunkGravity = -200.0;
 static float gChipmunkPlayerMass = 1000.0;
 static float gChipmunkPlayerElasticity = 0.85;
 static float gChipmunkGroundElasticity = 0.33;
-static float gChipmunkPlayerSpeed = 75.0;
+static float gChipmunkPlayerSpeed = 175.0;
 
 // spine stuff
 static spSkeleton* bgsSkeleton;

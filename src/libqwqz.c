@@ -531,6 +531,7 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   qwqz_audio_stream st = malloc(sizeof(struct qwqz_audio_stream_t));
 #ifdef ANDROID_NDK
 #else
+  /*
   st->bits = 16;
   st->frequency = 44100;
   st->channels = 2;
@@ -554,6 +555,8 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->data = (void *)malloc(st->bufferSize);
   
   qwqz_audio_fill(st);
+
+  */
 #endif
   return st;
 }
@@ -562,6 +565,7 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
 int qwqz_audio_fill(qwqz_audio_stream st) {
 #ifdef ANDROID_NDK
 #else
+  /*
   ALint buffersProcessed = 0;
   ALuint buffer2 = 0;
   
@@ -595,11 +599,12 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
         ModPlug_Seek(st->modFile, 0);
       }
       
-      alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
-      alSourceQueueBuffers(st->source, 1, &buffer2);
+      //alBufferData(buffer2, st->format, st->data, st->read, st->frequency);
+      //alSourceQueueBuffers(st->source, 1, &buffer2);
       st->lastPrimedBuffer++;
     }
   }
+  */
 #endif 
   return 0;
 }
@@ -608,9 +613,10 @@ int qwqz_audio_play(qwqz_audio_stream st) {
 #ifdef ANDROID_NDK
   return 1;
 #else
-  ModPlug_Seek(st->modFile, 0);
-  alSourcePlay(st->source);
-  return (alGetError() == AL_NO_ERROR);
+  //ModPlug_Seek(st->modFile, 0);
+  //alSourcePlay(st->source);
+  //return (alGetError() == AL_NO_ERROR);
+  return 1;
 #endif
 }
 
@@ -618,13 +624,14 @@ int qwqz_audio_bind_device(void) {
 #ifdef ANDROID_NDK
   return 1;
 #else
-  ALCdevice* device = NULL;
-  ALCcontext* context = NULL;
+  //ALCdevice* device = NULL;
+  //ALCcontext* context = NULL;
   
-  device = alcOpenDevice(NULL);
-  context = alcCreateContext(device, NULL);
-  alcMakeContextCurrent(context);
+  //device = alcOpenDevice(NULL);
+  //context = alcCreateContext(device, NULL);
+  //alcMakeContextCurrent(context);
   
-  return (alGetError() == AL_NO_ERROR);
+  //return (alGetError() == AL_NO_ERROR);
+  return 1;
 #endif
 }
