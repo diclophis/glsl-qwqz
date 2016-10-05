@@ -541,15 +541,17 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
   st->channels = 2;
   st->format = AL_FORMAT_STEREO16;
   
-  st->numberOfBuffers = 4;
-  st->bufferSize = 1024 * 1024 * 8; //4megs
+  st->numberOfBuffers = 2;
+  st->bufferSize = 1024 * 1024; //4megs
   st->read = 0;
   st->lastPrimedBuffer = 0;
   
   st->buffers = (ALuint *)malloc(sizeof(ALuint) * st->numberOfBuffers);
   st->buffers2 = (ALuint *)malloc(sizeof(ALuint) * st->numberOfBuffers);
+
   alGenBuffers(st->numberOfBuffers, st->buffers);
-  alGenBuffers(st->numberOfBuffers, st->buffers2);
+  //alGenBuffers(st->numberOfBuffers, st->buffers2);
+
   alGenSources(1, &st->source);
   
   unsigned int lenn = 0;
@@ -574,7 +576,6 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
 #endif
 
 #ifdef EMSCRIPTEN
-  #define BUFFER_SIZE 1470*10
 
   ALint buffersProcessed = 0;
   ALuint buffer2 = 0;
@@ -583,25 +584,40 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
   ALint buffersQueued = 0;
   ALint state;
 
+/*
+
   alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
 
+  printf(".");
+
   while (st->offset < st->size && buffersProcessed--) {
+
+  printf(".");
+
     // unqueue the old buffer and validate the queue length
     alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersWereQueued);
-    alSourceUnqueueBuffers(st->source, 1, &buffer);
+    alSourceUnqueueBuffers(st->source, 1, st->buffers2);
 
     assert(alGetError() == AL_NO_ERROR);
-    int len = st->size - st->offset;
-    if (len > BUFFER_SIZE) {
-      len = BUFFER_SIZE;
-    }
+    
+    //int len = st->size - st->offset;
+    //if (len > BUFFER_SIZE) {
+    //  len = BUFFER_SIZE;
+    //}
 
     alGetSourcei(st->source, AL_BUFFERS_QUEUED, &buffersQueued);
     assert(buffersQueued == buffersWereQueued - 1);
 
     // queue the new buffer and validate the queue length
     buffersWereQueued = buffersQueued;
-    alBufferData(buffer, st->format, st->data, len, st->frequency);
+    //alBufferData(buffer, st->format, st->data, len, st->frequency);
+
+      st->read = ModPlug_Read(st->modFile, st->data, st->bufferSize);
+      if (st->read == 0) {
+        ModPlug_Seek(st->modFile, 0);
+      }
+      
+      alBufferData(buffer, st->format, st->data, st->read, st->frequency);
 
     alSourceQueueBuffers(st->source, 1, &buffer);
     assert(alGetError() == AL_NO_ERROR);
@@ -612,15 +628,15 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
     // make sure it's still playing
     alGetSourcei(st->source, AL_SOURCE_STATE, &state);
     assert(state == AL_PLAYING);
-
-    st->offset += len;
   }
 
+*/
  
-/* 
   alGetSourcei(st->source, AL_BUFFERS_PROCESSED, &buffersProcessed);
   
   if (buffersProcessed > 0) {
+    printf(".");
+
     alSourceUnqueueBuffers(st->source, buffersProcessed, st->buffers2);
 
     for (int i=0; i<buffersProcessed; i++) {
@@ -641,6 +657,8 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
       alSourcePlay(st->source);
     }
   } else {
+    printf(":");
+
     while (st->lastPrimedBuffer < st->numberOfBuffers) {
       buffer2 = st->buffers[st->lastPrimedBuffer];
       
@@ -655,7 +673,6 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
       st->lastPrimedBuffer++;
     }
   }
-*/
 
 #endif 
 
