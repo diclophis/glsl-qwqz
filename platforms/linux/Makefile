@@ -12,6 +12,7 @@ CXXFLAGS=\
 -I../../src \
 -I../../src/contrib \
 -I../../$(impl)-src \
+-DEMSCRIPTEN \
 -DDESKTOP \
 -DNDEBUG \
 -DHAVE_SETENV \
