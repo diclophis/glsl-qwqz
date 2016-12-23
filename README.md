@@ -31,3 +31,9 @@ The `networked-tilemap-maze-src` directory is a WIP example of how to communicat
 You should be presented with a screen of a character cycling through all of its animations. Use your pointer device to click and drag the player around the screen.
 ![image](doc/ntm.png)
 
+
+
+    qwqz_engine = qwqz_create();
+
+
+

@@ -675,3 +675,40 @@ int qwqz_audio_bind_device(void) {
 #endif
 
 }
+
+
+int qwqz_alloc_timers(qwqz_handle e, int c) {
+  e->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * c);
+  int i=0;
+  for (i=0; i<c; i++) {
+    qwqz_timer_init(&e->m_Timers[i]);
+  }
+}
+
+
+int qwqz_alloc_linkages(qwqz_handle e, int c) {
+  e->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * c);
+  e->m_LinkageCount = 0;
+}
+
+
+int qwqz_alloc_batches(qwqz_handle e, int c) {
+  e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * c);
+}
+
+int qwqz_stack_shader_linkage(qwqz_handle e, char *vsh, char *fsh) {
+  GLuint v = 0;
+  GLuint f2 = 0;
+  GLuint program = 0;
+
+  v = qwqz_compile(GL_VERTEX_SHADER, vsh); //"assets/shaders/spine_bone_texture_quad.vsh");
+  f2 = qwqz_compile(GL_FRAGMENT_SHADER, fsh); //"assets/shaders/indexed_filled_quad.fsh");
+
+  if (v && f2) {
+    program = glCreateProgram();
+    glAttachShader(program, v);
+    glAttachShader(program, f2);
+    qwqz_linkage_init(program, &e->m_Linkages[e->m_LinkageCount]);
+    e->m_LinkageCount++;
+  }
+}

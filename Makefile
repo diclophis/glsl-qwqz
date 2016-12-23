@@ -4,8 +4,13 @@ ntm:
 	cd platforms/osx && IMPL=networked-tilemap-maze make
 	platforms/osx/build/raptor_island
 
+linux-ntm:
+	cd platforms/linux && IMPL=networked-tilemap-maze make
+	platforms/linux/build/raptor_island
+
 ntm-clean:
 	cd platforms/osx && IMPL=networked-tilemap-mze make clean
+
 
 sidescroll:
 	cd platforms/osx && IMPL=sidescroll make
@@ -26,7 +31,7 @@ linux-sidescroll:
 	cd platforms/linux && IMPL=sidescroll make
 	platforms/linux/build/raptor_island
 
-linix-sidescroll-clean:
+linux-sidescroll-clean:
 	cd platforms/linux && IMPL=sidescroll make clean
 
 rocketeer:

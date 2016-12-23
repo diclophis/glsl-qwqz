@@ -141,21 +141,15 @@ int impl_main(int argc, char** argv, GLuint b) {
   GLuint program = 0;
 
   qwqz_engine = qwqz_create();
-  qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
-  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
-  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
 
-  qwqz_timer_init(&qwqz_engine->m_Timers[0]);
+  qwqz_alloc_timers(qwqz_engine, 1);
+  qwqz_alloc_linkages(qwqz_engine, 1);
+  qwqz_alloc_batches(qwqz_engine, 1);
 
-  v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/spine_bone_texture_quad.vsh");
-  f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/indexed_filled_quad.fsh");
+  qwqz_stack_shader_linkage(qwqz_engine,
+    "assets/shaders/spine_bone_texture_quad.vsh",
+    "assets/shaders/indexed_filled_quad.fsh");
 
-  if (v && f2) {
-    program = glCreateProgram();
-    glAttachShader(program, v);
-    glAttachShader(program, f2);
-    qwqz_linkage_init(program, &qwqz_engine->m_Linkages[0]);
-  }
 
   spAtlas* atlas = spAtlas_createFromFile("assets/spine/source.atlas", NULL);
   spSkeletonJson* json = spSkeletonJson_create(atlas);
@@ -165,7 +159,9 @@ int impl_main(int argc, char** argv, GLuint b) {
   state = spAnimationState_create(stateData);
   spAnimationState_setAnimationByName(state, 0, "0", 1);
 
-  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (skeleton->slotCount) * debugGrid * debugGrid);
+  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], 
+    (skeleton->slotCount) * debugGrid * debugGrid
+  );
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C

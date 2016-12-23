@@ -37,6 +37,7 @@ struct qwqz_handle_t {
   float m_Zoom2;
   struct qwqz_batch_t *m_Batches;
   struct qwqz_linkage_t *m_Linkages;
+  int m_LinkageCount;
   struct qwqz_timer_t *m_Timers;
 
   GLuint FramebufferName;
@@ -88,6 +89,16 @@ void qwqz_batch_add(qwqz_batch ff, int renderObject, float *vertices, float *col
 void qwqz_batch_clear(qwqz_batch ff);
 void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll);
 void qwqz_batch_render(qwqz_handle e, qwqz_batch ff);
+
+int qwqz_alloc_timers(qwqz_handle e, int c);
+int qwqz_alloc_linkages(qwqz_handle e, int c);
+int qwqz_alloc_batches(qwqz_handle e, int c);
+
+/*
+  qwqz_engine->m_Timers = (struct qwqz_timer_t *)malloc(sizeof(struct qwqz_timer_t) * 1);
+  qwqz_engine->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * 1);
+  qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * 1);
+*/
 
 int qwqz_linkage_init(GLuint program, qwqz_linkage e);
 int qwqz_compile(GLuint type, const char *path);

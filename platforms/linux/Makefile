@@ -12,7 +12,6 @@ CXXFLAGS=\
 -I../../src \
 -I../../src/contrib \
 -I../../$(impl)-src \
--DEMSCRIPTEN \
 -DDESKTOP \
 -DNDEBUG \
 -DHAVE_SETENV \
@@ -20,6 +19,7 @@ CXXFLAGS=\
 -DMODPLUG_FASTSOUNDLIB \
 -DHAVE_STDINT_H \
 -DHAVE_SINF
+#-DEMSCRIPTEN \
 
 CFLAGS=$(CXXFLAGS)
 LDFLAGS=-lpthread -lresolv -lGL -lglut -lGLU -lm -lstdc++ -lopenal
