@@ -16,8 +16,6 @@
 #include "chipmunk_bridge.h"
 
 
-
-
 static qwqz_handle qwqz_engine = NULL;
 static cpSpace *space;
 static int doPhysics = 1;
@@ -39,15 +37,15 @@ static float bgsScroll[9] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 static cpBody **bodies;
 static int jumped = 0;
 
+
 int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
-  spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.0);
+  spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.0);
   spAnimationState_apply(state, skeleton);
   spSkeleton_updateWorldTransform(skeleton);
 
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-  //glUniform2f(g_TextureOffset, 0) * (ay % 3)));
 
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -59,11 +57,12 @@ int impl_draw(int b) {
   for (int i=0; i<skeleton->slotCount; i++) {
     spSlot *s = skeleton->drawOrder[i];
     spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-    if (s->attachment->type == SP_ATTACHMENT_REGION) {
-      float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
+    if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
+
+      float ox = 0;
       spRegionAttachment_computeWorldVertices(ra, ox, 0.0, s->bone, verticeBuffer);
       qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
-
+    
       float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
       float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
 
@@ -72,20 +71,22 @@ int impl_draw(int b) {
 
       cpBody *body = bodies[i];
 
-      cpVect newPos = cpv(x + ox, y);
-      cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
+      if (body) {
+        cpVect newPos = cpv(x + ox, y);
+        cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
 
-      float velocity_limit = 150;
-      float velocity_mag = cpvlength(newVel);
-      if (velocity_mag > velocity_limit) {
-        float velocity_scale = velocity_limit / velocity_mag;
-        newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+        float velocity_limit = 150;
+        float velocity_mag = cpvlength(newVel);
+        if (velocity_mag > velocity_limit) {
+          float velocity_scale = velocity_limit / velocity_mag;
+          newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+        }
+
+        cpBodySetVelocity(body, newVel);
+        cpBodySetPosition(body, newPos);
+
+        cpBodySetAngle(body, r);
       }
-
-      cpBodySetVelocity(body, newVel);
-      cpBodySetPosition(body, newPos);
-
-      cpBodySetAngle(body, r);
     }
   }
 
@@ -105,8 +106,6 @@ int impl_draw(int b) {
 
 
   return 0;
-
-
 
 
 /*
@@ -280,11 +279,22 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
   return resized;
 }
 
+
 int impl_hit(int x, int y, int s) {
-  spAnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
-  spAnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
+  //spAnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
+  //if (rand() > (RAND_MAX / 2)) {
+    //spAnimationState_setAnimationByName(state, 0, "walk", 1);
+  //} else {
+
+  if (2 == s) {
+    spAnimationState_addAnimationByName(state, 0, "shoot", 0, 0);
+    spAnimationState_addAnimationByName(state, 0, "walk", 1, 0.45);
+  }
+
+  //}
   return 0;
 }
+
 
 int impl_main(int argc, char** argv, GLuint b) {
 
@@ -358,17 +368,20 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   if (doSpine) {
     {
-      spAtlas* atlas = spAtlas_createFromFile("assets/spine/robot.atlas", NULL);
+      spAtlas* atlas = spAtlas_createFromFile("assets/spine/spineboy.atlas", NULL);
       spSkeletonJson* json = spSkeletonJson_create(atlas);
-      spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/robot.json");
+      spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/spineboy.json");
       assert(skeletonData);
       skeleton = spSkeleton_create(skeletonData);
       stateData = spAnimationStateData_create(skeletonData);
-      spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
-      spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
+      //spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
+      //spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
+      spAnimationStateData_setMixByName(stateData, "walk", "shoot", 0.001);
+      spAnimationStateData_setMixByName(stateData, "shoot", "walk", 0.5);
       state = spAnimationState_create(stateData);
-      spAnimationState_setAnimationByName(state, 0, "walk_alt", 1);
+      spAnimationState_setAnimationByName(state, 0, "walk", 1);
 
+      /*
       spAtlas* atlas2 = spAtlas_createFromFile("assets/spine/bgs.atlas", NULL);
       spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
       spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
@@ -376,6 +389,7 @@ int impl_main(int argc, char** argv, GLuint b) {
       bgsStateData = spAnimationStateData_create(skeletonData2);
       bgsState = spAnimationState_create(bgsStateData);
       spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
+      */
     }
 
     qwqz_stack_shader_linkage(qwqz_engine,
@@ -383,7 +397,7 @@ int impl_main(int argc, char** argv, GLuint b) {
       "assets/shaders/indexed_filled_quad.fsh");
 
     qwqz_batch_init(&qwqz_engine->m_Batches[0],
-      &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * 3) + skeleton->slotCount);
+      &qwqz_engine->m_Linkages[0], skeleton->slotCount);
 
     glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
     int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
@@ -406,8 +420,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
     for (int i=0; i<skeleton->slotCount; i++) {
       spSlot *s = skeleton->drawOrder[i];
-      if (s->attachment->type == SP_ATTACHMENT_REGION) {
-
+      if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
 
         float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
@@ -426,16 +439,17 @@ int impl_main(int argc, char** argv, GLuint b) {
         cpBodySetAngle(body, r);
         cpBodySetPosition(body, cpv(x, y));
 
-        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * 0.5, ra->height * 0.5, 10.0f));
+        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width * 0.5, ra->height * 0.5, 15.0f));
         cpShapeSetElasticity(shape, 0.0f);
         cpShapeSetFriction(shape, 1.0f);
         cpGroup spineGroup = 2;
         shape->filter.group = spineGroup;
       }
     }
+
   }
 
-
+/*
   if (0 && doShaderBg) {
     qwqz_engine->m_RenderTextureWidth = 256;
 
@@ -471,6 +485,7 @@ int impl_main(int argc, char** argv, GLuint b) {
     qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
     qwqz_batch_init(&qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2], 1);
   }
+*/
 
   return 0;
 }
