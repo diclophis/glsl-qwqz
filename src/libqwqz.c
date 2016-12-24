@@ -554,7 +554,7 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
 
   alGenSources(1, &st->source);
   
-  unsigned int lenn = 0;
+  long lenn = 0;
   char *buffer = qwqz_load(sound_file, &lenn);
   st->modFile = ModPlug_Load(buffer, lenn);
   free(buffer);
