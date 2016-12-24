@@ -158,14 +158,14 @@ int impl_draw(int b) {
   skeleton->flipX = flip; // so simple
   */
 
-  spAnimationState_update(state, qwqz_engine->m_Timers[0].step);
+  spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 3.0);
   spAnimationState_apply(state, skeleton);
   spSkeleton_updateWorldTransform(skeleton);
 
   glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
   //glUniform2f(g_TextureOffset, 0) * (ay % 3)));
 
-  glClearColor(0.01, 1.0, 0.01, 1.0);
+  glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
@@ -539,6 +539,16 @@ int impl_main(int argc, char** argv, GLuint b) {
 
     //foor
     shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-1000, 0), cpv(1000, 0), 0.0f));
+    cpShapeSetElasticity(shape, 0.0f);
+    cpShapeSetFriction(shape, 1.0f);
+    cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(-300, 0), cpv(-600, 400), 0.0f));
+    cpShapeSetElasticity(shape, 0.0f);
+    cpShapeSetFriction(shape, 1.0f);
+    cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
+
+    shape = cpSpaceAddShape(space, cpSegmentShapeNew(staticBody, cpv(300, 0), cpv(600, 400), 0.0f));
     cpShapeSetElasticity(shape, 0.0f);
     cpShapeSetFriction(shape, 1.0f);
     cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);

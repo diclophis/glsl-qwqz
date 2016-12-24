@@ -84,12 +84,13 @@ emscripten-sidescroll:
 emscripten-sidescroll-clean:
 	cd platforms/emscripten && IMPL=sidescroll emmake make clean
 
+emscripten-rocketeer:
+	cd platforms/emscripten && IMPL=rocketeer emmake make
+	cd platforms/emscripten && IMPL=rocketeer emmake make install
+
 emscripten-rocketeer-clean:
 	cd platforms/emscripten && IMPL=rocketeer emmake make clean
 
-emscripten-rocketeer:
-	#cd platforms/emscripten && IMPL=rocketeer emmake make
-	cd platforms/emscripten && IMPL=rocketeer emmake make install
 
 emscripten-test:
 	cd platforms/emscripten && IMPL=test emmake make

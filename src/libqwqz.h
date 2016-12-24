@@ -141,3 +141,4 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file);
 int qwqz_audio_bind_device(void);
 int qwqz_audio_play(qwqz_audio_stream st);
 int qwqz_audio_fill(qwqz_audio_stream st);
+int qwqz_stack_shader_linkage(qwqz_handle e, char *vsh, char *fsh);

@@ -127,8 +127,8 @@ static int counting_on_ground = 0.0;
 // chipmunk stuff
 static cpSpace *space;
 static cpBody **bodies;
-static float gChipmunkJumpPower = 150000.0;
-static float gChipmunkGravity = -200.0;
+static float gChipmunkJumpPower = 100000.0;
+static float gChipmunkGravity = -400.0;
 static float gChipmunkPlayerMass = 1000.0;
 static float gChipmunkPlayerElasticity = 0.85;
 static float gChipmunkGroundElasticity = 0.33;
@@ -242,7 +242,7 @@ int impl_hit(int x, int y, int s) {
     cpVect jump = cpv(0.0, gChipmunkJumpPower);
     cpBodyApplyImpulseAtLocalPoint(body, jump, cpv(0, 0));
     if (gChipmunkPlayerSpeed < 2000.0) {
-      gChipmunkPlayerSpeed += 100.0;
+      gChipmunkPlayerSpeed += 300.0;
     }
   }
   
