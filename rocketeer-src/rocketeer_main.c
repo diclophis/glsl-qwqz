@@ -46,7 +46,12 @@ int impl_draw(int b) {
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
   if (doPhysics) {
-    cpSpaceStep(space, qwqz_engine->m_Timers[0].step);
+    //TODO: figure out better step code
+    float phstep = qwqz_engine->m_Timers[0].step / 4.0;
+    int p=0;
+    for (p=0; p<4; p++) {
+      cpSpaceStep(space, phstep);
+    }
   }
 
   if (doPhysics) {
@@ -341,8 +346,8 @@ int impl_main(int argc, char** argv, GLuint b) {
 
     space = cpSpaceNew();
     cpSpaceSetGravity(space, cpv(0, -200));
-    cpSpaceSetIterations(space, 1);
-    cpSpaceSetCollisionSlop(space, 1.0);
+    cpSpaceSetIterations(space, 4);
+    cpSpaceSetCollisionSlop(space, 0.1);
 
     cpShape *shape;
     cpBody *body;
@@ -407,7 +412,7 @@ int impl_main(int argc, char** argv, GLuint b) {
       stateData = spAnimationStateData_create(skeletonData);
       //spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
       //spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
-      spAnimationStateData_setMixByName(stateData, "walk", "shoot", 0.001);
+      spAnimationStateData_setMixByName(stateData, "walk", "shoot", 0.25);
       spAnimationStateData_setMixByName(stateData, "shoot", "walk", 0.5);
       state = spAnimationState_create(stateData);
       spAnimationState_setAnimationByName(state, 0, "walk", 1);
