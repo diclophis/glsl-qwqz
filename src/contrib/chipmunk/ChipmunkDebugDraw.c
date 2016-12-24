@@ -34,7 +34,7 @@
 float ChipmunkDebugDrawPointLineScale = 1.0f;
 float ChipmunkDebugDrawOutlineWidth = 1.0f;
 
-static GLuint program;
+static GLuint ChipmunkDebugRenderProgram;
 
 struct v2f {GLfloat x, y;};
 static struct v2f v2f0 = {0.0f, 0.0f};
@@ -184,7 +184,7 @@ precision mediump float;
 		}
 	));
 	
-	program = LinkProgram(vshader, fshader);
+	ChipmunkDebugRenderProgram = LinkProgram(vshader, fshader);
 	//CHECK_GL_ERRORS();
 	
 	// Setu VBO and VAO.
@@ -194,19 +194,19 @@ precision mediump float;
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	
-  glUseProgram(program);
+  glUseProgram(ChipmunkDebugRenderProgram);
   
-  glUniform1f(glGetUniformLocation(program, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
+  glUniform1f(glGetUniformLocation(ChipmunkDebugRenderProgram, "u_outline_coef"), ChipmunkDebugDrawPointLineScale);
 
-  SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
-  SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
-  SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
-  SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, vertex, GL_FLOAT);
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, aa_coord, GL_FLOAT);
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, fill_color, GL_FLOAT);
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, outline_color, GL_FLOAT);
 
   //ChipmunkDebugDrawResizeRenderer(128.0, 128.0);
 
-  ModelViewProjectionMatrix_location2 = glGetUniformLocation(program, "ModelViewProjectionMatrix");
-  resolutionHackLocation = glGetUniformLocation(program, "iResolution");
+  ModelViewProjectionMatrix_location2 = glGetUniformLocation(ChipmunkDebugRenderProgram, "ModelViewProjectionMatrix");
+  resolutionHackLocation = glGetUniformLocation(ChipmunkDebugRenderProgram, "iResolution");
 
   /*
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -394,15 +394,17 @@ ChipmunkDebugDrawFlushRenderer(void)
   //CHECK_GL_ERRORS();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, triangle_buffer, GL_DYNAMIC_DRAW);
 
   glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle)*triangle_count, NULL, GL_DYNAMIC_DRAW);
   glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Triangle)*triangle_count, triangle_buffer);
-  
-  SET_ATTRIBUTE(program, struct Vertex, vertex, GL_FLOAT);
-  SET_ATTRIBUTE(program, struct Vertex, aa_coord, GL_FLOAT);
-  SET_ATTRIBUTE(program, struct Vertex, fill_color, GL_FLOAT);
-  SET_ATTRIBUTE(program, struct Vertex, outline_color, GL_FLOAT);
+
+
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, vertex, GL_FLOAT);
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, aa_coord, GL_FLOAT);
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, fill_color, GL_FLOAT);
+  SET_ATTRIBUTE(ChipmunkDebugRenderProgram, struct Vertex, outline_color, GL_FLOAT);
 	
 	//glBindVertexArrayOES(vao);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -433,7 +435,7 @@ ChipmunkDebugDrawPushRenderer(void)
 {
 	pushed_triangle_count = triangle_count;
 
-	glUseProgram(program);
+	glUseProgram(ChipmunkDebugRenderProgram);
   glUniformMatrix4fv(ModelViewProjectionMatrix_location2, 1, GL_FALSE, ProjectionMatrix2);
 
   return resolutionHackLocation;

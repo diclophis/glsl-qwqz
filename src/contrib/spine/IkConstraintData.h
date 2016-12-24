@@ -28,40 +28,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_EVENTDATA_H_
-#define SPINE_EVENTDATA_H_
+#ifndef SPINE_IKCONSTRAINTDATA_H_
+#define SPINE_IKCONSTRAINTDATA_H_
+
+#include <spine/BoneData.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct spEventData {
+typedef struct spIkConstraintData {
 	const char* const name;
-	int intValue;
-	float floatValue;
-	const char* stringValue;
+	int order;
+	int bonesCount;
+	spBoneData** bones;
+
+	spBoneData* target;
+	int bendDirection;
+	float mix;
 
 #ifdef __cplusplus
-	spEventData() :
+	spIkConstraintData() :
 		name(0),
-		intValue(0),
-		floatValue(0),
-		stringValue(0) {
+		bonesCount(0),
+		bones(0),
+		target(0),
+		bendDirection(0),
+		mix(0) {
 	}
 #endif
-} spEventData;
+} spIkConstraintData;
 
-spEventData* spEventData_create (const char* name);
-void spEventData_dispose (spEventData* self);
+spIkConstraintData* spIkConstraintData_create (const char* name);
+void spIkConstraintData_dispose (spIkConstraintData* self);
 
 #ifdef SPINE_SHORT_NAMES
-typedef spEventData EventData;
-#define EventData_create(...) spEventData_create(__VA_ARGS__)
-#define EventData_dispose(...) spEventData_dispose(__VA_ARGS__)
+typedef spIkConstraintData IkConstraintData;
+#define IkConstraintData_create(...) spIkConstraintData_create(__VA_ARGS__)
+#define IkConstraintData_dispose(...) spIkConstraintData_dispose(__VA_ARGS__)
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SPINE_EVENTDATA_H_ */
+#endif /* SPINE_IKCONSTRAINTDATA_H_ */

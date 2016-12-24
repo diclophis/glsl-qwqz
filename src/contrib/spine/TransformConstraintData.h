@@ -28,40 +28,55 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_EVENTDATA_H_
-#define SPINE_EVENTDATA_H_
+#ifndef SPINE_TRANSFORMCONSTRAINTDATA_H_
+#define SPINE_TRANSFORMCONSTRAINTDATA_H_
+
+#include <spine/BoneData.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct spEventData {
+typedef struct spTransformConstraintData {
 	const char* const name;
-	int intValue;
-	float floatValue;
-	const char* stringValue;
+	int order;
+	int bonesCount;
+	spBoneData** const bones;
+	spBoneData* target;
+	float rotateMix, translateMix, scaleMix, shearMix;
+	float offsetRotation, offsetX, offsetY, offsetScaleX, offsetScaleY, offsetShearY;
 
 #ifdef __cplusplus
-	spEventData() :
+	spTransformConstraintData() :
 		name(0),
-		intValue(0),
-		floatValue(0),
-		stringValue(0) {
+		bonesCount(0),
+		bones(0),
+		target(0),
+		rotateMix(0),
+		translateMix(0),
+		scaleMix(0),
+		shearMix(0),
+		offsetRotation(0),
+		offsetX(0),
+		offsetY(0),
+		offsetScaleX(0),
+		offsetScaleY(0),
+		offsetShearY(0) {
 	}
 #endif
-} spEventData;
+} spTransformConstraintData;
 
-spEventData* spEventData_create (const char* name);
-void spEventData_dispose (spEventData* self);
+spTransformConstraintData* spTransformConstraintData_create (const char* name);
+void spTransformConstraintData_dispose (spTransformConstraintData* self);
 
 #ifdef SPINE_SHORT_NAMES
-typedef spEventData EventData;
-#define EventData_create(...) spEventData_create(__VA_ARGS__)
-#define EventData_dispose(...) spEventData_dispose(__VA_ARGS__)
+typedef spTransformConstraintData TransformConstraintData;
+#define TransformConstraintData_create(...) spTransformConstraintData_create(__VA_ARGS__)
+#define TransformConstraintData_dispose(...) spTransformConstraintData_dispose(__VA_ARGS__)
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SPINE_EVENTDATA_H_ */
+#endif /* SPINE_TRANSFORMCONSTRAINTDATA_H_ */

@@ -28,40 +28,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_EVENTDATA_H_
-#define SPINE_EVENTDATA_H_
+#ifndef SPINE_PATHATTACHMENT_H_
+#define SPINE_PATHATTACHMENT_H_
+
+#include <spine/Attachment.h>
+#include <spine/VertexAttachment.h>
+#include <spine/Atlas.h>
+#include <spine/Slot.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct spEventData {
-	const char* const name;
-	int intValue;
-	float floatValue;
-	const char* stringValue;
+typedef struct spPathAttachment {
+	spVertexAttachment super;
+	int lengthsLength;
+	float* lengths;
+	int/*bool*/ closed, constantSpeed;
+} spPathAttachment;
 
-#ifdef __cplusplus
-	spEventData() :
-		name(0),
-		intValue(0),
-		floatValue(0),
-		stringValue(0) {
-	}
-#endif
-} spEventData;
-
-spEventData* spEventData_create (const char* name);
-void spEventData_dispose (spEventData* self);
+spPathAttachment* spPathAttachment_create (const char* name);
+void spPathAttachment_computeWorldVertices (spPathAttachment* self, spSlot* slot, float* worldVertices);
+void spPathAttachment_computeWorldVertices1 (spPathAttachment* self, spSlot* slot, int start, int count, float* worldVertices, int offset);
 
 #ifdef SPINE_SHORT_NAMES
-typedef spEventData EventData;
-#define EventData_create(...) spEventData_create(__VA_ARGS__)
-#define EventData_dispose(...) spEventData_dispose(__VA_ARGS__)
+typedef spPathAttachment PathAttachment;
+#define PathAttachment_create(...) spPathAttachment_create(__VA_ARGS__)
+#define PathAttachment_computeWorldVertices(...) spPathAttachment_computeWorldVertices(__VA_ARGS__)
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SPINE_EVENTDATA_H_ */
+#endif /* SPINE_PATHATTACHMENT_H_ */
