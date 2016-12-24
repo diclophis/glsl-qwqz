@@ -125,7 +125,7 @@ struct qwqz_audio_stream_t {
   int lastPrimedBuffer;
 #ifdef ANDROID_NDK
 #endif
-#ifdef EMSCRIPTEN
+#ifdef HAVE_OPENAL
   ALuint *buffers;
   ALuint *buffers2;
   ALuint source;

@@ -533,7 +533,7 @@ qwqz_audio_stream qwqz_create_audio_stream(char *sound_file) {
 #ifdef ANDROID_NDK
 #endif
 
-#ifdef EMSCRIPTEN
+#if HAVE_OPENAL
   printf("doing audio!\n");
 
   st->bits = 16;
@@ -575,7 +575,7 @@ int qwqz_audio_fill(qwqz_audio_stream st) {
 #ifdef ANDROID_NDK
 #endif
 
-#ifdef EMSCRIPTEN
+#ifdef HAVE_OPENAL
 
   ALint buffersProcessed = 0;
   ALuint buffer2 = 0;
@@ -638,7 +638,7 @@ int qwqz_audio_play(qwqz_audio_stream st) {
   return 1;
 #endif
 
-#ifdef EMSCRIPTEN
+#ifdef HAVE_OPENAL
   printf("playing\n");
 
   ModPlug_Seek(st->modFile, 0);
@@ -658,7 +658,7 @@ int qwqz_audio_bind_device(void) {
   return 0;
 #endif
 
-#ifdef EMSCRIPTEN
+#ifdef HAVE_OPENAL
   printf("wtf!!!\n");
 
   ALCdevice* device = NULL;

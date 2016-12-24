@@ -140,7 +140,7 @@
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
 #else
-#ifdef EMSCRIPTEN
+#ifdef HAVE_OPENAL
 #include <AL/al.h>
 #include <AL/alc.h>
 #endif
