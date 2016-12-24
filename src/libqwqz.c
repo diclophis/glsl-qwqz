@@ -47,17 +47,17 @@ qwqz_handle qwqz_create(void) {
 }
 
 
-char *qwqz_load(const char *path, unsigned int *le) {
+char *qwqz_load(const char *path, long *le) {
   FILE *fd = iosfopen(path, "rb");
   if (fd) {
     fseek(fd, 0, SEEK_END);
-    unsigned int len = ftell(fd);
+    long len = ftell(fd);
     *le = len;
     rewind(fd);
     char *buffer = NULL;
     buffer = (char *)malloc(sizeof(char) * (len + 1));
     fseek(fd, 0, SEEK_SET); //NOTE: android offset != 0
-    int read = fread(buffer, sizeof(char), len, fd);
+    size_t read = fread(buffer, sizeof(char), len, fd);
     rewind(fd);
     fclose(fd);
     if (read > 0) {
@@ -297,7 +297,7 @@ void qwqz_batch_prepare(qwqz_handle e, qwqz_batch ff, qwqz_linkage ll) {
   
   if (ff->m_NeedsAttribs) {
     ff->m_NeedsAttribs = 0;
-    size_t size_of_sprite = sizeof(struct qwqz_sprite_t);
+    GLsizei size_of_sprite = sizeof(struct qwqz_sprite_t);
     glVertexAttribPointer(ll->g_PositionAttribute, 2, GL_SHORT, GL_FALSE, size_of_sprite, (char *)NULL + (0));
     glVertexAttribPointer(ll->g_TextureAttribute, 2, GL_FLOAT, GL_FALSE, size_of_sprite, (char *)NULL + (2 * sizeof(GLshort)));
   }
@@ -335,7 +335,7 @@ int qwqz_compile(GLuint type, const char *vsh) {
   int l = 0;
   int success = 0;
   GLuint v = 0;
-  unsigned int len = 0;
+  long len = 0;
   char *b = qwqz_load(vsh, &len);
   char *msg = NULL;
   if (b) {
@@ -683,17 +683,23 @@ int qwqz_alloc_timers(qwqz_handle e, int c) {
   for (i=0; i<c; i++) {
     qwqz_timer_init(&e->m_Timers[i]);
   }
+
+  return 0;
 }
 
 
 int qwqz_alloc_linkages(qwqz_handle e, int c) {
   e->m_Linkages = (struct qwqz_linkage_t *)malloc(sizeof(struct qwqz_linkage_t) * c);
   e->m_LinkageCount = 0;
+
+  return 0;
 }
 
 
 int qwqz_alloc_batches(qwqz_handle e, int c) {
   e->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * c);
+
+  return 0;
 }
 
 int qwqz_stack_shader_linkage(qwqz_handle e, char *vsh, char *fsh) {
@@ -711,4 +717,6 @@ int qwqz_stack_shader_linkage(qwqz_handle e, char *vsh, char *fsh) {
     qwqz_linkage_init(program, &e->m_Linkages[e->m_LinkageCount]);
     e->m_LinkageCount++;
   }
+
+  return 0;
 }

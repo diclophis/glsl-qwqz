@@ -372,7 +372,7 @@ int impl_draw(int b) {
 
         float r = cpBodyGetAngle(body);
         ra->rotation = RADIANS_TO_DEGREES(r);
-        if (abs(ra->rotation) > 90) {
+        if (fabsf(ra->rotation) > 90) {
           cpBodySetAngle(body, 0);
         };
         spRegionAttachment_updateOffset(ra);
