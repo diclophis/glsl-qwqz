@@ -120,7 +120,7 @@ void ChipmunkDemoDefaultDrawImpl(cpSpace *space) {
 static qwqz_handle qwqz_engine = NULL;
 static qwqz_audio_stream qwqz_audio = NULL;
 static int started_audio = 0;
-static int gRenderPhysicsDebug = 0;
+static int gRenderPhysicsDebug = 1;
 static float time_on_ground = -0.1;
 static int counting_on_ground = 0.0;
 
@@ -296,7 +296,9 @@ int impl_draw(int b) {
         spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
         if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
           float offX = (bgsScroll[a]);
-          spRegionAttachment_computeWorldVertices(ra, offX, 0.0, s->bone, verticeBuffer1);
+          ra->x -= 0.01; //offX;
+          spRegionAttachment_updateOffset(ra);
+          spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer1);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer1, NULL, ra->uvs);
         }
       }
@@ -309,14 +311,10 @@ int impl_draw(int b) {
     qwqz_engine->m_Batches[1].m_NeedsAttribs = 1;
     qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1]);
 
-    for (int i=0; i<skeleton->slotCount; i++) {
+    for (int i=0; i<skeleton->slotsCount; i++) {
       spSlot *s = skeleton->drawOrder[i];
       spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
       if (s->attachment->type == SP_ATTACHMENT_REGION) {
-        float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
-        float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-        float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
-
         cpBody *body = bodies[i];
         cpVect bodyOff = cpBodyGetPosition(body);
         cpVect newVel = cpBodyGetVelocity(body);
@@ -372,12 +370,15 @@ int impl_draw(int b) {
 
         float r = cpBodyGetAngle(body);
         ra->rotation = RADIANS_TO_DEGREES(r);
+        ra->x = bodyOff.x;
+        ra->y = bodyOff.y;
+        
         if (fabsf(ra->rotation) > 90) {
           cpBodySetAngle(body, 0);
         };
         spRegionAttachment_updateOffset(ra);
 
-        spRegionAttachment_computeWorldVertices(ra, (bodyOff.x) - x, (bodyOff.y) - y, s->bone, verticeBuffer);
+        spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer);
         qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, ra->uvs);
       }
     }
@@ -507,9 +508,9 @@ int impl_main(int argc, char** argv, GLuint b) {
     qwqz_linkage_init(program2, &qwqz_engine->m_Linkages[1]);
   }
 
-  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotCount * bg_range));
+  qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], (bgsSkeleton->slotsCount * bg_range));
 
-  num_bg = bgsSkeleton->slotCount;
+  num_bg = bgsSkeleton->slotsCount;
   
   for (int i=0; i<bg_range; i++) {
     float f = (float)(i - (i / 2)) * (bgsSkeleton->data->bones[1]->length * 4.0); // * bg_scale));
@@ -521,16 +522,16 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   spSkeleton_updateWorldTransform(skeleton);
 
-  bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotCount);
+  bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotsCount);
 
-  for (int i=0; i<skeleton->slotCount; i++) {
+  for (int i=0; i<skeleton->slotsCount; i++) {
     spSlot *s = skeleton->drawOrder[i];
     if (s->attachment->type == SP_ATTACHMENT_REGION) {
 
       spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
 
-      float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
-      float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
+      float rr = 0.0; //DEGREES_TO_RADIANS(s->bone->worldRotation);
+      float r = 0.0; //DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
 
       float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
       float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y)) + 300.0;
@@ -557,7 +558,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
   glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
   
-  qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], (skeleton->slotCount));
+  qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], (skeleton->slotsCount));
   
   qwqz_engine->g_lastFrameBuffer = b;
 

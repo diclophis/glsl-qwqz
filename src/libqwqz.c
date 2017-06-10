@@ -494,6 +494,7 @@ int qwqz_tick_timer(qwqz_timer timer) {
   timer->step = step;
   timer->m_SimulationTime += timer->step;
 
+/*
   // add in whatever time we currently have saved in the buffer
   timer->step += timer->accum;
   
@@ -512,6 +513,7 @@ int qwqz_tick_timer(qwqz_timer timer) {
 
   // update delta buffer so we keep the same time on average
   timer->accum = oldDelta - timer->step;
+*/
 
   timer->t1 = timer->t2;
 
