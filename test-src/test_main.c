@@ -117,9 +117,10 @@ int impl_main(int argc, char** argv, GLuint b) {
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
 
   //stack_shader(qwqz_engine, "assets/shaders/ml.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1);
+  stack_shader(qwqz_engine, "assets/shaders/dalek.fsh", v1);
 
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * stackedShaderCount);
 
@@ -129,7 +130,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   qwqz_audio_bind_device();
   qwqz_audio = qwqz_create_audio_stream("assets/sounds/2.mod");
-  printf("3 %d\n", qwqz_audio_play(qwqz_audio));
+  //printf("3 %d\n", qwqz_audio_play(qwqz_audio));
 
   return 0;
 }
