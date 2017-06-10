@@ -213,19 +213,43 @@ float DarkBits(vec3 p)
 
 float Balls(vec3 p, float polar_t, float polar_r)
 {
-	p.y += 2.45 + sin(time);
-	
-	float ang_reps = 2.;
-	polar_t = mod(polar_t,pi*(1./ang_reps)) - pi*(1./ang_reps)*0.5;
-	vec3 q = vec3(polar_r * sin(polar_t), p.y, polar_r*cos(polar_t));
-		
-	float k = .5;
-	q.y = mod( q.y, k ) - 0.5 * k;
-	
-	float balls = Sphere(q,vec3(0.0,0,1.25 - 0.1*floor(p.y*2.)),0.2);
-	
-	balls = max(balls,abs(p.y)-1.); //clip!
-	return balls;
+  //p.y += 2.45 + (sin(time * 10.0) * 0.1);
+  //p.x += 2.45 + (cos(time * 10.0) * 0.1);
+  //p.z += 2.45 + (tan(time * 10.0) * 0.1);
+  //p.x += sin(time);
+
+  float ang_reps = 8.; // + sin(time);
+  polar_t = mod(polar_t,pi*(1./ang_reps)) - pi*(1./ang_reps)*0.5;
+
+  vec3 q = vec3((polar_r * sin(polar_t)), p.y, (polar_r*cos(polar_t)));
+         //vec3((polar_r * sin(polar_t)), 3.0, (polar_r*cos(polar_t)));
+
+  // single
+  //vec3 q = p;
+
+  //q.x = forward/back
+  //q.z = left/right
+  //q.y = up/down
+
+  q.y += 2.0; // + sin(time);
+
+  float k = 0.0;
+  float alt = 0.5 * k;
+
+  q.y = mod(q.y, k) - alt;
+
+  float tilt = 0.0;
+  float size = 1.0 + (sin(time * 20.0) * 0.1);
+
+  //float balls = Sphere(q, vec3(0.0, 0, 1.25 - 0.1 * floor(p.y * tilt)), size);
+
+  float balls = Sphere(q, vec3(0.0, 0.0, 0.0), size);
+
+  //float balls = Sphere(q, vec3(0.0, 0.0, 0.0), size);
+
+  balls = max(balls, abs(q.y) - size); // clip!
+
+  return balls;
 }
 
 float Body(vec3 p) {
@@ -349,7 +373,6 @@ float sdf( vec3 p )
 	float d_bound = 2.5;	
 
   d = min(d, Balls(p, polar_t, polar_r));
-
 
 /*
 	if (polar_r < d_bound)	//optimize away this stuff if far away from bound cylinder
@@ -634,7 +657,7 @@ void MakeViewRay(out vec3 viewP, out vec3 viewD)
 	
 	viewD = normalize(viewD);
 	
-	float t = pi*0.5 + sin(time);
+	float t = pi*0.5; // + sin(time);
 
 	viewD=RotX(viewD,pi*0.1);
 	
@@ -677,72 +700,89 @@ void main(void)
 	vec3 viewP, viewD;
 	MakeViewRay(viewP, viewD);
 	
-	float t = 0.;
+	float t = 1.;
 	float d;
 
-	for (int i=0; i<128; i++)
+	for (int i=0; i<32; i++)
 	{
 		vec3 X = viewP + viewD * t;
+
 		d = sdf(X);
-		if (abs(d) < 0.00001) break; //near enough surface for normals to look OK.
-	
-#if 1	
+
+		if (abs(d) < 0.01) break; // near enough surface for normals to look OK.
+
+    // too far render cutoff
 		if (t>20.) //too far - won't converge: just go to ground plane.
 		{
 			t = (-viewP.y + floor_height) / (viewD.y);
 			break;
 		}
-#endif		
-		t += d*0.9; //bounding volumes make the distance a bit wrong so slow down
+
+		t += d * 0.8999; // wtf
+
+    //(0.5 + sin(time) * 0.5); //bounding volumes make the distance a bit wrong so slow down
 	}
 
 	vec3 X = viewP + viewD * t;
 	vec3 n = nor(X);
-	
-//	vec3 c = vec3(i,i,i)*1.0/32.0;
-//	vec3 c = vec3(t,t,t);
-//	vec3 c = n*0.5+0.5;
 
-	vec3 lightDir = normalize(vec3(3,8,2));
+	vec3 lightDir = normalize(vec3(3, 8, 2));
 
-#if 1	
-	float ao = Ao(X+n*0.03, n, sdf(n*0.03+X));	
+  float aoWeight = 0.03;
+
+	float ao = Ao(X+n*aoWeight, n, sdf(n*aoWeight+X));	
 	lightIntensity *= ao;
-#endif
 	
 	ChooseMat(X);
 	
-	float sha= 0.2;
-//	if (dot(n,lightDir)>0.) 
-		sha = shadow(X,n,lightDir);
+	float sha = 0.2;
+
+  sha = shadow(X,n,lightDir);
 	lightIntensity *= sha;
 	
-#if 0
-	gl_FragColor = vec4(vec3(sha,sha,sha),1.0);
-#else	
-	
-    vec3 c;
-    //= brdf(lightDir, -viewD, n);
+  lightDir = normalize(vec3(2,8,-3));
+  if (dot(n,lightDir)>0.) {
+    sha = shadow(X,n,lightDir);
+  }
 
-    lightDir = normalize(vec3(2,8,-3));
-    if (dot(n,lightDir)>0.)		sha = shadow(X,n,lightDir);
-    lightIntensity = ao * 4. * sha;
-	
-    c += brdf(lightDir, -viewD, n) * vec3(1., 0.,0.7);
-	
-    vec3 env = vec3(1.5, 0.5, 0.5);
-    //textureCube(iChannel0,reflect(viewD,n)).xyz;
+  lightIntensity = ao * 3. * sha;
 
-    // darken
-    //c += c * env * envAmount;
+  // colorize
 
-    // other render modes
+  vec3 c;
+ 
+  // wtf?
+  //c = vec3(0.0, 0.0, 0.0);
 
-    //c = vec3(ao,ao,ao);
-    c = pow(c, vec3(1./gamma));
-    //c = vec3(sha,sha,sha);
-    //c = n*0.5+0.5;
+  // pastel
+  //c = n*0.5+0.5;
 
-	gl_FragColor = vec4(c,1.0);
-#endif	
+  // contrast?
+  //float i = 0.5;
+  //c = vec3(i,i,i)*1.0/32.0;
+
+  //brdf(lightDir, -viewD, n);
+
+  c += brdf(lightDir, -viewD, n) * vec3(1., 0.,0.7);
+
+  // darken
+  //vec3 env = vec3(1.5, 0.5, 0.5);
+  //c += c * env * envAmount;
+
+  // other render modes
+  // just ambient acculsion
+  //c = vec3(ao,ao,ao);
+
+  // just material
+  c = pow(c, vec3(1./gamma));
+
+  // just shadow
+  //c = vec3(sha,sha,sha);
+  // wtf
+	//gl_FragColor = vec4(vec3(sha,sha,sha),1.0);
+
+  // just normals
+  //c = n*0.5+0.5;
+
+  gl_FragColor = vec4(c,1.0);
 }
