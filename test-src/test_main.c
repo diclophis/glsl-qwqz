@@ -50,12 +50,6 @@ int impl_hit(int x, int y, int s) {
 
 
 int impl_resize(int width, int height, int ew, int eh, int u) {
-  if (qwqz_engine == NULL) {
-    return 0;
-  }
-  
-  glActiveTexture(GL_TEXTURE0);
-  
   int resized = qwqz_resize(qwqz_engine, width, height, ew, eh, u);
 
   for (int i=0; i<stackedShaderCount; i++) {
@@ -64,18 +58,18 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
 
-  verticeBuffer[0] = -1.0;
+  verticeBuffer[0] = -2.0;
   verticeBuffer[1] = 2.0;
   
-  verticeBuffer[2] = -1.0;
+  verticeBuffer[2] = -2.0;
   verticeBuffer[3] = 0;
 
-  verticeBuffer[4] = 1.0;
+  verticeBuffer[4] = 2.0;
   verticeBuffer[5] = 0;
   
-  verticeBuffer[6] = 1.0;
+  verticeBuffer[6] = 2.0;
   verticeBuffer[7] = 2.0;
-  
+
   return resized;
 }
 

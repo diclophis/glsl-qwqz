@@ -213,15 +213,54 @@ float DarkBits(vec3 p)
 
 float Balls(vec3 p, float polar_t, float polar_r)
 {
+
+/*
+float size = 0.2;
+
+float ang_reps = 2.;
+polar_t = mod(polar_t,pi*(1./ang_reps)) - pi*(1./ang_reps)*0.5;
+vec3 q = vec3(polar_r * sin(polar_t), p.y, polar_r*cos(polar_t));
+        
+//float k = 0.5;
+//q.y = mod(q.y, 0.5)-k;
+//q.y += size;
+
+  float k = 0.5;
+  float alt = 0.5 * k;
+
+  q.y = mod(q.y, k) - alt;
+
+  //float balls = Sphere(q,vec3(0.0,0,.25 - 0.1*floor(p.y*0.)),size);
+
+  float balls = Sphere(q, vec3(0.0, 0.0, 1.0), size);
+
+//balls = max(balls,abs(p.y)-size); //clip!
+
+balls = max(balls, abs(q.y) - size); // clip!
+
+return balls;
+
+*/
+
   //p.y += 2.45 + (sin(time * 10.0) * 0.1);
   //p.x += 2.45 + (cos(time * 10.0) * 0.1);
   //p.z += 2.45 + (tan(time * 10.0) * 0.1);
   //p.x += sin(time);
+  //p.y += 2.0;
 
-  float ang_reps = 8.; // + sin(time);
-  polar_t = mod(polar_t,pi*(1./ang_reps)) - pi*(1./ang_reps)*0.5;
+  //p.y -= 2.0; // + sin(time);
+  //p.z += time; // + sin(time);
 
-  vec3 q = vec3((polar_r * sin(polar_t)), p.y, (polar_r*cos(polar_t)));
+  float ang_reps = 3.0; //1.0 + round(time * 0.25); // + sin(time);
+
+  float rotate = polar_t + (time * 2.0); //+ (pi * 1.5); //(mod(time, pi));
+
+  rotate = mod(rotate,pi*(1./ang_reps)) - pi*(1./ang_reps)*0.5;
+
+  float rr = polar_r;
+
+  vec3 q = vec3((rr * sin(rotate)), p.y, (rr * cos(rotate)));
+
          //vec3((polar_r * sin(polar_t)), 3.0, (polar_r*cos(polar_t)));
 
   // single
@@ -231,7 +270,9 @@ float Balls(vec3 p, float polar_t, float polar_r)
   //q.z = left/right
   //q.y = up/down
 
-  q.y += 2.0; // + sin(time);
+  //q.x -= time;
+  //q.z += time;
+
 
   float k = 0.0;
   float alt = 0.5 * k;
@@ -239,11 +280,11 @@ float Balls(vec3 p, float polar_t, float polar_r)
   q.y = mod(q.y, k) - alt;
 
   float tilt = 0.0;
-  float size = 1.0 + (sin(time * 20.0) * 0.1);
+  float size = 0.75 + (sin(time * 0.5) * 0.1);
 
   //float balls = Sphere(q, vec3(0.0, 0, 1.25 - 0.1 * floor(p.y * tilt)), size);
 
-  float balls = Sphere(q, vec3(0.0, 0.0, 0.0), size);
+  float balls = Sphere(q, vec3(0.0, 0.0, (3.0)), size);
 
   //float balls = Sphere(q, vec3(0.0, 0.0, 0.0), size);
 
@@ -649,7 +690,7 @@ void MakeViewRay(out vec3 viewP, out vec3 viewD)
 	vec2 filmUv = (xy + vec2(0.5,0.5))/resolution.xy;
 
 	float tx = (2.0*filmUv.x - 1.0)*(resolution.x/resolution.y);
-	float ty = (1.0 - 2.0*filmUv.y);
+	float ty = (2.0*filmUv.y - 0.125);
 	float tz = 0.0;
 
 	viewP = vec3(0.0, 0.0, 5.0);
@@ -657,16 +698,21 @@ void MakeViewRay(out vec3 viewP, out vec3 viewD)
 	
 	viewD = normalize(viewD);
 	
-	float t = pi*0.5; // + sin(time);
+	float t = pi; // + sin(time) * 3.0;
 
-	viewD=RotX(viewD,pi*0.1);
+	viewD = RotX(viewD, pi*(0.5 + (sin(time) * 0.0))); //pi * (0.15 + (time * 0.1)));
 	
-viewP.y += 4.0;
-viewP.z += 12.0; // - sin(iGlobalTime)*8.0;
-	viewP = RotY(viewP,t);
-	
-	viewD = RotY(viewD,t);
-	
+  //viewP.y += time; // + sin(time);
+  //viewP.z += time; //12.0 - sin(iGlobalTime)*8.0;
+
+  viewP.y = 30.;
+
+  viewP = RotY(viewP, t);
+	viewD = RotY(viewD, t);
+
+  //float dd = 0.0;
+  //viewP = RotX(viewP, dd);
+  //viewD = RotX(viewD, dd);
 }
 
 //thanks again IQ http://www.iquilezles.org/www/articles/rmshadows/rmshadows.htm
@@ -712,7 +758,7 @@ void main(void)
 		if (abs(d) < 0.01) break; // near enough surface for normals to look OK.
 
     // too far render cutoff
-		if (t>20.) //too far - won't converge: just go to ground plane.
+		if (t>1000.) //too far - won't converge: just go to ground plane.
 		{
 			t = (-viewP.y + floor_height) / (viewD.y);
 			break;
