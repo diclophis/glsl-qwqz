@@ -118,8 +118,6 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
   e->g_TextureUniform3 = glGetUniformLocation(e->m_Program, "texture3");
 
-  //qwqz_checkgl("wtf");
-  
   //free(msg);
 
   return 0;
@@ -654,15 +652,12 @@ int qwqz_audio_play(qwqz_audio_stream st) {
 }
 
 int qwqz_audio_bind_device(void) {
-  printf("ok?!!!\n");
 
 #ifdef ANDROID_NDK
   return 0;
 #endif
 
 #ifdef HAVE_OPENAL
-  printf("wtf!!!\n");
-
   ALCdevice* device = NULL;
   ALCcontext* context = NULL;
   
