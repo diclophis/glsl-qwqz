@@ -69,13 +69,11 @@ clean:
 
 install: $(build)/raptor_island_$(impl).js
 	mkdir -p $(hash_dir)
-	ruby cache_manifest.rb ../../assets/spine ../../assets/shaders ../../assets/sounds > $(hash_dir)/index.appcache
+	ruby cache_manifest.rb ../../assets/shaders ../../assets/sounds > $(hash_dir)/index.appcache
 	cp -R ../../assets $(hash_dir)
-	ln -nsf ~/favicon.ico $(hash_dir)/favicon.ico
 	install -C index.html $(hash_dir)
 	install -C $(build)/raptor_island_$(impl).js $(hash_dir)/raptor_island.js
 	(test -f $(build)/raptor_island_$(impl).js.mem && install -C $(build)/raptor_island_$(impl).js.mem $(hash_dir)/) || true
 	install -C memoryprofiler.js $(hash_dir)/
-	ln -nsf ~/favicon.ico ~/naked.bardin.haus/public/favicon.ico
 	ln -nsf $(hash_dir) ~/naked.bardin.haus/public/latest-qwqz
 	touch ~/naked.bardin.haus/public/latest-qwqz

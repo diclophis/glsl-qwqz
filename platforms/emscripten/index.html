@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta charset="utf-8">
-    <title>MemoryLeak</title>
+    <title>primitives</title>
     <style>
       body, html { margin: 0; padding: 0; overflow: hidden; height: 100%; }
     </style>
@@ -74,7 +74,7 @@
     <script>
       window.onload = function() {
         window.Module = {
-          TOTAL_MEMORY: 1024 / 1,
+          TOTAL_MEMORY: 5242880 * 2,
           noInitialRun: true,
           //preRun: [memoryprofiler_add_hooks],
           print: function(text) {
@@ -93,7 +93,6 @@
           preDepCount: 0,
           depCounter: 0,
           monitorRunDependencies: function(left) {
-            console.log(left);
             this.totalDependencies = Math.max(this.totalDependencies, left);
             this.percentComplete = (parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0));
             if (this.percentComplete > 100) { this.percentComplete = 100; }
