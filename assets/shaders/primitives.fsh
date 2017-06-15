@@ -186,8 +186,8 @@ vec2 map( in vec3 pos )
 
   //if (index < 5.0) {
   //} else {
-    res = opU( res, vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 ) );
-    res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 ) );
+    res = opU( res, vec2( sdSphere(    pos-vec3( 0.0,0.5, 0.0), 0.25 ), 46.9 ) );
+    res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.5, 0.0), vec3(0.25) ), 3.0 ) );
   //}
 
 /*
