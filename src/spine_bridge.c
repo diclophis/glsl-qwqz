@@ -32,5 +32,6 @@ void _spAtlasPage_disposeTexture (spAtlasPage* self) {
 
 
 char* _spUtil_readFile (const char* path, int* length) {
+    
   return _readFile(path, length);
 }

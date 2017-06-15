@@ -114,7 +114,9 @@ int impl_main(int argc, char** argv, GLuint b) {
   //stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/dalek.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/dalek.fsh", v1);
+  stack_shader(qwqz_engine, "assets/shaders/primitives.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/octo.fsh", v1);
 
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * stackedShaderCount);
 
