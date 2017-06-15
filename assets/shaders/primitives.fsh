@@ -184,11 +184,11 @@ vec2 map( in vec3 pos )
 
   vec2 res = opU( vec2( sdPlane(     pos), 1.0 ), vec2(1.0));
 
-  if (index < 5.0) {
+  //if (index < 5.0) {
+  //} else {
     res = opU( res, vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 ) );
-  } else {
     res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 ) );
-  }
+  //}
 
 /*
   res = opU( res, vec2( udRoundBox(  pos-vec3( 1.0,0.25, 1.0), vec3(0.15), 0.1 ), 41.0 ) );
@@ -230,9 +230,9 @@ vec2 castRay( in vec3 ro, in vec3 rd )
   
   float t = tmin;
   float m = -1.0;
-  for( int i=0; i<64; i++ )
+  for( int i=0; i<128; i++ )
   {
-    float precis = 0.0005*t;
+    float precis = 0.000001*t;
     vec2 res = map( ro+rd*t );
       if( res.x<precis || t>tmax ) break;
       t += res.x;
