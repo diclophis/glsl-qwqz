@@ -118,8 +118,6 @@ int qwqz_linkage_init(GLuint program, qwqz_linkage e) {
   e->g_TextureUniform2 = glGetUniformLocation(e->m_Program, "texture2");
   e->g_TextureUniform3 = glGetUniformLocation(e->m_Program, "texture3");
 
-  //free(msg);
-
   return 0;
 }
 

@@ -104,7 +104,6 @@ int main(int argc, char** argv) {
   
   wh = emscripten_run_script_string("(function(){return document.body.offsetWidth;})()");
   kWindowWidth = atoi(wh);
-
   wh = emscripten_run_script_string("(function(){return document.body.offsetHeight;})()");
   kWindowHeight = atoi(wh);
 
