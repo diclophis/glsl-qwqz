@@ -62,8 +62,8 @@ emscripten-ntm-clean:
 	cd platforms/emscripten && IMPL=networked-tilemap-maze emmake make clean
 
 emscripten-sidescroll:
-	cd platforms/emscripten && IMPL=sidescroll emmake make
-	cd platforms/emscripten && IMPL=sidescroll emmake make install
+	cd platforms/emscripten && PATH=${PATH}:~/emscripten IMPL=sidescroll emmake make
+	cd platforms/emscripten && PATH=${PATH}:~/emscripten IMPL=sidescroll emmake make install
 
 emscripten-sidescroll-clean:
 	cd platforms/emscripten && IMPL=sidescroll emmake make clean

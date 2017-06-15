@@ -192,8 +192,8 @@ vec2 map( in vec3 pos )
 
     res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.5, 0.0), vec3(0.25) ), 3.0 ) );
 
-    //res = opU( res, vec2( opS( udRoundBox(  pos-vec3(-0.25,0.5, 0.25), vec3(0.15),0.05),
-    //                           sdSphere(    pos-vec3(-0.25,0.5, 0.25), 0.25)), 13.0 ) );
+    res = opU( res, vec2( opS( udRoundBox(  pos-vec3(-0.25,0.5, 0.25), vec3(0.15),0.05),
+                               sdSphere(    pos-vec3(-0.25,0.5, 0.25), 0.25)), 13.0 ) );
 
 /*
   res = opU( res, vec2( udRoundBox(  pos-vec3( 1.0,0.25, 1.0), vec3(0.15), 0.1 ), 41.0 ) );

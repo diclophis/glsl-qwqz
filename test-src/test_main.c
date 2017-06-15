@@ -93,7 +93,7 @@ int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1) {
 
 
 int impl_main(int argc, char** argv, GLuint b) {
-  printf("starting impl_main\n");
+  printf("starting impl_main XXX\n");
 
   qwqz_engine = qwqz_create();
 
@@ -111,17 +111,17 @@ int impl_main(int argc, char** argv, GLuint b) {
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
 
   //stack_shader(qwqz_engine, "assets/shaders/ml.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/smiley.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/plasma.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/flower.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/thunder_and_lightning.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/trail.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/dalek.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/smiley.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/plasma.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/flower.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/thunder_and_lightning.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/trail.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/dalek.fsh", v1);
   stack_shader(qwqz_engine, "assets/shaders/primitives.fsh", v1);
-  stack_shader(qwqz_engine, "assets/shaders/octo.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/octo.fsh", v1);
 
   qwqz_engine->m_Batches = (struct qwqz_batch_t *)malloc(sizeof(struct qwqz_batch_t) * stackedShaderCount);
 

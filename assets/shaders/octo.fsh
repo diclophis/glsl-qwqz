@@ -1,5 +1,8 @@
 // "Octopus!" by Krzysztof Narkowicz @knarkowicz
 // License: Public Domain
+#ifdef GL_ES
+precision mediump float;
+#endif
 
 vec2 iMouse = vec2(0,0);
 
