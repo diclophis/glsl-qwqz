@@ -4,6 +4,9 @@ RUN apt-get update -qq && apt-get install --no-install-recommends -y --force-yes
 
 RUN useradd --home-dir /home/app --create-home --shell /bin/bash app
 
+USER app
+WORKDIR /home/app
+
 RUN curl "https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz" -o /var/tmp/emsdk-portable.tar.gz
 RUN tar zxvf /var/tmp/emsdk-portable.tar.gz
 
@@ -13,8 +16,11 @@ RUN emsdk-portable/emsdk activate latest
 
 COPY [".", "/home/app"]
 
-USER app
-RUN source ./emsdk_env.sh && 
+#Setting environment variables:
+#EMSDK = /emsdk-portable
+#EM_CONFIG = /home/app/.emscripten
+
+RUN make emscripten-test
 
 #
 #WORKDIR /home/app

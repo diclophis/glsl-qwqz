@@ -6,6 +6,9 @@
 // do some interesting boolean operations, repetition and displacement.
 //
 // More info here: http://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm
+#ifdef GL_ES
+precision mediump float;
+#endif
 
 vec2 iMouse = vec2(0,0);
 

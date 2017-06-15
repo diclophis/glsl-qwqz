@@ -1,7 +1,6 @@
 Dockerfile.emscripten
 assets
 networked-tilemap-maze-src
-platforms
 platforms/android
 platforms/ios
 platforms/linux

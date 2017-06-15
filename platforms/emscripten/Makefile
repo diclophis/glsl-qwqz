@@ -37,7 +37,7 @@ objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../
 objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../$(impl)-src/*.c)))
 
 HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_island_$(impl).js | cut -d" " -f 1 || echo 0)
-hash_dir=~/emscripten.risingcode.com/public/$(HASH)
+hash_dir=~/naked.bardin.haus/public/$(HASH)
 
 $(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
 	$(CXX) $(OPTL) -lopenal --closure 0 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=0 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
@@ -76,6 +76,6 @@ install: $(build)/raptor_island_$(impl).js
 	install -C $(build)/raptor_island_$(impl).js $(hash_dir)/raptor_island.js
 	(test -f $(build)/raptor_island_$(impl).js.mem && install -C $(build)/raptor_island_$(impl).js.mem $(hash_dir)/) || true
 	install -C memoryprofiler.js $(hash_dir)/
-	ln -nsf ~/favicon.ico ~/emscripten.risingcode.com/public/favicon.ico
-	ln -nsf $(hash_dir) ~/emscripten.risingcode.com/public/latest-qwqz
-	touch ~/emscripten.risingcode.com/public/latest-qwqz
+	ln -nsf ~/favicon.ico ~/naked.bardin.haus/public/favicon.ico
+	ln -nsf $(hash_dir) ~/naked.bardin.haus/public/latest-qwqz
+	touch ~/naked.bardin.haus/public/latest-qwqz

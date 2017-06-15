@@ -76,11 +76,11 @@ emscripten-rocketeer-clean:
 	cd platforms/emscripten && IMPL=rocketeer emmake make clean
 
 emscripten-test:
-	cd platforms/emscripten && IMPL=test emmake make
-	cd platforms/emscripten && IMPL=test emmake make install
+	cd platforms/emscripten && PATH=${PATH}:~/emscripten IMPL=test emmake make
+	cd platforms/emscripten && PATH=${PATH}:~/emscripten IMPL=test emmake make install
 
 emscripten-test-clean:
-	cd platforms/emscripten && IMPL=test emmake make clean
+	cd platforms/emscripten && PATH=${PATH}:~/emscripten IMPL=test emmake make clean
 
 android: android-clean
 	cd platforms/android && make
