@@ -10,7 +10,7 @@
 precision mediump float;
 #endif
 
-vec2 iMouse = vec2(0,0);
+vec2 iMouse = vec2(0,0.0);
 
 uniform float iGlobalTime;
 uniform vec2 iResolution;
@@ -186,9 +186,14 @@ vec2 map( in vec3 pos )
 
   //if (index < 5.0) {
   //} else {
-    res = opU( res, vec2( sdSphere(    pos-vec3( 0.0,0.5, 0.0), 0.25 ), 46.9 ) );
-    res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.5, 0.0), vec3(0.25) ), 3.0 ) );
   //}
+
+    //res = opU( res, vec2( sdSphere(    pos-vec3( 0.0,0.5, 0.0), 0.25 ), 46.9 ) );
+
+    res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.5, 0.0), vec3(0.25) ), 3.0 ) );
+
+    //res = opU( res, vec2( opS( udRoundBox(  pos-vec3(-0.25,0.5, 0.25), vec3(0.15),0.05),
+    //                           sdSphere(    pos-vec3(-0.25,0.5, 0.25), 0.25)), 13.0 ) );
 
 /*
   res = opU( res, vec2( udRoundBox(  pos-vec3( 1.0,0.25, 1.0), vec3(0.15), 0.1 ), 41.0 ) );
@@ -232,7 +237,7 @@ vec2 castRay( in vec3 ro, in vec3 rd )
   float m = -1.0;
   for( int i=0; i<128; i++ )
   {
-    float precis = 0.000001*t;
+    float precis = 0.00001*t;
     vec2 res = map( ro+rd*t );
       if( res.x<precis || t>tmax ) break;
       t += res.x;
@@ -247,7 +252,7 @@ float softshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax )
 {
   float res = 1.0;
   float t = mint;
-  for( int i=0; i<16; i++ )
+  for( int i=0; i<32; i++ )
   {
     float h = map( ro + rd*t ).x;
     res = min( res, 8.0*h/t );
