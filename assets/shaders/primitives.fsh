@@ -175,11 +175,19 @@ vec3 opTwist( vec3 p )
 
 vec2 map( in vec3 pos )
 {
-  vec2 res = opU( vec2( sdPlane(     pos), 1.0 ),
-                  vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 ) );
+
+  float index = mod(time, 10.0);
+
+
+  vec2 res = opU( vec2( sdPlane(     pos), 1.0 ), vec2(1.0));
+
+  if (index < 5.0) {
+    res = opU( res, vec2( sdSphere(    pos-vec3( 0.0,0.25, 0.0), 0.25 ), 46.9 ) );
+  } else {
+    res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 ) );
+  }
 
 /*
-  res = opU( res, vec2( sdBox(       pos-vec3( 1.0,0.25, 0.0), vec3(0.25) ), 3.0 ) );
   res = opU( res, vec2( udRoundBox(  pos-vec3( 1.0,0.25, 1.0), vec3(0.15), 0.1 ), 41.0 ) );
 	res = opU( res, vec2( sdTorus(     pos-vec3( 0.0,0.25, 1.0), vec2(0.20,0.05) ), 25.0 ) );
   res = opU( res, vec2( sdCapsule(   pos,vec3(-1.3,0.10,-0.1), vec3(-0.8,0.50,0.2), 0.1  ), 31.9 ) );
@@ -334,19 +342,20 @@ void main(void)
 {
   vec2 mo = iMouse.xy/iResolution.xy;
 	float time = 15.0 + iGlobalTime;
+  float rotSpeed = 0.5;
 
   vec3 tot = vec3(0.0);
   vec2 p = (-iResolution.xy + 2.0*gl_FragCoord.xy)/iResolution.y;
 
 	// camera	
-  vec3 ro = vec3(-0.5+3.5*cos(0.1*time + 6.0*mo.x), 1.0 + 2.0*mo.y, 0.5 + 4.0*sin(0.1*time + 6.0*mo.x));
-  vec3 ta = vec3(-0.5, -0.4, 0.5);
+  vec3 ro = vec3(-0.5+3.5*cos(time*rotSpeed + 6.0*mo.x), 1.0 + 2.0*mo.y, 0.5 + 4.0*sin(time*rotSpeed + 6.0*mo.x));
+  vec3 ta = vec3(-0.0, -0.0, -0.0);
 
   // camera-to-world transformation
   mat3 ca = setCamera(ro, ta, 0.0);
 
   // ray direction
-  vec3 rd = ca * normalize(vec3(p.xy,2.0));
+  vec3 rd = ca * normalize(vec3(p.xy, 2.0));
 
   // render	
   vec3 col = render(ro, rd);
