@@ -94,48 +94,43 @@ int impl_draw(int b) {
 
       //void spBone_localToWorld (spBone* self, float localX, float localY, float* worldX, float* worldY) {
 
-/*
-      cpBody *body = bodies[i];
+      if (0) {
+        cpBody *body = bodies[i];
+        if (body) {
+          //float x = 1.0, y = 1.0;
+          //float x = s->bone->worldX;
+          //float y = s->bone->worldY;
 
-      if (body) {
+          float x, y;
+          spBone_localToWorld(s->bone, 0, 0, &x, &y);
+     
+          float aa = spBone_getWorldRotationX(s->bone);
+          float bb = spBone_getWorldRotationY(s->bone);
 
-        //float x = 1.0, y = 1.0;
-        //float x = s->bone->worldX;
-        //float y = s->bone->worldY;
-        float x, y;
-        spBone_localToWorld(s->bone, 0, 0, &x, &y);
+          float r = 0;
+         
+          //(bone.getWorldRotationX() - att.rotation) * Math.PI / 180;
 
-   
-        float aa = spBone_getWorldRotationX(s->bone);
-        float bb = spBone_getWorldRotationY(s->bone);
+          r = DEGREES_TO_RADIANS(aa); //ra->rotation;
 
-        float r = 0;
-       
-        //(bone.getWorldRotationX() - att.rotation) * Math.PI / 180;
+          cpVect newPos = cpv(x, y);
+          cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
 
-        r = DEGREES_TO_RADIANS(aa); //ra->rotation;
+          float velocity_limit = 150;
+          float velocity_mag = cpvlength(newVel);
+          if (velocity_mag > velocity_limit) {
+            float velocity_scale = velocity_limit / velocity_mag;
+            newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+          }
 
-        cpVect newPos = cpv(x, y);
-        cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
+          cpBodySetVelocity(body, newVel);
+          cpBodySetPosition(body, newPos);
 
-        float velocity_limit = 150;
-        float velocity_mag = cpvlength(newVel);
-        if (velocity_mag > velocity_limit) {
-          float velocity_scale = velocity_limit / velocity_mag;
-          newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
+          cpBodySetAngle(body, r);
         }
-
-        cpBodySetVelocity(body, newVel);
-        cpBodySetPosition(body, newPos);
-
-        cpBodySetAngle(body, r);
       }
-*/
-
     }
   }
-
-
 
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
@@ -323,8 +318,27 @@ int impl_hit(int x, int y, int s) {
   //} else {
 
   if (2 == s) {
-    spAnimationState_addAnimationByName(state, 0, "shoot", 0, 0);
-    spAnimationState_addAnimationByName(state, 0, "walk", 1, 0.45);
+    //spAnimationState_clearTracks(state); //, 0, "shoot", 0, 0);
+    //spAnimationState_clearTrack(state, 1); //, 0, "shoot", 0, 0);
+    ////spAnimationState_addAnimationByName(state, 0, "walk", 0, 0.0);
+
+    //spAnimationState_addAnimationByName(state, 1, "shoot", 0, 0.0);
+    //spAnimationState_addAnimationByName(state, 1, "walk", 1, 0.0);
+
+    //spAnimationState_addAnimationByName(state, 0, "shoot", 0);
+    //spAnimationState_addAnimationByName(state, 1, "walk", 1);
+
+    spAnimationState_setEmptyAnimation(state, 1, 0.66);
+    spTrackEntry* te = spAnimationState_addAnimationByName(state, 1, "shoot", 0, 0.0);
+
+    //te->mixDuration = 0.33;
+
+    //spAnimationState_addEmptyAnimation(state, 1, 0.33, 0.0);
+
+    te = spAnimationState_addAnimationByName(state, 1, "walk", 1, 0.33);
+    te->mixDuration = 0.66;
+
+    //spAnimationState_addAnimationByName(state, 1, "walk", 1, 0.0);
   }
 
   //}
@@ -369,7 +383,7 @@ int impl_main(int argc, char** argv, GLuint b) {
     cpShapeSetFriction(shape, 1.0f);
     cpShapeSetFilter(shape, NOT_GRABBABLE_FILTER);
 
-    for(int i=0; i<25; i++) {
+    for(int i=0; i<5; i++) {
       for(int j=0; j<=i; j++) {
         float m = 10000.0;
 
@@ -412,10 +426,20 @@ int impl_main(int argc, char** argv, GLuint b) {
       stateData = spAnimationStateData_create(skeletonData);
       //spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
       //spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
-      spAnimationStateData_setMixByName(stateData, "walk", "shoot", 0.25);
-      spAnimationStateData_setMixByName(stateData, "shoot", "walk", 0.5);
+
+      //spAnimationStateData_setMixByName(stateData, "walk", "shoot", 0.66);
+      //spAnimationStateData_setMixByName(stateData, "shoot", "walk", 0.66);
+
       state = spAnimationState_create(stateData);
-      spAnimationState_setAnimationByName(state, 0, "walk", 1);
+
+      //spAnimationState_setAnimationByName(state, 0, "walk", 1);
+
+      spAnimationState_addAnimationByName(state, 0, "walk", 1, 0.0);
+      spAnimationState_addAnimationByName(state, 1, "shoot", 1, 0.0);
+
+      //spAnimationState_addEmptyAnimation(state, 1, 0.33, 0.0);
+      //spAnimationState_addAnimationByName(state, 1, "walk", 1, 0.0);
+
 
       /*
       spAtlas* atlas2 = spAtlas_createFromFile("assets/spine/bgs.atlas", NULL);
@@ -447,44 +471,43 @@ int impl_main(int argc, char** argv, GLuint b) {
 
     glActiveTexture(GL_TEXTURE0);
 
-    //skeleton->root->scaleX = 0.5;
-    //skeleton->root->scaleY = 0.5;
+    //skeleton->root->scaleX = 2.0;
+    //skeleton->root->scaleY = 2.0;
 
     spSkeleton_updateWorldTransform(skeleton);
 
-/*
-    bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotsCount);
+    if (0) {
+      bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotsCount);
 
-    for (int i=0; i<skeleton->slotsCount; i++) {
-      spSlot *s = skeleton->drawOrder[i];
-      if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
-        spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
+      for (int i=0; i<skeleton->slotsCount; i++) {
+        spSlot *s = skeleton->drawOrder[i];
+        if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
+          spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
 
-        //float rr = DEGREES_TO_RADIANS(s->bone->rotation);
-        //float r = DEGREES_TO_RADIANS(s->bone->rotation + ra->rotation);
+          //float rr = DEGREES_TO_RADIANS(s->bone->rotation);
+          //float r = DEGREES_TO_RADIANS(s->bone->rotation + ra->rotation);
 
-        //float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-        //float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
+          //float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
+          //float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
 
-        cpBody *body;
-        cpShape *shape;
+          cpBody *body;
+          cpShape *shape;
 
-        body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
-        body->userData = (void *)1;
-        bodies[i] = body;
+          body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
+          body->userData = (void *)1;
+          bodies[i] = body;
 
-        //cpBodySetAngle(body, r);
-        //cpBodySetPosition(body, cpv(x, y));
+          //cpBodySetAngle(body, r);
+          //cpBodySetPosition(body, cpv(x, y));
 
-        shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 15.0f));
-        cpShapeSetElasticity(shape, 0.0f);
-        cpShapeSetFriction(shape, 1.0f);
-        cpGroup spineGroup = 2;
-        shape->filter.group = spineGroup;
+          shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 15.0f));
+          cpShapeSetElasticity(shape, 0.0f);
+          cpShapeSetFriction(shape, 1.0f);
+          cpGroup spineGroup = 2;
+          shape->filter.group = spineGroup;
+        }
       }
     }
-*/
-
   }
 
 /*
