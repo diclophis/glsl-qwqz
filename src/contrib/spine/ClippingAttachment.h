@@ -28,66 +28,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_SLOT_H_
-#define SPINE_SLOT_H_
+#ifndef SPINE_CLIPPINGATTACHMENT_H_
+#define SPINE_CLIPPINGATTACHMENT_H_
 
 #include <spine/dll.h>
-#include <spine/Bone.h>
 #include <spine/Attachment.h>
-#include <spine/SlotData.h>
+#include <spine/VertexAttachment.h>
+#include <spine/Atlas.h>
+#include <spine/Slot.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct spSlot {
-	spSlotData* const data;
-	spBone* const bone;
-	spColor color;
-	spColor* darkColor;
-	spAttachment* const attachment;
+typedef struct spClippingAttachment {
+	spVertexAttachment super;
+	spSlotData* endSlot;
+} spClippingAttachment;
 
-	int attachmentVerticesCapacity;
-	int attachmentVerticesCount;
-	float* attachmentVertices;
-
-#ifdef __cplusplus
-	spSlot() :
-		data(0),
-		bone(0),
-		color(),
-		darkColor(0),
-		attachment(0),
-		attachmentVerticesCapacity(0),
-		attachmentVerticesCount(0),
-		attachmentVertices(0) {
-	}
-#endif
-} spSlot;
-
-SP_API spSlot* spSlot_create (spSlotData* data, spBone* bone);
-SP_API void spSlot_dispose (spSlot* self);
-
-/* @param attachment May be 0 to clear the attachment for the slot. */
-SP_API void spSlot_setAttachment (spSlot* self, spAttachment* attachment);
-
-SP_API void spSlot_setAttachmentTime (spSlot* self, float time);
-SP_API float spSlot_getAttachmentTime (const spSlot* self);
-
-SP_API void spSlot_setToSetupPose (spSlot* self);
+SP_API void _spClippingAttachment_dispose(spAttachment* self);
+SP_API spClippingAttachment* spClippingAttachment_create (const char* name);
 
 #ifdef SPINE_SHORT_NAMES
-typedef spSlot Slot;
-#define Slot_create(...) spSlot_create(__VA_ARGS__)
-#define Slot_dispose(...) spSlot_dispose(__VA_ARGS__)
-#define Slot_setAttachment(...) spSlot_setAttachment(__VA_ARGS__)
-#define Slot_setAttachmentTime(...) spSlot_setAttachmentTime(__VA_ARGS__)
-#define Slot_getAttachmentTime(...) spSlot_getAttachmentTime(__VA_ARGS__)
-#define Slot_setToSetupPose(...) spSlot_setToSetupPose(__VA_ARGS__)
+typedef spClippingAttachment ClippingAttachment;
+#define ClippingAttachment_create(...) spClippingAttachment_create(__VA_ARGS__)
 #endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SPINE_SLOT_H_ */
+#endif /* SPINE_CLIPPINGATTACHMENT_H_ */
