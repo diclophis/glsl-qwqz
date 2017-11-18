@@ -798,7 +798,7 @@ void main(void)
   vec3 c;
  
   // wtf?
-  //c = vec3(0.0, 0.0, 0.0);
+  c = vec3(0.0, 0.0, 0.0);
 
   // pastel
   //c = n*0.5+0.5;

@@ -25,7 +25,7 @@ int impl_draw(int b) {
   }
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
-  int i = (int)(qwqz_engine->m_Timers[0].m_SimulationTime * (1.8 / 4.0)) % stackedShaderCount;
+  int i = (int)(qwqz_engine->m_Timers[0].m_SimulationTime * (1.8 / 10.0)) % stackedShaderCount;
 
   qwqz_bind_frame_buffer(qwqz_engine, b);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -93,7 +93,7 @@ int stack_shader(qwqz_handle qwqz_engine, char *filename, GLuint v1) {
 
 
 int impl_main(int argc, char** argv, GLuint b) {
-  printf("starting impl_main\n");
+  printf("starting impl_main XXX\n");
 
   qwqz_engine = qwqz_create();
 
@@ -111,6 +111,11 @@ int impl_main(int argc, char** argv, GLuint b) {
   v1 = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/full_screen_first_pass.vsh");
 
   //stack_shader(qwqz_engine, "assets/shaders/ml.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/smiley.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/plasma.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/flower.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/thunder_and_lightning.fsh", v1);
+  //stack_shader(qwqz_engine, "assets/shaders/trail.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/rings.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf2.fsh", v1);
   //stack_shader(qwqz_engine, "assets/shaders/wtf3.fsh", v1);
