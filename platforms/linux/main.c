@@ -116,6 +116,7 @@ void processNormalKeys(unsigned char key, int x, int y) {
         //Engine::CurrentGameCreateFoos();
         //Engine::CurrentGameStart();
       } else if (key == 115) { // s
+        exit(0);
       }
     }
     reset_down = !reset_down;
