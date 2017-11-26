@@ -241,7 +241,9 @@ void spTwoColorBatcher_add(spTwoColorBatcher* batcher, spMeshPart mesh) {
 void spTwoColorBatcher_flush(spTwoColorBatcher* batcher) {
 	if (batcher->numVertices == 0 || batcher->numIndices == 0)
 		return;
-	
+
+  //printf("wtf %d\n", batcher->shader->program);
+
 	glUseProgram(batcher->shader->program);
 		
 	glActiveTexture(GL_TEXTURE0);
@@ -251,6 +253,7 @@ void spTwoColorBatcher_flush(spTwoColorBatcher* batcher) {
 	glBlendFunc(batcher->lastSrcBlend, batcher->lastDstBlend);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, batcher->vertexBufferHandle);
+
 	glBufferData(GL_ARRAY_BUFFER, sizeof(spVertex) * batcher->numVertices , batcher->verticesBuffer, GL_DYNAMIC_DRAW);
 	
 	glEnableVertexAttribArray(batcher->positionAttributeLocation);

@@ -90,13 +90,15 @@ void addVertex(float x, float y, float u, float v, float r, float g, float b, fl
 }
 
 
-int impl_draw(int b) {
-  //qwqz_bind_frame_buffer(qwqz_engine, b);
+int impl_draw(int bbb) {
+  qwqz_bind_frame_buffer(qwqz_engine, bbb);
+
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
+  /*
   if (doPhysics) {
     //TODO: figure out better step code
     float phstep = qwqz_engine->m_Timers[0].step / 4.0;
@@ -115,6 +117,8 @@ int impl_draw(int b) {
     ChipmunkDebugDrawPopRenderer();
   }
 
+  */
+
   spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.0);
   spAnimationState_apply(state, skeletonTop);
   spSkeleton_updateWorldTransform(skeletonTop);
@@ -125,135 +129,6 @@ int impl_draw(int b) {
   //qwqz_engine->m_Batches[0].m_NeedsAttribs = 1;
   //qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
 
-  for (int i=0; i<skeletonTop->slotsCount; i++) {
-    spSlot *slot = skeletonTop->drawOrder[i];
-
-    spAttachment* attachment = slot->attachment;
-    if (!attachment) continue;
-
-    // Fetch the blend mode from the slot and
-    // translate it to the engine blend mode
-    /*
-    BlendMode engineBlendMode;
-    switch (slot->data->blendMode) {
-       case SP_BLEND_MODE_NORMAL:
-          engineBlendMode = BLEND_NORMAL;
-          break;
-       case SP_BLEND_MODE_ADDITIVE:
-          engineBlendMode = BLEND_ADDITIVE;
-          break;
-       case SP_BLEND_MODE_MULTIPLY:
-          engineBlendMode = BLEND_MULTIPLY;
-          break;
-       case SP_BLEND_MODE_SCREEN:
-          engineBlendMode = BLEND_SCREEN;
-          break;
-       default:
-          // unknown Spine blend mode, fall back to
-          // normal blend mode
-          engineBlendMode = BLEND_NORMAL;
-    }
-    */
-
-    // Calculate the tinting color based on the skeleton's color
-    // and the slot's color. Each color channel is given in the
-    // range [0-1], you may have to multiply by 255 and cast to
-    // and int if your engine uses integer ranges for color channels.
-    float tintR = 0; //skeletonTop->r * slot->r;
-    float tintG = 0; //skeletonTop->g * slot->g;
-    float tintB = 0; //skeletonTop->b * slot->b;
-    float tintA = 0; //skeletonTop->a * slot->a;
-
-    // Fill the vertices array depending on the type of attachment
-    //Texture* texture = 0;
-    int vertexIndex = 0;
-    if (attachment->type == SP_ATTACHMENT_REGION) {
-       // Cast to an spRegionAttachment so we can get the rendererObject
-       // and compute the world vertices
-       spRegionAttachment* regionAttachment = (spRegionAttachment*)attachment;
-
-       // Our engine specific Texture is stored in the spAtlasRegion which was
-       // assigned to the attachment on load. It represents the texture atlas
-       // page that contains the image the region attachment is mapped to
-       //texture = (Texture*)((spAtlasRegion*)regionAttachment->rendererObject)->page->rendererObject;
-
-       // Computed the world vertices positions for the 4 vertices that make up
-       // the rectangular region attachment. This assumes the world transform of the
-       // bone to which the slot (and hence attachment) is attached has been calculated
-       // before rendering via spSkeleton_updateWorldTransform
-       spRegionAttachment_computeWorldVertices(regionAttachment, slot->bone, worldVerticesPositions, 0, 2);
-
-      //LOGV("%f\n", worldVerticesPositions[0]);
-
-/*
-       // Create 2 triangles, with 3 vertices each from the region's
-       // world vertex positions and its UV coordinates (in the range [0-1]).
-       addVertex(worldVerticesPositions[0], worldVerticesPositions[1],
-              regionAttachment->uvs[0], regionAttachment->uvs[1],
-              tintR, tintG, tintB, tintA, &vertexIndex);
-
-       addVertex(worldVerticesPositions[2], worldVerticesPositions[3],
-              regionAttachment->uvs[2], regionAttachment->uvs[3],
-              tintR, tintG, tintB, tintA, &vertexIndex);
-
-       addVertex(worldVerticesPositions[4], worldVerticesPositions[5],
-              regionAttachment->uvs[4], regionAttachment->uvs[5],
-              tintR, tintG, tintB, tintA, &vertexIndex);
-
-       addVertex(worldVerticesPositions[4], worldVerticesPositions[5],
-              regionAttachment->uvs[4], regionAttachment->uvs[5],
-              tintR, tintG, tintB, tintA, &vertexIndex);
-
-       addVertex(worldVerticesPositions[6], worldVerticesPositions[7],
-              regionAttachment->uvs[6], regionAttachment->uvs[7],
-              tintR, tintG, tintB, tintA, &vertexIndex);
-
-       addVertex(worldVerticesPositions[0], worldVerticesPositions[1],
-              regionAttachment->uvs[0], regionAttachment->uvs[1],
-              tintR, tintG, tintB, tintA, &vertexIndex);
-*/
-
-            //// Draw the mesh we created for the attachment
-            ////engine_drawMesh(vertices, 0, vertexIndex, texture, engineBlendMode);
-            
-            //qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, worldVerticesPositions, NULL, regionAttachment->uvs);
-    } else if (attachment->type == SP_ATTACHMENT_MESH) {
-       // Cast to an spMeshAttachment so we can get the rendererObject
-       // and compute the world vertices
-       spMeshAttachment* mesh = (spMeshAttachment*)attachment;
-
-       // Check the number of vertices in the mesh attachment. If it is bigger
-       // than our scratch buffer, we don't render the mesh. We do this here
-       // for simplicity, in production you want to reallocate the scratch buffer
-       // to fit the mesh.
-       if (mesh->super.worldVerticesLength > MAX_VERTICES_PER_ATTACHMENT) continue;
-
-       // Our engine specific Texture is stored in the spAtlasRegion which was
-       // assigned to the attachment on load. It represents the texture atlas
-       // page that contains the image the mesh attachment is mapped to
-       //texture = (Texture*)((spAtlasRegion*)mesh->rendererObject)->page->rendererObject;
-
-       // Computed the world vertices positions for the vertices that make up
-       // the mesh attachment. This assumes the world transform of the
-       // bone to which the slot (and hence attachment) is attached has been calculated
-       // before rendering via spSkeleton_updateWorldTransform
-       spVertexAttachment_computeWorldVertices(SUPER(mesh), slot, 0, mesh->super.worldVerticesLength, worldVerticesPositions, 0, 2);
-
-       // Mesh attachments use an array of vertices, and an array of indices to define which
-       // 3 vertices make up each triangle. We loop through all triangle indices
-       // and simply emit a vertex for each triangle's vertex.
-       for (int i = 0; i < mesh->trianglesCount; ++i) {
-          int index = mesh->triangles[i] << 1;
-          //addVertex(worldVerticesPositions[index], worldVerticesPositions[index + 1],
-          //       mesh->uvs[index], mesh->uvs[index + 1],
-          //       tintR, tintG, tintB, tintA, &vertexIndex);
-       
-          //qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, worldVerticesPositions, NULL, mesh->uvs);
-       }
-       //LOGV("%d \n", mesh->trianglesCount);
-    }
-  }
-
   //glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
   //qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
@@ -262,69 +137,70 @@ int impl_draw(int b) {
 	int verticesCount = 0;
 	unsigned short* triangles = 0;
 	int trianglesCount = 0;
-	//float r = 0, g = 0, b = 0, a = 0;
-	//float dr = 0, dg = 0, db = 0, da = _premultipliedAlpha ? 1 : 0;
+  int _premultipliedAlpha = 0;
+
+	float r = 0, g = 0, b = 0, a = 0;
+	float dr = 0, dg = 0, db = 0, da = _premultipliedAlpha ? 1 : 0;
+
 	for (int i = 0, n = skeletonTop->slotsCount; i < n; i++) {
 		spSlot* slot = skeletonTop->drawOrder[i];
 		if (!slot->attachment) continue;
-		//CCTexture *texture = 0;
+
 		switch (slot->attachment->type) {
-		case SP_ATTACHMENT_REGION: {
-			spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
-			spRegionAttachment_computeWorldVertices(attachment, slot->bone, vertices, 0, 2);
-			//texture = [self getTextureForRegion:attachment];
-			uvs = attachment->uvs;
-			verticesCount = 8;
-			triangles = quadTriangles;
-			trianglesCount = 6;
-			r = attachment->color.r;
-			g = attachment->color.g;
-			b = attachment->color.b;
-			a = attachment->color.a;
-			break;
+      case SP_ATTACHMENT_REGION: {
+        spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
+        spRegionAttachment_computeWorldVertices(attachment, slot->bone, vertices, 0, 2);
+        uvs = attachment->uvs;
+        verticesCount = 8;
+        triangles = quadTriangles;
+        trianglesCount = 6;
+        r = attachment->color.r;
+        g = attachment->color.g;
+        b = attachment->color.b;
+        a = attachment->color.a;
+        break;
+      }
+      case SP_ATTACHMENT_MESH: {
+        spMeshAttachment* attachment = (spMeshAttachment*)slot->attachment;
+        spVertexAttachment_computeWorldVertices(SUPER(attachment), slot, 0, attachment->super.worldVerticesLength, vertices, 0, 2);
+        uvs = attachment->uvs;
+        verticesCount = attachment->super.worldVerticesLength;
+        triangles = attachment->triangles;
+        trianglesCount = attachment->trianglesCount;
+        r = attachment->color.r;
+        g = attachment->color.g;
+        b = attachment->color.b;
+        a = attachment->color.a;
+        break;
+      }
+      case SP_ATTACHMENT_CLIPPING: {
+        LOGV("DO CLIPPING");
+        spClippingAttachment* clip = (spClippingAttachment*)slot->attachment;
+        spSkeletonClipping_clipStart(_clipper, slot, clip);
+      }
+      default: ;
 		}
-		case SP_ATTACHMENT_MESH: {
-			spMeshAttachment* attachment = (spMeshAttachment*)slot->attachment;
-			spVertexAttachment_computeWorldVertices(SUPER(attachment), slot, 0, attachment->super.worldVerticesLength, vertices, 0, 2);
-			//texture = [self getTextureForMesh:attachment];
-			uvs = attachment->uvs;
-			verticesCount = attachment->super.worldVerticesLength;
-			triangles = attachment->triangles;
-			trianglesCount = attachment->trianglesCount;
-			r = attachment->color.r;
-			g = attachment->color.g;
-			b = attachment->color.b;
-			a = attachment->color.a;
-			break;
-		}
-		case SP_ATTACHMENT_CLIPPING: {
-			spClippingAttachment* clip = (spClippingAttachment*)slot->attachment;
-			spSkeletonClipping_clipStart(_clipper, slot, clip);
-		}
-		default: ;
-		}
-/*	
-		if (texture) {
+
+	  int blendMode = -1;
+    GLint srcBlend = GL_SRC_ALPHA;
+    GLint dstBlend = GL_ONE_MINUS_SRC_ALPHA;
+
 			if (slot->data->blendMode != blendMode) {
 				blendMode = slot->data->blendMode;
 				switch (slot->data->blendMode) {
 				case SP_BLEND_MODE_ADDITIVE:
-					[self setBlendMode:[CCBlendMode addMode]];
 					srcBlend = !_premultipliedAlpha ? GL_SRC_ALPHA : GL_ONE;
 					dstBlend = GL_ONE;
 					break;
 				case SP_BLEND_MODE_MULTIPLY:
-					[self setBlendMode:[CCBlendMode multiplyMode]];
 					srcBlend = GL_DST_COLOR;
 					dstBlend = GL_ONE_MINUS_SRC_ALPHA;
 					break;
 				case SP_BLEND_MODE_SCREEN:
-					[self setBlendMode:screenMode];
 					srcBlend = GL_ONE;
 					dstBlend = GL_ONE_MINUS_SRC_COLOR;
 					break;
 				default:
-					[self setBlendMode:_premultipliedAlpha ? [CCBlendMode premultipliedAlphaMode] : [CCBlendMode alphaMode]];
 					srcBlend = !_premultipliedAlpha ? GL_SRC_ALPHA : GL_ONE;
 					dstBlend = GL_ONE_MINUS_SRC_ALPHA;
 				}
@@ -342,14 +218,9 @@ int impl_draw(int b) {
 				b *= skeletonTop->color.b * slot->color.b;
 			}
 
-			self.texture = texture;
-			CGSize size = texture.contentSize;
-			GLKVector2 center = GLKVector2Make(size.width / 2.0, size.height / 2.0);
-			GLKVector2 extents = GLKVector2Make(size.width / 2.0, size.height / 2.0);
-			if (_skipVisibilityCheck || CCRenderCheckVisbility(transform, center, extents)) {
-			*/
 
 				if (spSkeletonClipping_isClipping(_clipper)) {
+          LOGV("clip\n");
 					spSkeletonClipping_clipTriangles(_clipper, vertices, verticesCount, triangles, trianglesCount, uvs, 2);
 					vertices = _clipper->clippedVertices->items;
 					verticesCount = _clipper->clippedVertices->size;
@@ -359,7 +230,7 @@ int impl_draw(int b) {
 				}
 				
 				if (trianglesCount > 0) {
-					if (!self.twoColorTint) {
+					if (0) {
 						//CCRenderBuffer buffer = [renderer enqueueTriangles:(trianglesCount / 3) andVertexes:verticesCount withState:self.renderState globalSortOrder:0];
 						for (int i = 0; i * 2 < verticesCount; ++i) {
 							//CCVertex vertex;
@@ -388,7 +259,6 @@ int impl_draw(int b) {
 							//CCRenderBufferSetTriangle(buffer, j, triangles[j * 3], triangles[j * 3 + 1], triangles[j * 3 + 2]);
 						}
 					} else {
-            /*
 						if (slot->darkColor) {
 							dr = slot->darkColor->r;
 							dg = slot->darkColor->g;
@@ -396,10 +266,9 @@ int impl_draw(int b) {
 						} else {
 							dr = dg = db = 0;
 						}
-            */
-						
+
 						spMeshPart meshPart;
-						spMesh_allocatePart(mesh, &meshPart, verticesCount / 2, trianglesCount, self.texture.name, srcBlend, dstBlend);
+						spMesh_allocatePart(mesh, &meshPart, verticesCount / 2, trianglesCount, 0, srcBlend, dstBlend);
 						
 						spVertex* verts = &meshPart.mesh->vertices[meshPart.startVertex];
 						unsigned short* indices = &meshPart.mesh->indices[meshPart.startIndex];
@@ -436,80 +305,39 @@ int impl_draw(int b) {
 								
 							}
 						} else {
+						}
+          */
+
 							for (int i = 0; i * 2 < verticesCount; i++, verts++) {
-								CCVertex vertex;
-								vertex.position = GLKVector4Make(vertices[i * 2], vertices[i * 2 + 1], 0.0, 1.0);
-								vertex = CCVertexApplyTransform(vertex, transform);
-								verts->x = vertex.position.x;
-								verts->y = vertex.position.y;
-								verts->z = vertex.position.z;
-								verts->w = vertex.position.w;
+								//CCVertex vertex;
+								//vertex.position = GLKVector4Make(vertices[i * 2], vertices[i * 2 + 1], 0.0, 1.0);
+								//vertex = CCVertexApplyTransform(vertex, transform);
+								verts->x = vertices[i * 2] * 0.0005;
+								verts->y = vertices[i * 2 + 1] * 0.0005;
+								verts->z = 0.0;
+								verts->w = 1.0;
 								verts->color = ((unsigned short)(r * 255))| ((unsigned short)(g * 255)) << 8 | ((unsigned short)(b * 255)) <<16 | ((unsigned short)(a * 255)) << 24;
 								verts->color2 = ((unsigned short)(dr * 255)) | ((unsigned short)(dg * 255)) << 8 | ((unsigned short)(db * 255)) << 16 | ((unsigned short)(da * 255)) << 24;
 								verts->u = uvs[i * 2];
 								verts->v = 1 - uvs[i * 2 + 1];
 							}
-						}
-						
-						for (int j = 0; j < trianglesCount; j++, indices++) {
-							*indices = triangles[j];
-						}
-					  
-          */
+
+              for (int j = 0; j < trianglesCount; j++, indices++) {
+                *indices = triangles[j];
+              }
 
 					  spTwoColorBatcher_add(batcher, meshPart);
 					}
-				}
-			}
 		}
+
 		spSkeletonClipping_clipEnd(_clipper, slot);
 	}
+
 	spSkeletonClipping_clipEnd2(_clipper);
 	
 	spTwoColorBatcher_flush(batcher);
 
-  /*
-	if (_debugSlots) {
-		// Slots.
-		CGPoint points[4];
-		for (int i = 0, n = skeletonTop->slotsCount; i < n; i++) {
-			spSlot* slot = skeletonTop->drawOrder[i];
-			if (!slot->attachment || slot->attachment->type != SP_ATTACHMENT_REGION) continue;
-			spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
-			spRegionAttachment_computeWorldVertices(attachment, slot->bone, _worldVertices, 0, 2);
-			points[0] = ccp(_worldVertices[0], _worldVertices[1]);
-			points[1] = ccp(_worldVertices[2], _worldVertices[3]);
-			points[2] = ccp(_worldVertices[4], _worldVertices[5]);
-			points[3] = ccp(_worldVertices[6], _worldVertices[7]);
-			[_drawNode drawPolyWithVerts:points count:4 fillColor:[CCColor clearColor] borderWidth:1 borderColor:[CCColor blueColor]];
-		}
-	}
-  */
-
-  /*
-	if (_debugBones) {
-		// Bone lengths.
-		for (int i = 0, n = skeletonTop->bonesCount; i < n; i++) {
-			spBone *bone = skeletonTop->bones[i];
-			float x = bone->data->length * bone->a + bone->worldX;
-			float y = bone->data->length * bone->c + bone->worldY;
-			[_drawNode drawSegmentFrom:ccp(bone->worldX, bone->worldY) to: ccp(x, y)radius:2 color:[CCColor redColor]];
-		}
-		
-		// Bone origins.
-		for (int i = 0, n = skeletonTop->bonesCount; i < n; i++) {
-			spBone *bone = skeletonTop->bones[i];
-			[_drawNode drawDot:ccp(bone->worldX, bone->worldY) radius:4 color:[CCColor greenColor]];
-			if (i == 0) [_drawNode drawDot:ccp(bone->worldX, bone->worldY) radius:4 color:[CCColor blueColor]];
-		}
-	}
-	
-	if (_effect) _effect->end(_effect);
-
-  */
-
 	spMesh_clearParts(mesh);
-
 
   return 0;
 
@@ -518,6 +346,8 @@ int impl_draw(int b) {
 
 int impl_resize(int width, int height, int ew, int eh, int u) {
   int resized = qwqz_resize(qwqz_engine, width, height, ew, eh, u);
+
+  /*
 
   for (int i=0; i<qwqz_engine->m_LinkageCount; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
@@ -529,6 +359,7 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
 
   ChipmunkDebugDrawResizeRenderer(width, height);
   glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+  */
  
   return resized;
 }
@@ -573,8 +404,9 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   qwqz_engine = qwqz_create();
   qwqz_alloc_timers(qwqz_engine, 1);
-  qwqz_alloc_linkages(qwqz_engine, 4);
-  qwqz_alloc_batches(qwqz_engine, 4);
+  
+  //qwqz_alloc_linkages(qwqz_engine, 4);
+  //qwqz_alloc_batches(qwqz_engine, 4);
 
   GLuint program = 0;
 
@@ -642,7 +474,7 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   if (doSpine) {
     {
-      atlas = spAtlas_createFromFile("assets/spine/spineboy.atlas", GL_TEXTURE0 + 0);
+      atlas = spAtlas_createFromFile("assets/spine/spineboy.atlas", (void *) (GL_TEXTURE0 + 0));
       spSkeletonJson* json = spSkeletonJson_create(atlas);
       spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/spineboy.json");
       assert(skeletonData);
@@ -661,9 +493,9 @@ int impl_main(int argc, char** argv, GLuint b) {
 
     //__asm__("int $3");
 
-    qwqz_stack_shader_linkage(qwqz_engine,
-      "assets/shaders/spine_bone_texture_quad.vsh",
-      "assets/shaders/indexed_filled_quad.fsh");
+    //qwqz_stack_shader_linkage(qwqz_engine,
+    //  "assets/shaders/spine_bone_texture_quad.vsh",
+    //  "assets/shaders/indexed_filled_quad.fsh");
 
     int totalVerts = 0;
 
@@ -707,10 +539,10 @@ int impl_main(int argc, char** argv, GLuint b) {
 
     //spSkeleton_updateWorldTransform(skeletonTop);
 
-    if (!batcher) {
-      batcher = spTwoColorBatcher_create();
-      mesh = spMesh_create(64000, 32000);
-    }
+    batcher = spTwoColorBatcher_create();
+    mesh = spMesh_create(64000, 32000);
+
+	  _clipper = spSkeletonClipping_create();
 	
 	  _worldVertices = MALLOC(float, 1000); // Max number of vertices per mesh.
   }
