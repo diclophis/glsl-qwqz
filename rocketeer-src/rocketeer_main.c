@@ -12,6 +12,7 @@
 #include <chipmunk/ChipmunkDemoShaderSupport.h>
 #include <spine/spine.h>
 #include <spine/extension.h>
+#include <spine/GLUtils.h>
 #include "spine_bridge.h"
 #include "chipmunk_bridge.h"
 
@@ -27,7 +28,7 @@ static GLuint g_TextureOffset = -1;
 static spSkeleton* bgsSkeleton;
 static spAnimationStateData* bgsStateData;
 static spAnimationState* bgsState;
-static spSkeleton* skeleton;
+static spSkeleton* skeletonTop;
 static spAnimationStateData* stateData;
 static spAnimationState* state;
 static spRegionAttachment* lastAttachment = NULL;
@@ -38,13 +39,66 @@ static cpBody **bodies;
 static int jumped = 0;
 
 
-int impl_draw(int b) {
-  //qwqz_bind_frame_buffer(qwqz_engine, b);
+static unsigned short quadTriangles[6] = {0, 1, 2, 2, 3, 0};
+static spTwoColorBatcher* batcher = 0;
+static spMesh* mesh = 0;
+static spSkeletonClipping* _clipper;
+static float* _worldVertices;
+
+// A single vertex with UV 
+typedef struct Vertex {
+   // Position in x/y plane
+   float x, y;
+
+   // UV coordinates
+   float u, v;
+
+   // Color, each channel in the range from 0-1
+   // (Should really be a 32-bit RGBA packed color)
+   float r, g, b, a;
+} Vertex;
+
+/*
+enum BlendMode {
+   // See http://esotericsoftware.com/git/spine-runtimes/blob/spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/BlendMode.java#L37
+   // for how these translate to OpenGL source/destination blend modes.
+   BLEND_NORMAL,
+   BLEND_ADDITIVE,
+   BLEND_MULTIPLY,      
+   BLEND_SCREEN
+}
+*/
+
+#define MAX_VERTICES_PER_ATTACHMENT 2048
+static float worldVerticesPositions[MAX_VERTICES_PER_ATTACHMENT];
+static Vertex vertices[MAX_VERTICES_PER_ATTACHMENT];
+
+
+// Little helper function to add a vertex to the scratch buffer. Index will be increased
+// by one after a call to this function.
+void addVertex(float x, float y, float u, float v, float r, float g, float b, float a, int* index) {
+   Vertex* vertex = &vertices[*index];
+   vertex->x = x;
+   vertex->y = y;
+   vertex->u = u;
+   vertex->v = v;
+   vertex->r = r;
+   vertex->g = g;
+   vertex->b = b;
+   vertex->a = a;
+   *index += 1;
+}
+
+
+int impl_draw(int bbb) {
+  qwqz_bind_frame_buffer(qwqz_engine, bbb);
+
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
+  /*
   if (doPhysics) {
     //TODO: figure out better step code
     float phstep = qwqz_engine->m_Timers[0].step / 4.0;
@@ -63,238 +117,237 @@ int impl_draw(int b) {
     ChipmunkDebugDrawPopRenderer();
   }
 
+  */
+
   spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.0);
-  spAnimationState_apply(state, skeleton);
-  spSkeleton_updateWorldTransform(skeleton);
+  spAnimationState_apply(state, skeletonTop);
+  spSkeleton_updateWorldTransform(skeletonTop);
 
-  glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
+  //glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
 
-  qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-  qwqz_engine->m_Batches[0].m_NeedsAttribs = 1;
-  qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
+  //qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
+  //qwqz_engine->m_Batches[0].m_NeedsAttribs = 1;
+  //qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
 
-  for (int i=0; i<skeleton->slotsCount; i++) {
-    spSlot *s = skeleton->drawOrder[i];
-    spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-    if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
+  //glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+  //qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
 
-      float ox = 0;
-      //(spRegionAttachment* self, spBone* bone, float* vertices)
-      spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer);
-      qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
-    
-      //float rr = DEGREES_TO_RADIANS(s->bone->rotation);
-      //float r = DEGREES_TO_RADIANS(s->bone->rotation + ra->rotation);
+	float* uvs = 0;
+	float* vertices = _worldVertices;
+	int verticesCount = 0;
+	unsigned short* triangles = 0;
+	int trianglesCount = 0;
+  int _premultipliedAlpha = 0;
 
-      //float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-      //float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
+	float r = 0, g = 0, b = 0, a = 0;
+	float dr = 0, dg = 0, db = 0, da = _premultipliedAlpha ? 1 : 0;
 
-      //float x = //s->bone->worldX + ((spBone_getWorldRotationX(s->bone) * ra->x) - (spBone_getWorldRotationY(s->bone) * ra->y));
-      //float y = //s->bone->worldY + ((spBone_getWorldRotationX(s->bone) * ra->x) + (spBone_getWorldRotationY(s->bone) * ra->y));
+	for (int i = 0, n = skeletonTop->slotsCount; i < n; i++) {
+		spSlot* slot = skeletonTop->drawOrder[i];
+		if (!slot->attachment) continue;
 
-      //void spBone_localToWorld (spBone* self, float localX, float localY, float* worldX, float* worldY) {
-
-      if (0) {
-        cpBody *body = bodies[i];
-        if (body) {
-          //float x = 1.0, y = 1.0;
-          //float x = s->bone->worldX;
-          //float y = s->bone->worldY;
-
-          float x, y;
-          spBone_localToWorld(s->bone, 0, 0, &x, &y);
-     
-          float aa = spBone_getWorldRotationX(s->bone);
-          float bb = spBone_getWorldRotationY(s->bone);
-
-          float r = 0;
-         
-          //(bone.getWorldRotationX() - att.rotation) * Math.PI / 180;
-
-          r = DEGREES_TO_RADIANS(aa); //ra->rotation;
-
-          cpVect newPos = cpv(x, y);
-          cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
-
-          float velocity_limit = 150;
-          float velocity_mag = cpvlength(newVel);
-          if (velocity_mag > velocity_limit) {
-            float velocity_scale = velocity_limit / velocity_mag;
-            newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
-          }
-
-          cpBodySetVelocity(body, newVel);
-          cpBodySetPosition(body, newPos);
-
-          cpBodySetAngle(body, r);
-        }
+		switch (slot->attachment->type) {
+      case SP_ATTACHMENT_REGION: {
+        spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
+        spRegionAttachment_computeWorldVertices(attachment, slot->bone, vertices, 0, 2);
+        uvs = attachment->uvs;
+        verticesCount = 8;
+        triangles = quadTriangles;
+        trianglesCount = 6;
+        r = attachment->color.r;
+        g = attachment->color.g;
+        b = attachment->color.b;
+        a = attachment->color.a;
+        break;
       }
-    }
-  }
+      case SP_ATTACHMENT_MESH: {
+        spMeshAttachment* attachment = (spMeshAttachment*)slot->attachment;
+        spVertexAttachment_computeWorldVertices(SUPER(attachment), slot, 0, attachment->super.worldVerticesLength, vertices, 0, 2);
+        uvs = attachment->uvs;
+        verticesCount = attachment->super.worldVerticesLength;
+        triangles = attachment->triangles;
+        trianglesCount = attachment->trianglesCount;
+        r = attachment->color.r;
+        g = attachment->color.g;
+        b = attachment->color.b;
+        a = attachment->color.a;
+        break;
+      }
+      case SP_ATTACHMENT_CLIPPING: {
+        LOGV("DO CLIPPING");
+        spClippingAttachment* clip = (spClippingAttachment*)slot->attachment;
+        spSkeletonClipping_clipStart(_clipper, slot, clip);
+      }
+      default: ;
+		}
+
+	  int blendMode = -1;
+    GLint srcBlend = GL_SRC_ALPHA;
+    GLint dstBlend = GL_ONE_MINUS_SRC_ALPHA;
+
+			if (slot->data->blendMode != blendMode) {
+				blendMode = slot->data->blendMode;
+				switch (slot->data->blendMode) {
+				case SP_BLEND_MODE_ADDITIVE:
+					srcBlend = !_premultipliedAlpha ? GL_SRC_ALPHA : GL_ONE;
+					dstBlend = GL_ONE;
+					break;
+				case SP_BLEND_MODE_MULTIPLY:
+					srcBlend = GL_DST_COLOR;
+					dstBlend = GL_ONE_MINUS_SRC_ALPHA;
+					break;
+				case SP_BLEND_MODE_SCREEN:
+					srcBlend = GL_ONE;
+					dstBlend = GL_ONE_MINUS_SRC_COLOR;
+					break;
+				default:
+					srcBlend = !_premultipliedAlpha ? GL_SRC_ALPHA : GL_ONE;
+					dstBlend = GL_ONE_MINUS_SRC_ALPHA;
+				}
+			}
+
+			if (_premultipliedAlpha) {
+				a *= skeletonTop->color.a * slot->color.a;
+				r *= skeletonTop->color.r * slot->color.r * a;
+				g *= skeletonTop->color.g * slot->color.g * a;
+				b *= skeletonTop->color.b * slot->color.b * a;
+			} else {
+				a *= skeletonTop->color.a * slot->color.a;
+				r *= skeletonTop->color.r * slot->color.r;
+				g *= skeletonTop->color.g * slot->color.g;
+				b *= skeletonTop->color.b * slot->color.b;
+			}
 
 
-  glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-  qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
+				if (spSkeletonClipping_isClipping(_clipper)) {
+          LOGV("clip\n");
+					spSkeletonClipping_clipTriangles(_clipper, vertices, verticesCount, triangles, trianglesCount, uvs, 2);
+					vertices = _clipper->clippedVertices->items;
+					verticesCount = _clipper->clippedVertices->size;
+					uvs = _clipper->clippedUVs->items;
+					triangles = _clipper->clippedTriangles->items;
+					trianglesCount = _clipper->clippedTriangles->size;
+				}
+				
+				if (trianglesCount > 0) {
+					if (0) {
+						//CCRenderBuffer buffer = [renderer enqueueTriangles:(trianglesCount / 3) andVertexes:verticesCount withState:self.renderState globalSortOrder:0];
+						for (int i = 0; i * 2 < verticesCount; ++i) {
+							//CCVertex vertex;
+              /*
+							vertex.position = GLKVector4Make(vertices[i * 2], vertices[i * 2 + 1], 0.0, 1.0);
+							vertex.color = GLKVector4Make(r, g, b, a);
+							vertex.texCoord1 = GLKVector2Make(uvs[i * 2], 1 - uvs[i * 2 + 1]);
+							if (_effect) {
+								spColor light;
+								spColor dark;
+								light.r = r;
+								light.g = g;
+								light.b = b;
+								light.a = a;
+								dark.r = dark.g = dark.b = dark.a = 0;
+								_effect->transform(_effect, &vertex.position.x, &vertex.position.y, &vertex.texCoord1.s, &vertex.texCoord1.t, &light, &dark);
+								vertex.color.r = light.r;
+								vertex.color.g = light.g;
+								vertex.color.b = light.b;
+								vertex.color.a = light.a;
+							}
+							CCRenderBufferSetVertex(buffer, i, CCVertexApplyTransform(vertex, transform));
+              */
+						}
+						for (int j = 0; j * 3 < trianglesCount; ++j) {
+							//CCRenderBufferSetTriangle(buffer, j, triangles[j * 3], triangles[j * 3 + 1], triangles[j * 3 + 2]);
+						}
+					} else {
+						if (slot->darkColor) {
+							dr = slot->darkColor->r;
+							dg = slot->darkColor->g;
+							db = slot->darkColor->b;
+						} else {
+							dr = dg = db = 0;
+						}
+
+						spMeshPart meshPart;
+						spMesh_allocatePart(mesh, &meshPart, verticesCount / 2, trianglesCount, 0, srcBlend, dstBlend);
+						
+						spVertex* verts = &meshPart.mesh->vertices[meshPart.startVertex];
+						unsigned short* indices = &meshPart.mesh->indices[meshPart.startIndex];
+					
+            /*
+						if (_effect) {
+							spColor light;
+							light.r = r;
+							light.g = g;
+							light.b = b;
+							light.a = a;
+							spColor dark;
+							dark.r = dr;
+							dark.g = dg;
+							dark.b = db;
+							dark.a = da;
+							for (int i = 0; i * 2 < verticesCount; i++, verts++) {
+								spColor lightCopy = light;
+								spColor darkCopy = dark;
+								
+								CCVertex vertex;
+								vertex.position = GLKVector4Make(vertices[i * 2], vertices[i * 2 + 1], 0.0, 1.0);
+								verts->u = uvs[i * 2];
+								verts->v = 1 - uvs[i * 2 + 1];
+								_effect->transform(_effect, &vertex.position.x, &vertex.position.y, &verts->u, &verts->v, &lightCopy, &darkCopy);
+								
+								vertex = CCVertexApplyTransform(vertex, transform);
+								verts->x = vertex.position.x;
+								verts->y = vertex.position.y;
+								verts->z = vertex.position.z;
+								verts->w = vertex.position.w;
+								verts->color = ((unsigned short)(lightCopy.r * 255))| ((unsigned short)(lightCopy.g * 255)) << 8 | ((unsigned short)(lightCopy.b * 255)) <<16 | ((unsigned short)(lightCopy.a * 255)) << 24;
+								verts->color2 = ((unsigned short)(darkCopy.r * 255)) | ((unsigned short)(darkCopy.g * 255)) << 8 | ((unsigned short)(darkCopy.b * 255)) << 16 | ((unsigned short)(darkCopy.a * 255)) << 24;
+								
+							}
+						} else {
+						}
+          */
+
+							for (int i = 0; i * 2 < verticesCount; i++, verts++) {
+								//CCVertex vertex;
+								//vertex.position = GLKVector4Make(vertices[i * 2], vertices[i * 2 + 1], 0.0, 1.0);
+								//vertex = CCVertexApplyTransform(vertex, transform);
+								verts->x = vertices[i * 2] * 0.0005;
+								verts->y = vertices[i * 2 + 1] * 0.0005;
+								verts->z = 0.0;
+								verts->w = 1.0;
+								verts->color = ((unsigned short)(r * 255))| ((unsigned short)(g * 255)) << 8 | ((unsigned short)(b * 255)) <<16 | ((unsigned short)(a * 255)) << 24;
+								verts->color2 = ((unsigned short)(dr * 255)) | ((unsigned short)(dg * 255)) << 8 | ((unsigned short)(db * 255)) << 16 | ((unsigned short)(da * 255)) << 24;
+								verts->u = uvs[i * 2];
+								verts->v = 1 - uvs[i * 2 + 1];
+							}
+
+              for (int j = 0; j < trianglesCount; j++, indices++) {
+                *indices = triangles[j];
+              }
+
+					  spTwoColorBatcher_add(batcher, meshPart);
+					}
+		}
+
+		spSkeletonClipping_clipEnd(_clipper, slot);
+	}
+
+	spSkeletonClipping_clipEnd2(_clipper);
+	
+	spTwoColorBatcher_flush(batcher);
+
+	spMesh_clearParts(mesh);
 
   return 0;
 
-
-/*
-  qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
-
-  // not needed explicitly given that doShaderBg draws the to the entire screen
-  qwqz_bind_frame_buffer(qwqz_engine, b);
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-  //glViewport(0, 0, qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-
-  if (1) {
-  
-  if (doShaderBg) {
-    qwqz_bind_frame_buffer(qwqz_engine, qwqz_engine->FramebufferName);
-    //glViewport(0, 0, qwqz_engine->m_RenderTextureWidth, qwqz_engine->m_RenderTextureWidth);
-    
-    //glBindFramebuffer(GL_FRAMEBUFFER, b); //
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-    glUseProgram(qwqz_engine->m_Linkages[1].m_Program);
-    glUniform1f(qwqz_engine->m_Linkages[1].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-
-    if (1) {
-      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1]);
-      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[1]);
-    }
-    
-    if (1) {
-      qwqz_bind_frame_buffer(qwqz_engine, b);
-      glUseProgram(qwqz_engine->m_Linkages[2].m_Program);
-      glUniform1f(qwqz_engine->m_Linkages[2].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-      qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2]);
-      qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[2]);
-    }
-  }
-
-  }
-  
-  if (1) {
-  
-  qwqz_bind_frame_buffer(qwqz_engine, b);
-
-  if (doSpine) {
-    if (1) {
-      qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-
-      bgsSkeleton->root->scaleX = 1.0;
-      bgsSkeleton->root->scaleY = 1.0;
-
-      spSkeleton_updateWorldTransform(bgsSkeleton);
-
-      int bgsRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)bgsSkeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
-
-      for (int a=0; a<9; a++) {
-        float spd_m = 1.0 + (float)(a / 3);
-        float spd_x = 200.0;
-        float total_w = 1024.0;
-
-        bgsScroll[a] += -spd_x * qwqz_engine->m_Timers[0].step * spd_m;
-
-        if (bgsScroll[a] < -(total_w)) {
-          bgsScroll[a] = total_w * 2;
-        }
-
-        int c = a;
-        spSlot *s = bgsSkeleton->drawOrder[c];
-        spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-        if (s->attachment->type == SP_ATTACHMENT_REGION) {
-          spRegionAttachment_computeWorldVertices(ra, bgsScroll[a], 0.0, s->bone, verticeBuffer);
-          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
-        }
-      }
-      
-      if (1) {
-        glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-        glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-        glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, bgsRegionRenderObject); //TODO: this is the texture unit for spine background
-        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
-        qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-      }
-    }
-
-    if (1) {
-      qwqz_batch_clear(&qwqz_engine->m_Batches[0]);
-
-      skeleton->root->scaleX = 1.0;
-      skeleton->root->scaleY = 1.0;
-
-      spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 13.0); //3.125
-      spAnimationState_apply(state, skeleton);
-      spSkeleton_updateWorldTransform(skeleton);
-
-      if (0 == jumped && qwqz_engine->m_Timers[0].m_SimulationTime > 3.0) {
-        jumped = 1;
-        spAnimationState_addAnimationByName(state, 0, "jump", 0, 0); // trackIndex, name, loop, delay
-        spAnimationState_addAnimationByName(state, 0, "walk_alt", 1, 0);
-      }
-
-      if (qwqz_engine->m_Timers[0].m_SimulationTime > 6.0) {
-        jumped = 0;
-        qwqz_engine->m_Timers[0].m_SimulationTime = 0;
-      }
-
-      int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
-      //LOGV("wtf %d\n", roboRegionRenderObject);
-
-      for (int i=0; i<skeleton->slotCount; i++) {
-        spSlot *s = skeleton->drawOrder[i];
-        spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-        if (s->attachment->type == SP_ATTACHMENT_REGION) {
-          float ox = 0; //qwqz_engine->m_Timers[0].m_SimulationTime * 40.0; //TODO: player movement
-          spRegionAttachment_computeWorldVertices(ra, ox, 0.0, s->bone, verticeBuffer);
-          qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
-
-          float rr = DEGREES_TO_RADIANS(s->bone->worldRotation);
-          float r = DEGREES_TO_RADIANS(s->bone->worldRotation + ra->rotation);
-
-          float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-          float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
-
-          cpBody *body = bodies[i];
-
-          cpVect newPos = cpv(x + ox, y);
-          cpVect newVel = cpvmult(cpvsub(newPos, cpBodyGetPosition(body)), 1.0/qwqz_engine->m_Timers[0].step);
-
-          float velocity_limit = 150;
-          float velocity_mag = cpvlength(newVel);
-          if (velocity_mag > velocity_limit) {
-            float velocity_scale = velocity_limit / velocity_mag;
-            newVel = cpvmult(newVel, velocity_scale < 0.00011 ? 0.00011: velocity_scale);
-          }
-
-          cpBodySetVelocity(body, newVel);
-          cpBodySetPosition(body, newPos);
-
-          cpBodySetAngle(body, r);
-        }
-      }
-
-      if (1) {
-        glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-        glUniform1f(qwqz_engine->m_Linkages[0].g_TimeUniform, qwqz_engine->m_Timers[0].m_SimulationTime);
-        glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
-        qwqz_batch_prepare(qwqz_engine, &qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0]);
-        qwqz_batch_render(qwqz_engine, &qwqz_engine->m_Batches[0]);
-      }
-    }
-  }
-    
-  }
-
-*/
 }
 
 
 int impl_resize(int width, int height, int ew, int eh, int u) {
   int resized = qwqz_resize(qwqz_engine, width, height, ew, eh, u);
+
+  /*
 
   for (int i=0; i<qwqz_engine->m_LinkageCount; i++) {
     glUseProgram(qwqz_engine->m_Linkages[i].m_Program);
@@ -302,10 +355,11 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
     qwqz_linkage_resize(qwqz_engine, &qwqz_engine->m_Linkages[i]);
   }
 
-  spSkeleton_updateWorldTransform(skeleton);
+  spSkeleton_updateWorldTransform(skeletonTop);
 
   ChipmunkDebugDrawResizeRenderer(width, height);
   glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
+  */
  
   return resized;
 }
@@ -350,8 +404,9 @@ int impl_main(int argc, char** argv, GLuint b) {
 
   qwqz_engine = qwqz_create();
   qwqz_alloc_timers(qwqz_engine, 1);
-  qwqz_alloc_linkages(qwqz_engine, 4);
-  qwqz_alloc_batches(qwqz_engine, 4);
+  
+  //qwqz_alloc_linkages(qwqz_engine, 4);
+  //qwqz_alloc_batches(qwqz_engine, 4);
 
   GLuint program = 0;
 
@@ -415,138 +470,83 @@ int impl_main(int argc, char** argv, GLuint b) {
     }
   }
 
+  spAtlas* atlas;
 
   if (doSpine) {
     {
-      spAtlas* atlas = spAtlas_createFromFile("assets/spine/spineboy.atlas", NULL);
+      atlas = spAtlas_createFromFile("assets/spine/spineboy.atlas", (void *) (GL_TEXTURE0 + 0));
       spSkeletonJson* json = spSkeletonJson_create(atlas);
       spSkeletonData *skeletonData = spSkeletonJson_readSkeletonDataFile(json, "assets/spine/spineboy.json");
       assert(skeletonData);
-      skeleton = spSkeleton_create(skeletonData);
+      skeletonTop = spSkeleton_create(skeletonData);
       stateData = spAnimationStateData_create(skeletonData);
-      //spAnimationStateData_setMixByName(stateData, "walk_alt", "jump", 0.75);
-      //spAnimationStateData_setMixByName(stateData, "jump", "walk_alt", 0.75);
-
-      //spAnimationStateData_setMixByName(stateData, "walk", "shoot", 0.66);
-      //spAnimationStateData_setMixByName(stateData, "shoot", "walk", 0.66);
 
       state = spAnimationState_create(stateData);
-
-      //spAnimationState_setAnimationByName(state, 0, "walk", 1);
 
       spAnimationState_addAnimationByName(state, 0, "walk", 1, 0.0);
       spAnimationState_addAnimationByName(state, 1, "shoot", 1, 0.0);
 
-      //spAnimationState_addEmptyAnimation(state, 1, 0.33, 0.0);
-      //spAnimationState_addAnimationByName(state, 1, "walk", 1, 0.0);
-
-
-      /*
-      spAtlas* atlas2 = spAtlas_createFromFile("assets/spine/bgs.atlas", NULL);
-      spSkeletonJson *json2 = spSkeletonJson_create(atlas2);
-      spSkeletonData *skeletonData2 = spSkeletonJson_readSkeletonDataFile(json2, "assets/spine/bgs.json");
-      bgsSkeleton = spSkeleton_create(skeletonData2);
-      bgsStateData = spAnimationStateData_create(skeletonData2);
-      bgsState = spAnimationState_create(bgsStateData);
-      spAnimationState_setAnimationByName(bgsState, 0, "default", 1);
-      */
+	    spSkeletonJson_dispose(json);
     }
 
-    qwqz_stack_shader_linkage(qwqz_engine,
-      "assets/shaders/spine_bone_texture_quad.vsh",
-      "assets/shaders/indexed_filled_quad.fsh");
+    spSkeleton* skeletonFoo = skeletonTop;
 
-    qwqz_batch_init(&qwqz_engine->m_Batches[0],
-      &qwqz_engine->m_Linkages[0], skeleton->slotsCount);
+    //__asm__("int $3");
 
-    glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
-    int roboRegionRenderObject = (int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
-    glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
+    //qwqz_stack_shader_linkage(qwqz_engine,
+    //  "assets/shaders/spine_bone_texture_quad.vsh",
+    //  "assets/shaders/indexed_filled_quad.fsh");
 
-    g_TextureOffset = glGetUniformLocation(program, "iTextureOffset");
-    glUniform2f(g_TextureOffset, 0, 0);
+    int totalVerts = 0;
 
-    qwqz_engine->g_lastFrameBuffer = b;
-    qwqz_engine->m_Zoom2 = 512.0 / 1.0;
+    /*
+    for (int i=0; i<skeletonTop->slotsCount; i++) {
+      spSlot *slot = skeletonTop->drawOrder[i];
 
-    glActiveTexture(GL_TEXTURE0);
-
-    //skeleton->root->scaleX = 2.0;
-    //skeleton->root->scaleY = 2.0;
-
-    spSkeleton_updateWorldTransform(skeleton);
-
-    if (0) {
-      bodies = (cpBody **)malloc(sizeof(cpBody *) * skeleton->slotsCount);
-
-      for (int i=0; i<skeleton->slotsCount; i++) {
-        spSlot *s = skeleton->drawOrder[i];
-        if (s->attachment && s->attachment->type == SP_ATTACHMENT_REGION) {
-          spRegionAttachment *ra = (spRegionAttachment *)s->attachment;
-
-          //float rr = DEGREES_TO_RADIANS(s->bone->rotation);
-          //float r = DEGREES_TO_RADIANS(s->bone->rotation + ra->rotation);
-
-          //float x = s->bone->worldX + ((cosf(rr) * ra->x) - (sinf(rr) * ra->y));
-          //float y = s->bone->worldY + ((sinf(rr) * ra->x) + (cosf(rr) * ra->y));
-
-          cpBody *body;
-          cpShape *shape;
-
-          body = cpBodyNew(INFINITY, cpMomentForBox(INFINITY, ra->width, ra->height));
-          body->userData = (void *)1;
-          bodies[i] = body;
-
-          //cpBodySetAngle(body, r);
-          //cpBodySetPosition(body, cpv(x, y));
-
-          shape = cpSpaceAddShape(space, cpBoxShapeNew(body, ra->width, ra->height, 15.0f));
-          cpShapeSetElasticity(shape, 0.0f);
-          cpShapeSetFriction(shape, 1.0f);
-          cpGroup spineGroup = 2;
-          shape->filter.group = spineGroup;
-        }
+      spAttachment* attachment = slot->attachment;
+      if (!attachment) continue;
+      if (attachment->type == SP_ATTACHMENT_REGION) {
+         spRegionAttachment* regionAttachment = (spRegionAttachment*)attachment;
+         spRegionAttachment_computeWorldVertices(regionAttachment, slot->bone, worldVerticesPositions, 0, 2);
+         totalVerts += 1;
+      } else if (attachment->type == SP_ATTACHMENT_MESH) {
+         spMeshAttachment* mesh = (spMeshAttachment*)attachment;
+         if (mesh->super.worldVerticesLength > MAX_VERTICES_PER_ATTACHMENT) continue;
+         spVertexAttachment_computeWorldVertices(SUPER(mesh), slot, 0, mesh->super.worldVerticesLength, worldVerticesPositions, 0, 2);
+         //totalVerts += mesh->trianglesCount;
+         LOGV("%d \n", mesh->trianglesCount);
       }
     }
+    */
+
+    //LOGV("------ %d %d !!!!!\n",  skeletonTop->slotsCount, totalVerts);
+    //qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], 11);
+
+    //glUseProgram(qwqz_engine->m_Linkages[0].m_Program);
+    //int roboRegionRenderObject = (int)atlas->rendererObject; //(int)((spAtlasRegion *)((spRegionAttachment *)skeleton->drawOrder[0]->attachment)->rendererObject)->page->rendererObject; //TODO: fix this, fuck yea C
+    
+    ////LOGV("wtf %d!!!!!!\n\n\n\n", roboRegionRenderObject);
+
+    //glUniform1i(qwqz_engine->m_Linkages[0].g_TextureUniform, roboRegionRenderObject); //TODO: texture unit
+
+    //g_TextureOffset = glGetUniformLocation(program, "iTextureOffset");
+    //glUniform2f(g_TextureOffset, 0, 0);
+
+    //qwqz_engine->g_lastFrameBuffer = b;
+    //qwqz_engine->m_Zoom2 = 512.0 / 1.0;
+
+    //glActiveTexture(GL_TEXTURE0);
+
+    //spSkeleton_updateWorldTransform(skeletonTop);
+
+    batcher = spTwoColorBatcher_create();
+    mesh = spMesh_create(64000, 32000);
+
+	  _clipper = spSkeletonClipping_create();
+	
+	  _worldVertices = MALLOC(float, 1000); // Max number of vertices per mesh.
   }
-
-/*
-  if (0 && doShaderBg) {
-    qwqz_engine->m_RenderTextureWidth = 256;
-
-    GLuint v = 0;
-    GLuint f = 0;
-    GLuint f2 = 0;
-    GLuint program = 0;
-
-    // render target
-    int renderBufferTexture = qwqz_buffer_texture_init(GL_TEXTURE2);
-    qwqz_engine->FramebufferName = qwqz_buffer_target_init(renderBufferTexture);
-
-    v = qwqz_compile(GL_VERTEX_SHADER, "assets/shaders/basic.vsh");
-    f = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/flower.fsh");
-    f2 = qwqz_compile(GL_FRAGMENT_SHADER, "assets/shaders/rocketeer_background.fsh");
-
-    if (v && f && f2) {
-      // Create and link the shader program
-      program = glCreateProgram();
-      glAttachShader(program, v);
-      glAttachShader(program, f);
-      qwqz_linkage_init(program, &qwqz_engine->m_Linkages[1]);
-
-      program = glCreateProgram();
-      glAttachShader(program, v);
-      glAttachShader(program, f2);
-      qwqz_linkage_init(program, &qwqz_engine->m_Linkages[2]);
-      //GL_TEXTURE2
-      //glUniform1i(qwqz_engine->m_Linkages[1].g_TextureUniform, 2);
-      glUniform1i(qwqz_engine->m_Linkages[2].g_TextureUniform, 2);
-    }
-
-    qwqz_batch_init(&qwqz_engine->m_Batches[1], &qwqz_engine->m_Linkages[1], 1);
-    qwqz_batch_init(&qwqz_engine->m_Batches[2], &qwqz_engine->m_Linkages[2], 1);
-  }
-*/
 
   return 0;
+
 }
