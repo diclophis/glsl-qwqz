@@ -312,8 +312,8 @@ int impl_draw(int bbb) {
 								//CCVertex vertex;
 								//vertex.position = GLKVector4Make(vertices[i * 2], vertices[i * 2 + 1], 0.0, 1.0);
 								//vertex = CCVertexApplyTransform(vertex, transform);
-								verts->x = vertices[i * 2] * 0.0005;
-								verts->y = vertices[i * 2 + 1] * 0.0005;
+								verts->x = (vertices[i * 2] * 0.0025) + 0.0;
+								verts->y = (vertices[i * 2 + 1] * 0.0025) - 0.75;
 								verts->z = 0.0;
 								verts->w = 1.0;
 								verts->color = ((unsigned short)(r * 255))| ((unsigned short)(g * 255)) << 8 | ((unsigned short)(b * 255)) <<16 | ((unsigned short)(a * 255)) << 24;
