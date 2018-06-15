@@ -1,7 +1,7 @@
 # Linux Makefile
 
-rootsrc=/home/ubuntu/glsl-qwqz/src
-rootroot=/home/ubuntu/glsl-qwqz
+rootsrc=$(HOME)/glsl-qwqz/src
+rootroot=$(HOME)/glsl-qwqz
 
 build=build
 impl=$(IMPL)
@@ -26,7 +26,7 @@ CXXFLAGS=\
 -DHAVE_OPENAL
 
 CFLAGS=$(CXXFLAGS)
-LDFLAGS=-lpthread -lresolv -lGL -lglut -lGLU -lm -lstdc++ -lopenal
+LDFLAGS=-lpthread -lresolv -lGL -lglut -lGLU -lm -lstdc++ -lopenal -lEGL
 
 objects   = $(patsubst %,build/%, $(patsubst %.c,%.o, $(wildcard *.c)))
 
