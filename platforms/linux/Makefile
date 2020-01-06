@@ -1,7 +1,7 @@
 # Linux Makefile
 
-rootsrc=$(HOME)/glsl-qwqz/src
-rootroot=$(HOME)/glsl-qwqz
+rootsrc=$(HOME)/workspace/glsl-qwqz/src
+rootroot=$(HOME)/workspace/glsl-qwqz
 
 build=build
 impl=$(IMPL)
