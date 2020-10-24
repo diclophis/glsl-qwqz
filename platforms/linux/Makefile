@@ -1,5 +1,8 @@
 # Linux Makefile
 
+rootsrc=$(HOME)/workspace/glsl-qwqz/src
+rootroot=$(HOME)/workspace/glsl-qwqz
+
 build=build
 impl=$(IMPL)
 
@@ -8,10 +11,11 @@ CXXFLAGS=\
 -Wall \
 -g \
 -pg \
+-O0 \
 -I/usr/include \
--I../../src \
--I../../src/contrib \
--I../../$(impl)-src \
+-I$(rootsrc) \
+-I$(rootsrc)/contrib \
+-I$(rootroot)/$(impl)-src \
 -DDESKTOP \
 -DNDEBUG \
 -DHAVE_SETENV \
@@ -22,19 +26,19 @@ CXXFLAGS=\
 -DHAVE_OPENAL
 
 CFLAGS=$(CXXFLAGS)
-LDFLAGS=-lpthread -lresolv -lGL -lglut -lGLU -lm -lstdc++ -lopenal
+LDFLAGS=-lpthread -lresolv -lGL -lglut -lGLU -lm -lstdc++ -lopenal -lEGL
 
 objects   = $(patsubst %,build/%, $(patsubst %.c,%.o, $(wildcard *.c)))
 
-objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/zlib/*.c)))
-objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/chipmunk/*.c)))
-objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/spine/*.c)))
-objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/contrib/pt/*.c)))
-objects   += $(patsubst ../../src/%,build/%, $(patsubst %.cpp,%.o, $(wildcard ../../src/contrib/libmodplug/*.cpp)))
+objects   += $(patsubst $(rootsrc)/%,build/%, $(patsubst %.c,%.o, $(wildcard $(rootsrc)/contrib/zlib/*.c)))
+objects   += $(patsubst $(rootsrc)/%,build/%, $(patsubst %.c,%.o, $(wildcard $(rootsrc)/contrib/chipmunk/*.c)))
+objects   += $(patsubst $(rootsrc)/%,build/%, $(patsubst %.c,%.o, $(wildcard $(rootsrc)/contrib/spine/*.c)))
+objects   += $(patsubst $(rootsrc)/%,build/%, $(patsubst %.c,%.o, $(wildcard $(rootsrc)/contrib/pt/*.c)))
+objects   += $(patsubst $(rootsrc)/%,build/%, $(patsubst %.cpp,%.o, $(wildcard $(rootsrc)/contrib/libmodplug/*.cpp)))
 
-objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../src/*.c)))
+objects   += $(patsubst $(rootsrc)/%,build/%, $(patsubst %.c,%.o, $(wildcard $(rootsrc)/*.c)))
 
-objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.o, $(wildcard ../../$(impl)-src/*.c)))
+objects   += $(patsubst $(rootroot)/$(impl)-src/%,build/%, $(patsubst %.c,%.o, $(wildcard $(rootroot)/$(impl)-src/*.c)))
 
 raptor_island: $(build) $(objects)
 	$(CXX) -o $(build)/raptor_island $(objects) $(LDFLAGS)
@@ -42,13 +46,13 @@ raptor_island: $(build) $(objects)
 $(build)/%.o: %.c
 	$(CC) $(CXXFLAGS) -c $< -o $@
 
-$(build)/%.o: ../../$(impl)-src/%.c
+$(build)/%.o: $(rootroot)/$(impl)-src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(build)/%.o: ../../src/%.c
+$(build)/%.o: $(rootsrc)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(build)/%.o: ../../src/%.cpp
+$(build)/%.o: $(rootsrc)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(build):
