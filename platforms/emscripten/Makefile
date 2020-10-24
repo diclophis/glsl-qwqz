@@ -2,6 +2,7 @@
 
 #TOTAL_ALLOWED_RAM=8388608
 
+checkout=/home/app
 build=build
 impl=$(IMPL)
 
@@ -9,9 +10,9 @@ OPTL=-O3
 
 CXXFLAGS=\
 $(OPTL) \
--I../../src \
--I../../src/contrib \
--I../../$(impl)-src \
+-I$(checkout)/src \
+-I$(checkout)/src/contrib \
+-I$(checkout)/$(impl)-src \
 -DEMSCRIPTEN \
 -DDESKTOP \
 -DNDEBUG \
@@ -37,10 +38,10 @@ objects   += $(patsubst ../../src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../
 objects   += $(patsubst ../../$(impl)-src/%,build/%, $(patsubst %.c,%.bc, $(wildcard ../../$(impl)-src/*.c)))
 
 HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_island_$(impl).js | cut -d" " -f 1 || echo 0)
-hash_dir=~/naked.bardin.haus/public/$(HASH)
+hash_dir=/var/www/html/$(HASH)
 
 $(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
-	BINARYEN=~/binaryen EMCC_DEBUG=1 $(CXX) $(OPTL) -lopenal --closure 0 -s WASM=1 -s PRECISE_I64_MATH=0 -s FORCE_ALIGNED_MEMORY=0 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+	BINARYEN=~/binaryen EMCC_DEBUG=1 $(CXX) $(OPTL) -lopenal --closure 0 -s WASM=1 -s FORCE_ALIGNED_MEMORY=0 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
 
 $(build)/raptor_island_$(impl).bc: $(objects)
 	$(CXX) $(OPTL) $(objects) -std=c++11 -o $(build)/raptor_island_$(impl).bc
@@ -76,5 +77,4 @@ install: $(build)/raptor_island_$(impl).js
 	install -C $(build)/raptor_island_$(impl).wasm $(hash_dir)/raptor_island_$(impl).wasm
 	(test -f $(build)/raptor_island_$(impl).js.mem && install -C $(build)/raptor_island_$(impl).js.mem $(hash_dir)/) || true
 	install -C memoryprofiler.js $(hash_dir)/
-	ln -nsf $(hash_dir) ~/naked.bardin.haus/public/latest-qwqz
-	touch ~/naked.bardin.haus/public/latest-qwqz
+	ln -nsf $(hash_dir) /var/www/html/latest-qwqz

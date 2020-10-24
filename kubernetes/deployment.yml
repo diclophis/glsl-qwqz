@@ -1,0 +1,78 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: glsl-qwqz-bardin-haus-app
+  labels:
+    ttl: '16'
+spec:
+  type: NodePort
+  ports:
+  - nodePort: 32217
+    port: 8080
+    protocol: TCP
+  selector:
+    name: glsl-qwqz
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: glsl-qwqz-bardin-haus-vhost
+  labels:
+    ttl: '16'
+spec:
+  rules:
+  - host: glsl-qwqz.bardin.haus
+    http:
+      paths:
+      - backend:
+          serviceName: glsl-qwqz-bardin-haus-app
+          servicePort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glsl-qwqz
+  labels:
+    ttl: '16'
+spec:
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+  replicas: 1
+  selector:
+    matchLabels:
+      name: glsl-qwqz
+  template:
+    metadata:
+      labels:
+        name: glsl-qwqz
+        ttl: '16'
+    spec:
+      volumes:
+      - name: run
+        emptyDir: {}
+      containers:
+      - name: glsl-qwqz-bardin-haus-app
+        image: glsl-qwqz:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts: 
+        - mountPath: /var/run/apache2
+          name: run
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 20m
+        command:
+        - "apache2"
+        - "-D"
+        - "FOREGROUND"
+        #- "sleep"
+        #- "infinity"
+        env: &1
+        - name: APP_ENV
+          value: production

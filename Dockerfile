@@ -1,48 +1,45 @@
-FROM ubuntu:16.10
+FROM ubuntu:18.04
 
-RUN apt-get update -qq && apt-get install --no-install-recommends -y --force-yes curl openssl ca-certificates nodejs make cmake build-essential default-jre python python-minimal python2.7 && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install --no-install-recommends -y --force-yes curl openssl ca-certificates nodejs make cmake build-essential default-jre python python-minimal python2.7 git ruby && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN useradd --home-dir /home/app --create-home --shell /bin/bash app
 
-USER app
-WORKDIR /home/app
+RUN cd /opt && git clone https://github.com/juj/emsdk.git && cd emsdk && git pull && ./emsdk list && ./emsdk install 1.39.19 && chown -R app /opt/emsdk && cd /opt/emsdk && ./emsdk activate 1.39.19 
 
-RUN curl "https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz" -o /var/tmp/emsdk-portable.tar.gz
-RUN tar zxvf /var/tmp/emsdk-portable.tar.gz
+RUN apt-get update
+RUN apt-get install -y apache2 apache2-utils
 
-RUN emsdk-portable/emsdk update
-RUN emsdk-portable/emsdk install latest
-RUN emsdk-portable/emsdk activate latest
+RUN a2enmod dav dav_fs headers rewrite
+RUN a2dissite 000-default
+
+ENV APACHE_RUN_USER app
+ENV APACHE_RUN_GROUP app
+ENV APACHE_LOG_DIR /var/log/apache2
+ENV APACHE_PID_FILE /var/run/apache2.pid
+ENV APACHE_LOCK_DIR /var/lock/apache2
+ENV APACHE_RUN_DIR /var/run/apache2
+
+RUN htpasswd -cb /etc/apache2/webdav.password guest guest
+RUN chown root:app /etc/apache2/webdav.password
+RUN chmod 640 /etc/apache2/webdav.password
+RUN echo "Listen 8080" | tee /etc/apache2/ports.conf
+
+RUN mkdir -p /var/lock/apache2 /var/www/html; chown app /var/log/apache2 /var/lock/apache2 /var/www/html
 
 COPY [".", "/home/app"]
 
-#Setting environment variables:
-#EMSDK = /emsdk-portable
-#EM_CONFIG = /home/app/.emscripten
+RUN chown -R app /home/app
 
-RUN make emscripten-test
+USER app
+RUN cd /opt/emsdk && . /opt/emsdk/emsdk_env.sh && cd /home/app && make emscripten-test
 
-#
-#WORKDIR /home/app
-#RUN chown -R app. /home/app
+USER root
+ADD glsl-qwqz.conf /etc/apache2/sites-available/glsl-qwqz.conf
+RUN a2ensite glsl-qwqz
+
+#CMD ["apache2", "-t"]
+#RUN mkdir -p /var/incoming; chown www-data /var/incoming
+#ADD index.html /var/www/html/index.html
 #USER app
-#RUN bundle install --force --path=vendor/bundle --jobs=4 --retry=3 --deployment
-#
-#COPY [".bash_profile", "/home/app/"]
-#COPY ["bespoked.config.ru", "puma.config.ru", "Rakefile", "/home/app/"]
-#COPY ["app", "/home/app/app"]
-#COPY ["bin", "/home/app/bin"]
-#COPY ["config", "/home/app/config"]
-#COPY ["db", "/home/app/db"]
-#COPY ["lib", "/home/app/lib"]
-#COPY ["public", "/home/app/public"]
-#
-#USER root
-#WORKDIR /home/app
-#RUN chown -R app. /home/app
 #USER app
-#
-#RUN mkdir -p /home/app/public/assets
-#RUN bundle exec rake assets:precompile
-#
-#CMD ["bundle", "exec", "rackup", "-h"]
+#WORKDIR /home/app
