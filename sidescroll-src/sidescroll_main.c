@@ -298,7 +298,7 @@ int impl_draw(int b) {
           float offX = (bgsScroll[a]);
           ra->x -= 0.01; //offX;
           spRegionAttachment_updateOffset(ra);
-          spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer1);
+          spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer1, 0, 0);
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer1, NULL, ra->uvs);
         }
       }
@@ -378,7 +378,7 @@ int impl_draw(int b) {
         };
         spRegionAttachment_updateOffset(ra);
 
-        spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer);
+        spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer, 0, 0);
         qwqz_batch_add(&qwqz_engine->m_Batches[1], 0, verticeBuffer, NULL, ra->uvs);
       }
     }

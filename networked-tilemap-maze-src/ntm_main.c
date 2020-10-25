@@ -100,12 +100,12 @@ int impl_draw(int b) {
     }
 
     if (1) {
-      spRegionAttachment_computeWorldVertices(ra, offX , offY, s->bone, verticeBuffer);
+      spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer, offX , offY);
       qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
     } else {
       for (int i=0; i<debugGrid; i++) {
         for (int j=0; j<debugGrid; j++) {
-          spRegionAttachment_computeWorldVertices(ra, offX + (i * 18), offY + (j * 18), s->bone, verticeBuffer);
+          spRegionAttachment_computeWorldVertices(ra, s->bone, verticeBuffer, offX + (i * 18), offY + (j * 18));
           qwqz_batch_add(&qwqz_engine->m_Batches[0], 0, verticeBuffer, NULL, ra->uvs);
         }
       }
@@ -160,7 +160,7 @@ int impl_main(int argc, char** argv, GLuint b) {
   spAnimationState_setAnimationByName(state, 0, "0", 1);
 
   qwqz_batch_init(&qwqz_engine->m_Batches[0], &qwqz_engine->m_Linkages[0], 
-    (skeleton->slotCount) * debugGrid * debugGrid
+    (skeleton->slotsCount) * debugGrid * debugGrid
   );
 
   glUseProgram(qwqz_engine->m_Linkages[0].m_Program);

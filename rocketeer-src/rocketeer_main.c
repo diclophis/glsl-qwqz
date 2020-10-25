@@ -98,7 +98,6 @@ int impl_draw(int bbb) {
 
   qwqz_tick_timer(&qwqz_engine->m_Timers[0]);
 
-  /*
   if (doPhysics) {
     //TODO: figure out better step code
     float phstep = qwqz_engine->m_Timers[0].step / 4.0;
@@ -116,8 +115,6 @@ int impl_draw(int bbb) {
     ChipmunkDebugDrawFlushRenderer();
     ChipmunkDebugDrawPopRenderer();
   }
-
-  */
 
   spAnimationState_update(state, qwqz_engine->m_Timers[0].step * 1.0);
   spAnimationState_apply(state, skeletonTop);
@@ -357,9 +354,10 @@ int impl_resize(int width, int height, int ew, int eh, int u) {
 
   spSkeleton_updateWorldTransform(skeletonTop);
 
+  */
+
   ChipmunkDebugDrawResizeRenderer(width, height);
   glUniform2f(ChipmunkDebugDrawPushRenderer(), qwqz_engine->m_ScreenWidth, qwqz_engine->m_ScreenHeight);
-  */
  
   return resized;
 }
