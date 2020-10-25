@@ -90,6 +90,6 @@ android-install:
 	cd platforms/android && make install
 
 android-clean:
-	cd platforms/android && make clean
+	#cd platforms/android && make clean
 
 clean: sidescroll-clean rocketeer-clean test-clean android-clean emscripten-test-clean emscripten-rocketeer-clean emscripten-sidescroll-clean emscripten-ntm-clean

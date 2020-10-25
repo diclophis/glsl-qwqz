@@ -31,7 +31,7 @@ COPY [".", "/home/app"]
 RUN chown -R app /home/app
 
 USER app
-RUN cd /opt/emsdk && . /opt/emsdk/emsdk_env.sh && cd /home/app && make emscripten-test-clean && make emscripten-test
+RUN cd /opt/emsdk && . /opt/emsdk/emsdk_env.sh && cd /home/app && make clean && make emscripten-test
 
 USER root
 ADD glsl-qwqz.conf /etc/apache2/sites-available/glsl-qwqz.conf
