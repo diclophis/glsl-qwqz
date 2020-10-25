@@ -90,8 +90,8 @@
           totalDependencies: 0,
           percentComplete: 0,
           leftCounter: 0,
-          preDepCount: 0,
-          depCounter: 0,
+          //preDepCount: 0,
+          //depCounter: 0,
           monitorRunDependencies: function(left) {
             this.totalDependencies = Math.max(this.totalDependencies, left);
             this.percentComplete = (parseInt(((this.totalDependencies-left) / this.totalDependencies) * 100.0));
@@ -100,10 +100,10 @@
           },
           addToRealModuleEventually: function(line, dirName, baseName, byteArray) {
             if (line != null) {
-              var del = (Module.depCounter++ * 17 * 2);
-              setTimeout(function() {
-                Module.removeRunDependency(line);
-              }, del);
+              //var del = (5000); //(Module.depCounter++ * 17 * 2);
+              //setTimeout(function() {
+              //  Module.removeRunDependency(line);
+              //}, del);
 
               return Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
             } else {
@@ -119,11 +119,11 @@
         script.src = (raptorUrl);
 
         script.onload = function(e) {
-          var FakeModule = window.Module;
+          //var FakeModule = window.Module;
           var manifestFile = new XMLHttpRequest();
           var manifestUrl = "index.appcache";
           manifestFile.open("GET", manifestUrl, true);
-          FakeModule.addRunDependency("manifest");
+          Module.addRunDependency("manifest");
           var fetchFileFromManifest = function(line) {
             if (line.indexOf("assets") == 0) {
               var lastSlashIndex = line.lastIndexOf("/");
@@ -132,26 +132,26 @@
               var dataFile = new XMLHttpRequest();
               dataFile.open("GET", line, true);
               dataFile.responseType = "arraybuffer";
-              FakeModule.addRunDependency(line);
+              //Module.addRunDependency(line);
               dataFile.onload = function(e) {
                 var arrayBuffer = this.response;
                 var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
-                FakeModule.addToRealModuleEventually(line, dirName, baseName, byteArray);
+                Module.addToRealModuleEventually(line, dirName, baseName, byteArray);
               }
               dataFile.send(null);
             }
           };
           manifestFile.onload = function(e) {
-            var assets = FakeModule.addToRealModuleEventually(null, "/", "assets");
-            var shaders = FakeModule.addToRealModuleEventually(null, assets, "shaders");
-            var textures = FakeModule.addToRealModuleEventually(null, assets, "textures");
-            var spine = FakeModule.addToRealModuleEventually(null, assets, "spine");
-            var sounds = FakeModule.addToRealModuleEventually(null, assets, "sounds");
+            var assets = Module.addToRealModuleEventually(null, "/", "assets");
+            var shaders = Module.addToRealModuleEventually(null, assets, "shaders");
+            var textures = Module.addToRealModuleEventually(null, assets, "textures");
+            var spine = Module.addToRealModuleEventually(null, assets, "spine");
+            var sounds = Module.addToRealModuleEventually(null, assets, "sounds");
             var lines = this.response.split("\n");
             for (var i=0; i<lines.length; i++) {
               fetchFileFromManifest(lines[i]);
             }
-            FakeModule.removeRunDependency("manifest");
+            //Module.removeRunDependency("manifest");
           };
           manifestFile.send(null);
         };

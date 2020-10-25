@@ -41,7 +41,7 @@ HASH=qwqz-$(shell test -e build/raptor_island_$(impl).js && md5sum build/raptor_
 hash_dir=/var/www/html/$(HASH)
 
 $(build)/raptor_island_$(impl).js: $(build)/raptor_island_$(impl).bc
-	BINARYEN=~/binaryen EMCC_DEBUG=1 $(CXX) $(OPTL) -lopenal --closure 0 -s WASM=1 -s FORCE_ALIGNED_MEMORY=0 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
+	EMCC_DEBUG=1 $(CXX) $(OPTL) -lopenal --closure 0 -s WASM=1 -s FORCE_ALIGNED_MEMORY=0 -s FORCE_FILESYSTEM=1 -s NO_EXIT_RUNTIME=1 -std=c++11 -s EXPORTED_FUNCTIONS="['_main', '_malloc', '_free']" $(build)/raptor_island_$(impl).bc -o $(build)/raptor_island_$(impl).js --js-library library_window.js
 
 $(build)/raptor_island_$(impl).bc: $(objects)
 	$(CXX) $(OPTL) $(objects) -std=c++11 -o $(build)/raptor_island_$(impl).bc
