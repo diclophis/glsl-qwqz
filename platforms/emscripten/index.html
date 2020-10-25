@@ -73,6 +73,7 @@
     </script>
     <script>
       window.onload = function() {
+        /*
         window.Module = {
           //TOTAL_MEMORY: 5242880 * 2,
           noInitialRun: true,
@@ -105,14 +106,41 @@
               //  Module.removeRunDependency(line);
               //}, del);
 
-              return Module.FS_createDataFile(dirName, baseName, byteArray, true, false);
+              return FS.writeFile(`${dirName}/${baseName}`, byteArray); //, true, false);
             } else {
-              return Module.FS_createFolder(dirName, baseName, true, true);
+              return FS.mkdir(`${dirName}/${baseName}`); //, baseName, true, true);
             }
           },
           arguments: [
           ]
         };
+        */
+
+  window.Module = {
+    arguments: [],
+    preRun: [(function() {
+    })],
+    postRun: [],
+    print: (function() {
+      return function(text) {
+        if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+        console.log(text);
+        //terminalContainer.innerHTML += (text) + "<br>";
+      };
+    })(),
+    canvas: document.getElementById("glut-window"),
+    setStatus: function(text) {
+      if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+      if (text === Module.setStatus.text) return;
+    },
+    totalDependencies: 0,
+    monitorRunDependencies: function(left) {
+      this.totalDependencies = Math.max(this.totalDependencies, left);
+      Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+    }
+  };
+
+  Module.setStatus('Downloading...');
 
         var raptorUrl = "raptor_island.js";
         var script = document.createElement("script");
@@ -120,40 +148,40 @@
 
         script.onload = function(e) {
           //var FakeModule = window.Module;
-          var manifestFile = new XMLHttpRequest();
-          var manifestUrl = "index.appcache";
-          manifestFile.open("GET", manifestUrl, true);
-          Module.addRunDependency("manifest");
-          var fetchFileFromManifest = function(line) {
-            if (line.indexOf("assets") == 0) {
-              var lastSlashIndex = line.lastIndexOf("/");
-              var dirName = line.substr(0, lastSlashIndex);
-              var baseName = line.substr(lastSlashIndex + 1, line.length);
-              var dataFile = new XMLHttpRequest();
-              dataFile.open("GET", line, true);
-              dataFile.responseType = "arraybuffer";
-              //Module.addRunDependency(line);
-              dataFile.onload = function(e) {
-                var arrayBuffer = this.response;
-                var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
-                Module.addToRealModuleEventually(line, dirName, baseName, byteArray);
-              }
-              dataFile.send(null);
-            }
-          };
-          manifestFile.onload = function(e) {
-            var assets = Module.addToRealModuleEventually(null, "/", "assets");
-            var shaders = Module.addToRealModuleEventually(null, assets, "shaders");
-            var textures = Module.addToRealModuleEventually(null, assets, "textures");
-            var spine = Module.addToRealModuleEventually(null, assets, "spine");
-            var sounds = Module.addToRealModuleEventually(null, assets, "sounds");
-            var lines = this.response.split("\n");
-            for (var i=0; i<lines.length; i++) {
-              fetchFileFromManifest(lines[i]);
-            }
-            //Module.removeRunDependency("manifest");
-          };
-          manifestFile.send(null);
+          //var manifestFile = new XMLHttpRequest();
+          //var manifestUrl = "index.appcache";
+          //manifestFile.open("GET", manifestUrl, true);
+          //Module.addRunDependency("manifest");
+          //var fetchFileFromManifest = function(line) {
+          //  if (line.indexOf("assets") == 0) {
+          //    var lastSlashIndex = line.lastIndexOf("/");
+          //    var dirName = line.substr(0, lastSlashIndex);
+          //    var baseName = line.substr(lastSlashIndex + 1, line.length);
+          //    var dataFile = new XMLHttpRequest();
+          //    dataFile.open("GET", line, true);
+          //    dataFile.responseType = "arraybuffer";
+          //    //Module.addRunDependency(line);
+          //    dataFile.onload = function(e) {
+          //      var arrayBuffer = this.response;
+          //      var byteArray = arrayBuffer.byteLength ? new Uint8Array(arrayBuffer) : arrayBuffer;
+          //      Module.addToRealModuleEventually(line, dirName, baseName, byteArray);
+          //    }
+          //    dataFile.send(null);
+          //  }
+          //};
+          //manifestFile.onload = function(e) {
+          //  var assets = Module.addToRealModuleEventually(null, "/", "assets");
+          //  var shaders = Module.addToRealModuleEventually(null, "/assets", "shaders");
+          //  var textures = Module.addToRealModuleEventually(null, "/assets", "textures");
+          //  var spine = Module.addToRealModuleEventually(null, "/assets", "spine");
+          //  var sounds = Module.addToRealModuleEventually(null, "/assets", "sounds");
+          //  var lines = this.response.split("\n");
+          //  for (var i=0; i<lines.length; i++) {
+          //    fetchFileFromManifest(lines[i]);
+          //  }
+          //  //Module.removeRunDependency("manifest");
+          //};
+          //manifestFile.send(null);
         };
         document.body.appendChild(script);
       };
@@ -165,3 +193,4 @@
     </script>
   </body>
 </html>
+

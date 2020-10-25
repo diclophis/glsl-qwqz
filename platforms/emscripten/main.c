@@ -17,7 +17,7 @@ FILE *iosfopen(const char *filename, const char *mode) {
 
 
 // Adds the given callback function to listen to the changes in browser window size.
-void set_window_resize_handler(void *userData, void (*handlerFunc)(int newWidth, int newHeight, void *userData));
+//void set_window_resize_handler(void *userData, void (*handlerFunc)(int newWidth, int newHeight, void *userData));
 
 
 static int game_index = 0;
@@ -100,6 +100,8 @@ void processNormalKeys(unsigned char key, int x, int y) {
 
 
 int main(int argc, char** argv) {
+  printf("starting impl_main XXX\n");
+
   char *wh = NULL;
   
   wh = emscripten_run_script_string("(function(){return document.body.offsetWidth;})()");
@@ -115,7 +117,7 @@ int main(int argc, char** argv) {
   glutMouseFunc(processMouse);
   glutMotionFunc(processMouseMotion);
   glutDisplayFunc(draw);
-  set_window_resize_handler(0, resize);
+  //set_window_resize_handler(0, resize);
 
   if (0 == impl_main(argc, argv, 0)) {
     resize(kWindowWidth, kWindowHeight, 0);
